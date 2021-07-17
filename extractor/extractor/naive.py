@@ -11,6 +11,7 @@ import algorithm.common.sig
 import algorithm.shotcut.shotcut
 import control.xvidgen
 import media.editor
+import database.msql
 
 def solve(bvid):
     print("extractor.naive: Hello ", bvid)
@@ -33,7 +34,7 @@ def solve(bvid):
     ans=[]
     for i in tans: ans+=[i]*24
     ans=ans[0:frame_total]
-    ans=scipy.signal.savgol_filter(ans,239,3)  
+    ans=scipy.signal.savgol_filter(ans,119,3)  
 
     for shotcut in shotcut_list:
         if shotcut["transition"]=="cut":
@@ -49,16 +50,18 @@ def solve(bvid):
     thres = algorithm.common.sig.getPropotionPoint(ans,0.1)
     bans = [(ans[i]>thres) for i in range(frame_total)]
 
+    # plt.plot(ans)
+    # plt.plot(bans)
+    # plt.show()
+
     res=algorithm.common.sig.makeRanges(bans,72,360)
 
     print("extractor.naive: writing...")
     for i in res:
         xvid=control.xvidgen.generateId()
         xvobj={"id":xvid, "bvid":bvid, "frame_begin":i[0], "frame_end":i[1], "src_type":0, "clip_type":0}
-        file_json = open("../../data/extract/%s.json"%xvid,"w",encoding="utf-8")
-        json.dump(xvobj,file_json, sort_keys=True, indent=4, separators=(',', ':'))
-        file_json.close()
         media.editor.edit([{"filename":"../../data/media/%s.mp4"%bvid, "start":xvobj["frame_begin"]/frame_rate, "duration":(xvobj["frame_end"]-xvobj["frame_begin"])/frame_rate}],"../../data/output/%s.mp4"%xvid, quiet=True)
+        database.msql.query("biliextract","INSERT INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type) VALUES ('%s','%s',%d,%d,%d,%d);"%(xvobj["id"],xvobj["bvid"],xvobj["frame_begin"],xvobj["frame_end"],xvobj["src_type"],xvobj["clip_type"]))
     
     print("extractor.naive: OK!")
         

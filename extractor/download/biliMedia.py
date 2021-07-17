@@ -20,12 +20,12 @@ def getMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental
 
     print("Downloading...")
 
-    # audioFile = myhtml.getRequestsContent(audioUrl, pageUrl)
-    # with open('../../tmp/audio_'+video_id+'.mp3', 'wb') as f:
-    #     f.write(audioFile)
-    # videoFile = myhtml.getRequestsContent(videoUrl, pageUrl)
-    # with open('../../tmp/video_'+video_id+'.mp4', 'wb') as f:
-    #     f.write(videoFile)
+    audioFile = myhtml.getRequestsContent(audioUrl, pageUrl)
+    with open('../../tmp/audio_'+video_id+'.mp3', 'wb') as f:
+        f.write(audioFile)
+    videoFile = myhtml.getRequestsContent(videoUrl, pageUrl)
+    with open('../../tmp/video_'+video_id+'.mp4', 'wb') as f:
+        f.write(videoFile)
 
     os.system('ffmpeg -y -i ../../tmp/video_'+video_id+'.mp4 -i ../../tmp/audio_' +
               video_id+'.mp3 ' + ffmpeg_config + ' ../../data/media/'+video_id+'.mp4')
