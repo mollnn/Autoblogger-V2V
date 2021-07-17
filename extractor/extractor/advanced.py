@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import scipy.signal
 import algorithm.danmu.density
+import algorithm.danmu.sentiments
 import algorithm.common.sig
 import algorithm.shotcut.shotcut
 import control.xvidgen
@@ -31,7 +32,8 @@ def solve(bvid):
     density_s=algorithm.danmu.density.calcDanmuDensity(danmu_list, duration, Delta=7)
     density_l=algorithm.danmu.density.calcDanmuDensity(danmu_list, duration, Delta=25)
     density_p=[density_s[i]/(density_l[i]+1) for i in range(duration)]
-    tans=[density_p[i] * math.sqrt(density_s[i]) for i in range(duration)]
+    sentiments=algorithm.danmu.sentiments.calcDanmuSentiments(danmu_list, duration)
+    tans=[density_p[i] * math.sqrt(density_s[i]) * sentiments[i] for i in range(duration)]
     ans=[]
     for i in tans: ans+=[i]*24
     ans=ans[0:frame_total]
@@ -51,9 +53,9 @@ def solve(bvid):
     thres = algorithm.common.sig.getPropotionPoint(ans,0.1)
     bans = [(ans[i]>thres) for i in range(frame_total)]
 
-    # plt.plot(ans)
-    # plt.plot(bans)
-    # plt.show()
+    plt.plot(ans)
+    plt.plot(bans)
+    plt.show()
 
     res=algorithm.common.sig.makeRanges(bans,72,360)
 
