@@ -178,8 +178,6 @@ class ShotBoundaryDetection:
             valid, frame = self._vid.read()
             histograms = []
             while valid:
-                cnt_progress+=1
-                if cnt_progress%1000==0: print("Progress: ",cnt_progress)
                 histograms.append([])
                 for i, col in enumerate(colors):
                     histograms[-1].append(
@@ -243,12 +241,13 @@ class ShotBoundaryDetection:
 
     def detect(self, set_progress=None, finish=None):
 
+        print("algorithm.shotcut: 0%")
         # noinspection PyShadowingNames
         cuts, gradual_transitions = self.__detect_multi_step_comparison_scheme(set_progress=set_progress)
         # print("{s}: {t}".format(s="finalize sbd",
         #                         t=datetime.datetime.now()))
 
-        print("presolve ok")
+        print("algorithm.shotcut: 80%")
 
         self.sb = []
         cut_index = 0
@@ -267,12 +266,15 @@ class ShotBoundaryDetection:
             if set_progress is not None:
                 set_progress(65 + 35 * (cut_index + gradual_index) / total_transitions, "Finalizing results...")
 
+        print("algorithm.shotcut: 90%")
+
         while cut_index < len(cuts):
             self.sb.append({'transition': 'cut',
                             'cut_frame': cuts[cut_index]})
             cut_index += 1
             if set_progress is not None:
                 set_progress(65 + 35 * (cut_index + gradual_index) / total_transitions, "Finalizing results...")
+        
         while gradual_index < len(gradual_transitions):
             self.sb.append({'transition': 'gradual',
                             'start_frame': gradual_transitions[gradual_index][0],
@@ -284,6 +286,9 @@ class ShotBoundaryDetection:
         # print("{s}: {t}".format(s="finalize gui",
         #                         t=datetime.datetime.now()))
         # print(self.sb)
+
+        print("algorithm.shotcut: OK!")
+        
         if finish is not None:
             finish()
 

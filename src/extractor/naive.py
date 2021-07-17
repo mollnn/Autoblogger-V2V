@@ -12,7 +12,8 @@ import algorithm.shotcut.shotcut
 import control.xvidgen
 import media.editor
 
-def solveAll(bvid):
+def solve(bvid):
+    print("extractor.naive: Hello ", bvid)
     duration = int(math.ceil(float(ffmpeg.probe("../../data/media/%s.mp4"%bvid)["format"]["duration"])))
     frame_rate = 24
     frame_total = int(math.ceil(duration*frame_rate))
@@ -23,6 +24,8 @@ def solveAll(bvid):
 
     shotcut_list = algorithm.shotcut.shotcut.shotcut("../../data/media/%s.mp4"%bvid)
 
+    print("extractor.naive: analysing...")
+    
     density_s=algorithm.danmu.density.calcDanmuDensity(danmu_list, duration, Delta=7)
     density_l=algorithm.danmu.density.calcDanmuDensity(danmu_list, duration, Delta=25)
     density_p=[density_s[i]/(density_l[i]+1) for i in range(duration)]
@@ -48,14 +51,17 @@ def solveAll(bvid):
 
     res=algorithm.common.sig.makeRanges(bans,72,360)
 
+    print("extractor.naive: writing...")
     for i in res:
         xvid=control.xvidgen.generateId()
-        print("write",xvid)
         xvobj={"id":xvid, "bvid":bvid, "frame_begin":i[0], "frame_end":i[1], "src_type":0, "clip_type":0}
         file_json = open("../../data/extract/%s.json"%xvid,"w",encoding="utf-8")
         json.dump(xvobj,file_json, sort_keys=True, indent=4, separators=(',', ':'))
         file_json.close()
-        media.editor.edit([{"filename":"../../data/media/%s.mp4"%bvid, "start":xvobj["frame_begin"]/frame_rate, "duration":(xvobj["frame_end"]-xvobj["frame_begin"])/frame_rate}],"../../data/output/%s.mp4"%xvid)
+        media.editor.edit([{"filename":"../../data/media/%s.mp4"%bvid, "start":xvobj["frame_begin"]/frame_rate, "duration":(xvobj["frame_end"]-xvobj["frame_begin"])/frame_rate}],"../../data/output/%s.mp4"%xvid, quiet=True)
+    
+    print("extractor.naive: OK!")
+        
 
 if __name__ == "__main__":
-    solveAll("BV1Uv411v7mM")
+    solve("BV1Uv411v7mM")
