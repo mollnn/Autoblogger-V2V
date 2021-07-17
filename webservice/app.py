@@ -25,6 +25,10 @@ def api_list(src_type, clip_type):
 def api_video(name):
     return osapi.getBinaryFile("../data/output/%s.mp4" % name)
 
+@app.route('/poster/<name>/')
+def api_poster(name):
+    return osapi.getBinaryFile("../data/poster/%s.mp4" % name)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

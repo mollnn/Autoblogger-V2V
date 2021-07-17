@@ -7,13 +7,12 @@ import json
 
 import network.myhtml as myhtml
 
-
-
 def getMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
     pageUrl = "https://www.bilibili.com/video/" + video_id
     htmlText = myhtml.getRequestsText(pageUrl, pageUrl)
     urlJson = json.loads(re.findall(
         '<script>window\.__playinfo__=(.*?)</script>', htmlText)[0])
+
 
     videoUrl = urlJson['data']['dash']['video'][0]['backupUrl'][0]
     audioUrl = urlJson['data']['dash']['audio'][0]['backupUrl'][0]
@@ -28,10 +27,11 @@ def getMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental
         f.write(videoFile)
 
     os.system('ffmpeg -y -i ../../tmp/video_'+video_id+'.mp4 -i ../../tmp/audio_' +
-              video_id+'.mp3 ' + ffmpeg_config + ' ../../data/media/'+video_id+'.mp4')
+              video_id+'.mp3 ' + ffmpeg_config + ' ../../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
     print("Succeed! :)")
 
     # 此处还应当删除临时文件
 
 if __name__ == "__main__":  
-    getMP4ByBid("BV1sk4y1k73b")
+    print("ok")
+    getMP4ByBid("BV1Uv411v7mM")
