@@ -20,8 +20,13 @@ def SSHMysql(DB, SQL):
     cursor.execute(SQL.encode('utf8'))  # 执行SQL
     data = cursor.fetchall()  # 获取查询结果
     cursor.close()
+    db.commit()
+    db.close()
+    server.close()
     return data
- 
+
+def query(DB, SQL):
+    return SSHMysql(DB, SQL)
  
 if __name__ == "__main__":
    SQL="SELECT * FROM Danmu;"

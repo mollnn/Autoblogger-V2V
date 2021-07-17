@@ -40,8 +40,8 @@ if __name__ == '__main__':
 
     danmu_list = readDanmuList(bid)
     duration = getMediaDuration(bid)
-    ans = calcDanmuDensity(danmu_list, duration)
+    density_small = calcDanmuDensity(danmu_list, duration)
 
-    print(ans)
-    plt.plot(ans)
+    print(density_small)
+    plt.plot(density_small)
     plt.show()

@@ -1,8 +1,10 @@
 # https://github.com/SaeidDadkhah/Shot-Boundary-Detection/blob/master/ShotBoundaryDetection.py
 
+# Object of type time is not JSON serializable 
+# Fix by mollnn
+
 import cv2
 import numpy as np
-import datetime
 
 class ShotBoundaryDetection:
     def __init__(self):
@@ -74,98 +76,6 @@ class ShotBoundaryDetection:
         self.__rearranged = True
         return self.__frame
 
-    def __detect_histogram(self):
-        if self.video_is_available():
-            # save state of video
-            current_frame_num = self._vid.get(cv2.CAP_PROP_POS_FRAMES)
-
-            # init
-            self._vid.set(cv2.CAP_PROP_POS_FRAMES, 0)
-            valid, prev = self._vid.read()
-            if not valid:
-                return False
-            prev = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
-            prev = cv2.calcHist(prev, [0], None, [256], [0, 256])
-            prev = np.array(prev)
-
-            # algorithm
-            valid, cur = self._vid.read()
-            width = self._vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-            height = self._vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
-            while valid:
-                cur = cv2.cvtColor(cur, cv2.COLOR_BGR2GRAY)
-                cur = cv2.calcHist(cur, [0], None, [256], [0, 256])
-                cur = np.array(cur)
-
-                dif = 1000 * np.sum((prev - cur) ** 2) / (width * height)
-                # print(dif)
-                if dif > 220:
-                    print("shot! diff: {x}".format(x=dif))
-                    self.sb.append(self._vid.get(cv2.CAP_PROP_POS_FRAMES))
-
-                prev = cur
-                valid, cur = self._vid.read()
-
-            print(self.sb)
-            # return video to first state
-            self._vid.set(cv2.CAP_PROP_POS_FRAMES, current_frame_num)
-
-    # this method is not working!
-    def __detect_histogram_adaptive_threshold(self):
-        frame_num = self._vid.get(cv2.CAP_PROP_POS_FRAMES)
-        if frame_num <= self.__last_frame:
-            # print("Cond 1")
-            return frame_num in self.sb
-        elif frame_num == 1:
-            # print("Cond 2")
-            if self.__rearranged:
-                gray = cv2.cvtColor(self.__frame, cv2.COLOR_RGB2GRAY)
-            else:
-                gray = cv2.cvtColor(self.__frame, cv2.COLOR_BGR2GRAY)
-            self.__last_hist = cv2.calcHist(gray, [0], None, [256], [0, 256])
-            self.__last_frame = frame_num
-            return False
-        elif frame_num == self.__last_frame + 1:
-            # print("Cond 3")
-            if self.__rearranged:
-                gray = cv2.cvtColor(self.__frame, cv2.COLOR_RGB2GRAY)
-            else:
-                gray = cv2.cvtColor(self.__frame, cv2.COLOR_BGR2GRAY)
-            prev = np.array(self.__last_hist)
-            self.__last_hist = cv2.calcHist(gray, [0], None, [256], [0, 256])
-            cur = np.array(self.__last_hist)
-            # noinspection PyUnresolvedReferences
-            # res = np.abs(res)
-            dif = np.sum((cur - prev) ** 2)
-
-            self.__last_frame += 1
-            # noinspection PyTypeChecker
-            print(self.__last_dif / (len(self.__frame) * len(self.__frame[0])))
-            # noinspection PyTypeChecker
-            if dif == 0:
-                print("a")
-                # self.__last_dif = 0
-                return False
-            elif self.__last_dif / (len(self.__frame) * len(self.__frame[0])) < 0.00001:
-                print("b")
-                # print(dif / self.__last_dif)
-                self.__last_dif = dif
-                # self.__sb.append(frame_num)
-                return False
-            elif dif > self.__last_dif ** 1.2:
-                print("c")
-                print(dif / self.__last_dif)
-                self.__last_dif = dif
-                self.sb.append(frame_num)
-                return True
-            else:
-                print("d")
-                self.__last_dif = dif
-                return False
-        else:
-            # TODO
-            pass
-
     def __detect_multi_step_comparison_scheme(self,
                                               set_progress=None,
                                               cut_l=4,
@@ -173,6 +83,8 @@ class ShotBoundaryDetection:
                                               gradual_l=10,
                                               gradual_threshold=42.5,
                                               mu_threshold=2):
+        cnt_progress=0
+        
         def calc_phi_eta(alg_atr_l):
             def calc_sigma():
                 res = 0
@@ -266,6 +178,8 @@ class ShotBoundaryDetection:
             valid, frame = self._vid.read()
             histograms = []
             while valid:
+                cnt_progress+=1
+                if cnt_progress%1000==0: print("Progress: ",cnt_progress)
                 histograms.append([])
                 for i, col in enumerate(colors):
                     histograms[-1].append(
@@ -328,19 +242,14 @@ class ShotBoundaryDetection:
             return cuts, gradual_transitions
 
     def detect(self, set_progress=None, finish=None):
-        def ms_to_time(ms):
-            second, microsecond = divmod(int(ms), 1000)
-            minute, second = divmod(second, 60)
-            hour, minute = divmod(minute, 60)
-            return datetime.time(hour=hour,
-                                 minute=minute,
-                                 second=second,
-                                 microsecond=microsecond)
 
         # noinspection PyShadowingNames
         cuts, gradual_transitions = self.__detect_multi_step_comparison_scheme(set_progress=set_progress)
         # print("{s}: {t}".format(s="finalize sbd",
         #                         t=datetime.datetime.now()))
+
+        print("presolve ok")
+
         self.sb = []
         cut_index = 0
         gradual_index = 0
@@ -348,36 +257,26 @@ class ShotBoundaryDetection:
         while cut_index < len(cuts) and gradual_index < len(gradual_transitions):
             if cuts[cut_index] < gradual_transitions[gradual_index][0]:
                 self.sb.append({'transition': 'cut',
-                                'cut_frame': cuts[cut_index],
-                                'cut_time': ms_to_time(self.frame_num_to_timestamp(cuts[cut_index]))})
+                                'cut_frame': cuts[cut_index]})
                 cut_index += 1
             else:
                 self.sb.append({'transition': 'gradual',
                                 'start_frame': gradual_transitions[gradual_index][0],
-                                'start_time': ms_to_time(
-                                    self.frame_num_to_timestamp(gradual_transitions[gradual_index][0])),
-                                'end_frame': gradual_transitions[gradual_index][1],
-                                'end_time': ms_to_time(
-                                    self.frame_num_to_timestamp(gradual_transitions[gradual_index][1]))})
+                                'end_frame': gradual_transitions[gradual_index][1]})
                 gradual_index += 1
             if set_progress is not None:
                 set_progress(65 + 35 * (cut_index + gradual_index) / total_transitions, "Finalizing results...")
 
         while cut_index < len(cuts):
             self.sb.append({'transition': 'cut',
-                            'cut_frame': cuts[cut_index],
-                            'cut_time': ms_to_time(self.frame_num_to_timestamp(cuts[cut_index]))})
+                            'cut_frame': cuts[cut_index]})
             cut_index += 1
             if set_progress is not None:
                 set_progress(65 + 35 * (cut_index + gradual_index) / total_transitions, "Finalizing results...")
         while gradual_index < len(gradual_transitions):
             self.sb.append({'transition': 'gradual',
                             'start_frame': gradual_transitions[gradual_index][0],
-                            'start_time': ms_to_time(
-                                self.frame_num_to_timestamp(gradual_transitions[gradual_index][0])),
-                            'end_frame': gradual_transitions[gradual_index][1],
-                            'end_time': ms_to_time(
-                                self.frame_num_to_timestamp(gradual_transitions[gradual_index][1]))})
+                            'end_frame': gradual_transitions[gradual_index][1]})
             gradual_index += 1
             if set_progress is not None:
                 set_progress(65 + 35 * (cut_index + gradual_index) / total_transitions, "Finalizing results...")
@@ -387,18 +286,6 @@ class ShotBoundaryDetection:
         # print(self.sb)
         if finish is not None:
             finish()
-
-    def frame_num_to_timestamp(self, frame):
-        # save state of video
-        current_frame_num = self._vid.get(cv2.CAP_PROP_POS_FRAMES)
-
-        self._vid.set(cv2.CAP_PROP_POS_FRAMES, frame)
-        timestamp = self._vid.get(cv2.CAP_PROP_POS_MSEC)
-
-        # return video to first state
-        self._vid.set(cv2.CAP_PROP_POS_FRAMES, current_frame_num)
-
-        return timestamp
 
 def shotcut(filename):
     sbd = ShotBoundaryDetection()

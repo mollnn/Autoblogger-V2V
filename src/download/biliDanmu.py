@@ -1,12 +1,13 @@
+import sys
+sys.path.append("..")
+
 import json
 import re
 import json
 import time
 import threading
 
-import myhtml
-import biliSearch
-
+import network.myhtml as myhtml
 
 def saveDanmuList(list, filename, bid):
     reDanmu = re.compile(
@@ -54,31 +55,13 @@ def getDanmuByBid(queryBid):
 
 
 def saveDanmuByBid(queryBid):
-    saveDanmuList(getDanmuByBid(queryBid), 'outputdanmu/' +
+    saveDanmuList(getDanmuByBid(queryBid), '../../data/danmu/' +
                   queryBid+'.danmu.json', queryBid)
 
 
 def saveDanmuByBids(listBid):
     print(listBid)
     for itemBid in listBid:
-        saveDanmuList(getDanmuByBid(itemBid), 'outputdanmu/' +
+        saveDanmuList(getDanmuByBid(itemBid), '../../data/danmu/' +
                       itemBid+'.danmu.json', itemBid)
     print("Thread finish")
-
-
-if __name__ == "__main__":
-    threadHandles = []
-    timeStart = time.time()
-    for page in range(1, 5):
-        listBid = biliSearch.getBidsBySearch("老番茄", page)
-        listBid = list(set(listBid))
-        # GetDanmuByBids(listBid)
-        threadHandles += [threading.Thread(target=saveDanmuByBids,
-                                           name="Thread "+str(page), args=(listBid,))]
-    for threadHandle in threadHandles:
-        threadHandle.start()
-    print("all start")
-    for threadHandle in threadHandles:
-        threadHandle.join()
-    timeEnd = time.time()
-    print("timeused: ", timeEnd-timeStart)

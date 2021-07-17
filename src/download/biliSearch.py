@@ -1,7 +1,7 @@
 import re
 
 import myhtml
-
+ 
 
 def getBidsBySearch(searchKeyword, page=1):
     urlSearch = "https://search.bilibili.com/all?keyword=" + \
