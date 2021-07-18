@@ -27,7 +27,7 @@ def api_video(name):
 
 @app.route('/poster/<name>/')
 def api_poster(name):
-    return osapi.getBinaryFile("../data/poster/%s.mp4" % name)
+    return osapi.getBinaryFile("../data/poster/%s.jpg" % name)
 
 
 if __name__ == '__main__':
