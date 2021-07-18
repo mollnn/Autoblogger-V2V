@@ -236,8 +236,9 @@ class ShotBoundaryDetection:
 
             if set_progress is not None:
                 set_progress(65, "Finalizing results...")
-
             return cuts, gradual_transitions
+        else:
+            print("algorithm.shotcut.shotcut: Error: Video is not available!")
 
     def detect(self, set_progress=None, finish=None):
 

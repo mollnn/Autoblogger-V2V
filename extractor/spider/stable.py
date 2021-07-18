@@ -184,10 +184,6 @@ def GetAllInfoByBid(vbid):
     return DanmuList, VInfoObj
 
 def solve(vbid,MYSQL_DBNAME='biliextract',MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
-    ans=database.msql.query("biliextract", "select * from Vinfo where bvid='%s'"%vbid)
-    if len(ans)>0: 
-        print("重复！")
-        return
     server = sshtunnel.SSHTunnelForwarder(
         ssh_address_or_host=('131.mollnn.com', 22),  # 指定ssh登录的跳转机的address
         ssh_username='wzc',  # 跳转机的用户
