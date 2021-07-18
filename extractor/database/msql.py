@@ -1,7 +1,7 @@
 import pymysql
 from sshtunnel import SSHTunnelForwarder
  
-def SSHMysql(DB, SQL):
+def SSHMysql(DB, SQL, argu=tuple()):
     server = SSHTunnelForwarder(
         ssh_address_or_host=('131.mollnn.com', 22),  # 指定ssh登录的跳转机的address
         ssh_username='wzc',  # 跳转机的用户
@@ -17,7 +17,8 @@ def SSHMysql(DB, SQL):
         database=DB,  # 需要连接的实例名
         charset='utf8')
     cursor = db.cursor()
-    cursor.execute(SQL.encode('utf8'))  # 执行SQL
+    if argu==tuple(): cursor.execute(SQL.encode('utf8'))  # 执行SQL
+    else: cursor.execute(SQL.encode('utf8'), argu)  # 执行SQL
     data = cursor.fetchall()  # 获取查询结果
     cursor.close()
     db.commit()
@@ -25,8 +26,8 @@ def SSHMysql(DB, SQL):
     server.close()
     return data
 
-def query(DB, SQL):
-    return SSHMysql(DB, SQL)
+def query(DB, SQL, argu=tuple()):
+    return SSHMysql(DB, SQL, argu)
  
 if __name__ == "__main__":
    SQL="SELECT * FROM Danmu;"
