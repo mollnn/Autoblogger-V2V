@@ -42,22 +42,26 @@ def solve(bvid):
 
     print("extractor.naive: Analysing...")
 
+    # Mark begin
+
     density_s = algorithm.danmu.density.calcDanmuDensity(
-        danmu_list, duration, Delta=7)
+        danmu_list, duration, Delta=5)
     density_l = algorithm.danmu.density.calcDanmuDensity(
-        danmu_list, duration, Delta=25)
-    density_p = [density_s[i]/(density_l[i]+1) for i in range(duration)]
+        danmu_list, duration, Delta=15)
+    density_p = [density_s[i]/(density_l[i]+0.1) for i in range(duration)]
     sentiments = algorithm.danmu.sentiments.calcDanmuSentiments(
         danmu_list, duration)
     tans = [density_p[i] * math.sqrt(density_s[i]) *
-            (0.5+math.sqrt(sentiments[i])) for i in range(duration)]
+            (0.5+0.5*math.sqrt(sentiments[i])) for i in range(duration)]
     ans = []
     for i in tans:
         ans += [i]*24
     ans = ans[0:frame_total]
-    ans = scipy.signal.savgol_filter(ans, 119, 3)
+    ans = scipy.signal.savgol_filter(ans, 49, 3)
 
-    plt.plot(ans)
+    # Mark end
+
+    # plt.plot(ans)
 
     for shotcut in shotcut_list:
         if shotcut["transition"] == "cut":
@@ -76,8 +80,8 @@ def solve(bvid):
     thres = algorithm.common.sig.getPropotionPoint(ans, 0.15)
     bans = [(ans[i] > thres) for i in range(frame_total)]
 
-    plt.plot(bans)
-    plt.show()
+    # plt.plot(bans)
+    # plt.show()
 
     res = algorithm.common.sig.makeRanges(bans, 24, 360)
 
