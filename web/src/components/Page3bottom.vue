@@ -1,77 +1,143 @@
 <template>
-<div class = "bottom">
-  <div class="recommendPage">
+  <div class="bottom">
     <swiper :options="swiperOption" ref="mySwiper">
-      <swiper-slide>I'm Slide 1</swiper-slide>
-      <swiper-slide>I'm Slide 2</swiper-slide>
-      <swiper-slide>I'm Slide 3</swiper-slide>
-      <div class="swiper-pagination" slot="pagination"></div>
+      <swiper-slide
+        class="swiper-slide"
+        v-for="(item, index) in collocateContentDtos"
+        :key="index"
+        @click.native="changevideo(index)"
+        :style="{
+          backgroundImage: 'url(' + item + ')',
+          backgroundSize: '100%',
+        }"
+      >
+        <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
+        <div class="bs-swiper-bottom">
+          <!-- <div>{{item.desc}}</div>
+            <div>{{item.date}}</div> -->
+        </div>
+      </swiper-slide>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
   </div>
-</div>
 </template>
 
 <script>
 // 引入插件
+import Bus from "../bus1.js";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.css";
 
 export default {
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+  },
+  methods: {
+    changevideo: function (e) {
+      this.$store.state.vlink = this.$store.state.videolist[e];
+      Bus.$emit("changevideo", this.$store.state.vlink);
+    },
   },
   data() {
     return {
+      collocateContentDtos: [
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+      ],
+
       swiperOption: {
-        loop: true,
-        autoplay: {
-          delay: 3000,
-          stopOnLastSlide: false,
-          disableOnInteraction: false
-        },
-        // 显示分页
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true //允许分页点击跳转
-        },
-        // 设置点击箭头
+        slidesPerView: 7, //一行显示4个
+        spaceBetween: 10, //间隔30
+        freeMode: true,
+        speed: 1000, //滑动速度
         navigation: {
           nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev"
-        }
-      }
+          prevEl: ".swiper-button-prev",
+        },
+
+        // on: {
+        //   click: (e) => {
+        //     this.$store.state.vlink = e;
+        //   },
+        // },
+      },
     };
   },
   computed: {
     swiper() {
-      return this.$refs.mySwiper.swiper;
-    }
+      return this.$refs.mySwiper.$swiper;
+    },
   },
   mounted() {
-    // current swiper instance
-    // 然后你就可以使用当前上下文内的swiper对象去做你想做的事了
-    console.log("this is current swiper instance object", this.swiper);
-    // this.swiper.slideTo(3, 1000, false);
-  }
+    console.log("Current Swiper instance object", this.swiper);
+    this.collocateContentDtos = this.$store.state.posterlist;
+    this.$forceUpdate();
+
+  },
 };
 </script>
 <style scoped >
-.recommendPage .swiper-container{
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  padding: 0 5px;
+}
+.swiper-slide {
+  width: 30%;
+  height: 150px;
   position: relative;
+}
+.bs-swiper-bottom {
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  height: 200px;
-  background: pink;
-}  
-.recommendPage .swiper-container .swiper-slide{
-  width: 100%;
-  line-height: 200px;
-  background: yellowgreen;
-  color: #000;
-  font-size: 16px;
-  text-align: center;
+  height: 20px;
+  background-color: rgba(65, 105, 225, 0.7);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>
 

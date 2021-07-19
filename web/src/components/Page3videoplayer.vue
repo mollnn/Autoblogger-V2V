@@ -6,15 +6,27 @@
       ref="videoPlayer"
       :playsinline="true"
       :options="playerOptions"
+      @ended="onPlayerEnded($event)"
     ></video-player>
   </div>
 </template>
 <script>
+import Bus from "../bus1.js";
 export default {
   computed:{
     vlink(){
       return this.$store.state.vlink
     },
+  },
+  methods: {
+      onPlayerEnded(player) {
+        console.log('player ended!', player);
+        console.log(this.$store.state.index);
+      this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index + 1)%this.$store.state.videolist.length];
+      this.$store.state.index = (this.$store.state.index + 1) % this.$store.state.videolist.length;
+      this.playerOptions.poster = this.$store.state.posterlist[this.$store.state.index];
+      this.$forceUpdate();
+      },
   },
   data() {
     return {
@@ -33,7 +45,7 @@ export default {
             src: this.$store.state.vlink, //url地址
           },
         ],
-        poster: "https://p1.music.126.net/5zs7IvmLv7KahY3BFzUmrg==/109951163635241613.jpg?param=600y500", //你的封面地址
+        poster:this.$store.state.posterlist[this.$store.state.index] , //你的封面地址
         // width: document.documentElement.clientWidth, //播放器宽度
         // height:20,
         // width:10,
@@ -47,6 +59,20 @@ export default {
       },
     };
   },
+  mounted() {
+      Bus.$on("changevideo", (val) => {
+      this.playerOptions.sources[0].src=val;
+      for(var i = 0; i < this.$store.state.videolist.length; i++){
+        if(val == this.$store.state.videolist[i]){
+          this.$store.state.index = i;
+          break;
+        }
+      }
+      console.log(val);
+      this.$forceUpdate();
+    });
+  },
+
 };
 </script>
 <style>

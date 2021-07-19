@@ -9,6 +9,7 @@ export default new Vuex.Store({
     vlink:"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
     objlist : [],
     posterlist:[],
+    videolist:[],
   },
   getters:{
 

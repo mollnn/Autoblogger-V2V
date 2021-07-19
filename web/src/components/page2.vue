@@ -68,6 +68,7 @@ export default {
               "http://131.mollnn.com:5001/video/" + res.data[i].id + "/";
           }
           this.$store.state.posterlist = this.pplist;
+          this.$store.state.videolist = this.kklist;
           console.log(this.$store.state.posterlist);
           document.getElementById("elcol").value = this.pplist;
           this.$forceUpdate();
