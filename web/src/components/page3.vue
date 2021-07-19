@@ -30,7 +30,7 @@ export default {
 <style scoped>
   .videoplayer{
     position: absolute;
-    top: 50px;
+    top: 60px;
     left:250px;
     right:350px;
     bottom:110px;
@@ -46,15 +46,15 @@ export default {
   }
   
   .rightzone{
-    margin-bottom:0;
     position: absolute;
     text-align:center;
     width: 350px;
-    top: 50px;  
+    top: 60px;  
     right: 0px;
+    float:right;
     bottom: 110px; 
     /* overflow-y: auto;  */
-    background-color: #409EFF;
+    background-color: transparent;
   }
   .leftzone {
     position: absolute;
@@ -64,22 +64,20 @@ export default {
     top: 50px; 
     left: 0px;
     bottom: 0px;
-    overflow-y: auto; 
     background-color:transparent;
   }
   
-  /* 主区域 */
   .bottom {
-    margin-bottom:0;
+    flex: 0;
     position: absolute;
     text-align:center;
-    top: 510px;
+    /* top: 495px; */
     left: 0px;
     bottom: 0px;
-    height: 120px;
+    height: 130px;
     right: 0px; 
-    padding: 10px;
-    background-color: #909399;
+    padding: 0px;
+    background-color: transparent;
   }
   </style>
  

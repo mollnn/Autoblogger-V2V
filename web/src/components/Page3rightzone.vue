@@ -7,7 +7,7 @@
           >点击查看详情</el-button
         >
       </div>
-      <div v-for="o in 10" :key="o" class="text item">
+      <div v-for="o in 8" :key="o" class="text item">
         {{ "视频信息条目 " + o }}
       </div>
     </el-card>
@@ -35,5 +35,6 @@
 
 .box-card {
   width: 350px;
+  right:0px;
 }
 </style>

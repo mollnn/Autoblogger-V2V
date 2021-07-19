@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Page1background/>
     <checkbox1 class="box" /><br /><br /><br /><br /><br />
     <checkbox2 class="box" />
     <el-button type="primary" round @click="gotolink" class="btn"

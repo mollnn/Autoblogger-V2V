@@ -7,10 +7,11 @@
         :key="index"
         @click.native="changevideo(index)"
         :style="{
-          backgroundImage: 'url(' + item + ')',
+          backgroundImage:'url('+' http://a52.photo.store.qq.com/http_imgload.cgi?/rurl4_s=5eb71a2038ad3a9a308277e2331794cd3e009c7bb1e5016be23328aef195736155dd067a475ec591b8b7c7877bfdd46c805c603d393adf5deedefc6a7efbec3e73649a650e0f522a6b7121ae10b1ed1c61646f73&;a=52&b=50 '+')',
           backgroundSize: '100%',
         }"
       >
+      <img :src= "item" width="100%">
         <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
         <div class="bs-swiper-bottom">
           <!-- <div>{{item.desc}}</div>
@@ -551,7 +552,7 @@ export default {
       swiperOption: {
         initialSlide:12,
         slidesPerView: 7, //一行显示4个
-        spaceBetween: 10, //间隔30
+        spaceBetween: 30, //间隔30
         freeMode: true,
         speed: 1000, //滑动速度
         navigation: {
@@ -588,11 +589,11 @@ export default {
 .swiper-container {
   width: 100%;
   height: 100%;
-  padding: 0 5px;
+  padding: 10px;
 }
 .swiper-slide {
   width: 30%;
-  height: 150px;
+  height: 180px;
   position: relative;
 }
 .bs-swiper-bottom {

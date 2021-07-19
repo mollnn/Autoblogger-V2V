@@ -20,6 +20,7 @@
           @click.native="gotolink(index)"
         >
           <img :src="o" class="image" />
+          
         </el-card>
       </el-col>
       <br />
