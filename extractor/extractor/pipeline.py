@@ -4,6 +4,7 @@ sys.path.append("..")
 import algorithm.shotcut.shotcut
 import database.msql
 import control.cutidgen
+import control.jsonconfig
 import spider.stable
 import extractor.naive
 import sys
@@ -18,7 +19,7 @@ import os.path
 # ---------------------
 
 def extract(bvid, src_type, clip_type):
-    if len(database.msql.query("biliextract", """
+    if len(database.msql.query(control.jsonconfig.readConfig("dbname"), """
         select * from extraction where bvid='{bvid}' and src_type='{src_type}' and clip_type='{clip_type}'
         """.format(bvid=bvid, src_type=src_type, clip_type=clip_type))) > 0:
         print("extractor.main.extract: Already extracted with same bvid, src_type and clip_type. Terminated.")
@@ -30,7 +31,7 @@ def extract(bvid, src_type, clip_type):
 
 
 def shotCut(bvid):
-    if len(database.msql.query("biliextract", """
+    if len(database.msql.query(control.jsonconfig.readConfig("dbname"), """
         select * from shotcut where bvid='{bvid}'
         """.format(bvid=bvid))) > 0:
         print("extractor.main.doShotCut: Already cut. Shotcut process terminated.")
@@ -41,14 +42,14 @@ def shotCut(bvid):
     for item in ans:
         cutid = control.cutidgen.generateId()
         if item["transition"] == "gradual":
-            database.msql.query("biliextract", """
+            database.msql.query(control.jsonconfig.readConfig("dbname"), """
                 insert into shotcut 
                 (bvid, cutid, transition, start_frame, end_frame)
                 values
                 ('%s','%s','%s','%d','%d')
                 """ % (bvid, cutid, item["transition"], item["start_frame"], item["end_frame"]))
         else:
-            database.msql.query("biliextract", """
+            database.msql.query(control.jsonconfig.readConfig("dbname"), """
                 insert into shotcut 
                 (bvid, cutid, transition, cut_frame)
                 values
@@ -60,7 +61,7 @@ def shotCut(bvid):
 
 def downloadInfo(bvid):
     ans = database.msql.query(
-        "biliextract", "select * from Vinfo where bvid='%s'" % bvid)
+        control.jsonconfig.readConfig("dbname"), "select * from Vinfo where bvid='%s'" % bvid)
     if len(ans) > 0:
         print("extractor.main.downloadInfo: Info already exists. Terminated.")
         return

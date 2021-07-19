@@ -2,6 +2,7 @@ import os
 import database.msql
 import media.editor
 import control.xvidgen
+import control.jsonconfig
 import algorithm.shotcut.shotcut
 import algorithm.common.sig
 import algorithm.danmu.sentiments
@@ -35,7 +36,7 @@ def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
     for i in ans_per_sec:
         ans += [i]*24
     ans = ans[0:frame_total]
-    ans = scipy.signal.savgol_filter(ans, 49, 3)
+    ans = scipy.signal.savgol_filter(ans, 97, 3)
     return ans
 
 
@@ -48,11 +49,11 @@ def solve(bvid):
 
     print("extractor.naive: Read danmu and shotcut from database... ", bvid)
     cid = database.msql.query(
-        "biliextract", "select cid from Vinfo where bvid='%s'" % bvid)[0][0]
+        control.jsonconfig.readConfig("dbname"), "select cid from Vinfo where bvid='%s'" % bvid)[0][0]
     danmu_list = database.msql.query(
-        "biliextract", "select * from Danmu where cid='%s'" % cid, isDict=True)
+        control.jsonconfig.readConfig("dbname"), "select * from Danmu where cid='%s'" % cid, isDict=True)
     shotcut_list = database.msql.query(
-        "biliextract", "select * from shotcut where bvid='%s'" % bvid, isDict=True)
+        control.jsonconfig.readConfig("dbname"), "select * from shotcut where bvid='%s'" % bvid, isDict=True)
 
     print("extractor.naive: Analysing...")
 
@@ -91,7 +92,7 @@ def solve(bvid):
         media.editor.edit([{"filename": "../../data/media/%s.mp4" % bvid, "start": extraction_obj["frame_begin"]/frame_rate,
                           "duration":(extraction_obj["frame_end"]-extraction_obj["frame_begin"])/frame_rate}], "../../data/output/%s.mp4" % xvid, quiet=True)
         os.system("ffmpeg -i ../../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../../data/poster/%s.jpg  -hide_banner -loglevel error" % (xvid, xvid))
-        database.msql.query("biliextract", "INSERT INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type) VALUES ('%s','%s',%d,%d,%d,%d);" % (
+        database.msql.query(control.jsonconfig.readConfig("dbname"), "INSERT INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type) VALUES ('%s','%s',%d,%d,%d,%d);" % (
             extraction_obj["id"], extraction_obj["bvid"], extraction_obj["frame_begin"], extraction_obj["frame_end"], extraction_obj["src_type"], extraction_obj["clip_type"]))
 
     print("extractor.naive: OK!")
