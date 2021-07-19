@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
-import control.jsonconfig
 import osapi
 import msql
 
@@ -18,7 +17,7 @@ def api_index():
 
 @app.route('/list/<int:src_type>/<int:clip_type>/')
 def api_list(src_type, clip_type):
-    sql_result = msql.query(control.jsonconfig.readConfig("dbname"),"select id, bvid from extraction where src_type=%d and clip_type=%d;"%(src_type,clip_type), isDict=True)
+    sql_result = msql.query("biliextract","select id, bvid from extraction where src_type=%d and clip_type=%d;"%(src_type,clip_type), isDict=True)
     return jsonify(sql_result)
 
 
