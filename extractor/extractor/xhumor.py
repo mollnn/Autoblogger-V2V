@@ -14,10 +14,8 @@ import ffmpeg
 import json
 import sys
 from matplotlib import pyplot as plt
-
 from cv2 import data
 sys.path.append("..")
-# from matplotlib import pyplot as plt
 
 
 def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
@@ -26,6 +24,10 @@ def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
         "db_banime"), "select humor from framelabel where bvid='%s' order by frame;" % bvid)
     ans = [i[0]*10 for i in sql_ans]
     ans += [0]*(frame_total-len(ans))
+    ans = scipy.signal.savgol_filter(ans, 73, 3)
+    ans = [max(i,0) for i in ans]
+    ans = scipy.signal.savgol_filter(ans, 73, 3)
+    ans = [max(i,0) for i in ans]
     return ans
 
 
@@ -49,27 +51,27 @@ def solve(bvid):
     mark_original = mark(bvid, duration, frame_total, danmu_list, shotcut_list)
     mark_final = mark_original
 
-    # for shotcut in shotcut_list:
-    #     if shotcut["transition"] == "cut":
-    #         fid = shotcut["cut_frame"]
-    #         if fid < frame_total:
-    #             mark_final[fid] = 0
-    #         if fid > 0:
-    #             mark_final[fid-1] = 0
-    #     else:
-    #         frame_id_l = shotcut["start_frame"]
-    #         frame_id_r = shotcut["end_frame"]
-    #         for i in range(frame_id_l-1, frame_id_r+1):
-    #             if i >= 0 and i < frame_total:
-    #                 mark_final[i] = 0
+    for shotcut in shotcut_list:
+        if shotcut["transition"] == "cut":
+            fid = shotcut["cut_frame"]
+            if fid < frame_total:
+                mark_final[fid] = 0
+            if fid > 0:
+                mark_final[fid-1] = 0
+        else:
+            frame_id_l = shotcut["start_frame"]
+            frame_id_r = shotcut["end_frame"]
+            for i in range(frame_id_l-1, frame_id_r+1):
+                if i >= 0 and i < frame_total:
+                    mark_final[i] = 0
 
-    threshold = algorithm.common.sig.getPropotionPoint(mark_final, 0.25)
+    threshold = algorithm.common.sig.getPropotionPoint(mark_final, 0.2)
     is_frame_good = [(mark_final[i] > threshold) for i in range(frame_total)]
 
     # Visualization
-    plt.plot(mark_original)
-    plt.plot(is_frame_good)
-    plt.show()
+    # plt.plot(mark_original)
+    # plt.plot(is_frame_good)
+    # plt.show()
 
     result = algorithm.common.sig.makeRanges(is_frame_good, 72, 360)
 
