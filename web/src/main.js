@@ -17,7 +17,7 @@ Vue.use(Vuex)
 import store from './store'
 // import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'swiper/css/swiper.css'
-// Vue.use(VueAwesomeSwiper);
+// Vue.use(VueAwesomeSwiper)
 
 const Bus = new Vue()
 new Vue({
