@@ -1,6 +1,8 @@
 import os.path
 import download.biliMedia
 import extractor.naive
+import extractor.xlove
+import extractor.xshock
 import extractor.xhumor
 import spider.stable
 import control.jsonconfig
@@ -29,7 +31,11 @@ def extract(bvid, src_type, clip_type):
         return
     if src_type == 0 and clip_type == 0:
         extractor.naive.solve(bvid)
-    elif src_type==0 and clip_type == 1:
+    elif src_type == 0 and clip_type == 1:
+        extractor.xlove.solve(bvid)
+    elif src_type == 0 and clip_type == 2:
+        extractor.xshock.solve(bvid)
+    elif src_type == 0 and clip_type == 3:
         extractor.xhumor.solve(bvid)
     else:
         print("Unsupported Type Parameters!")

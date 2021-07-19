@@ -21,7 +21,7 @@ sys.path.append("..")
 def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
     # Output: ans: The mark of each frame. len(ans)==frame_total
     sql_ans = database.msql.query(control.jsonconfig.readConfig(
-        "db_banime"), "select humor from framelabel where bvid='%s' order by frame;" % bvid)
+        "db_banime"), "select love from framelabel where bvid='%s' order by frame;" % bvid)
     ans = [i[0]*10 for i in sql_ans]
     ans += [0]*(frame_total-len(ans))
     ans = scipy.signal.savgol_filter(ans, 73, 3)
@@ -79,7 +79,7 @@ def solve(bvid):
     for i in result:
         xvid = control.xvidgen.generateId()
         extraction_obj = {"id": xvid, "bvid": bvid,
-                          "frame_begin": i[0], "frame_end": i[1], "src_type": 0, "clip_type": 3}
+                          "frame_begin": i[0], "frame_end": i[1], "src_type": 0, "clip_type": 1}
         media.editor.edit([{"filename": "../../data/media/%s.mp4" % bvid, "start": extraction_obj["frame_begin"]/frame_rate,
                           "duration":(extraction_obj["frame_end"]-extraction_obj["frame_begin"])/frame_rate}], "../../data/output/%s.mp4" % xvid, quiet=True)
         os.system("ffmpeg -i ../../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../../data/poster/%s.jpg  -hide_banner -loglevel error" % (xvid, xvid))

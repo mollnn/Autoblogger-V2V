@@ -78,9 +78,9 @@ def solve(bvid):
     is_frame_good = [(mark_final[i] > threshold) for i in range(frame_total)]
 
     # Visualization
-    plt.plot(mark_original)
-    plt.plot(is_frame_good)
-    plt.show()
+    # plt.plot(mark_original)
+    # plt.plot(is_frame_good)
+    # plt.show()
 
     result = algorithm.common.sig.makeRanges(is_frame_good, 72, 360)
 
