@@ -8,6 +8,7 @@ import requests
 import pymysql
 import sys
 import database.msql
+import control.jsonconfig
 import sshtunnel
 sys.path.append("..")
 
@@ -183,7 +184,7 @@ def GetAllInfoByBid(vbid):
 
     return DanmuList, VInfoObj
 
-def solve(vbid,MYSQL_DBNAME='biliextract',MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
+def solve(vbid,MYSQL_DBNAME=control.jsonconfig.readConfig("dbname"),MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
     server = sshtunnel.SSHTunnelForwarder(
         ssh_address_or_host=('131.mollnn.com', 22),  # 指定ssh登录的跳转机的address
         ssh_username='wzc',  # 跳转机的用户
