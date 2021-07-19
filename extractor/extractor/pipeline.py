@@ -70,5 +70,6 @@ def downloadInfo(bvid):
 def downloadMedia(bvid):
     if os.path.isfile('../../data/media/'+bvid+'.mp4'):
         print("extractor.main.downloadMedia: Media already exists. Terminated.")
+        return
     download.biliMedia.getMP4ByBid(
         bvid, ffmpeg_config="-c:v libx264 -c:a aac -vf scale=320:180 -r 24 -strict experimental -threads 4 -preset ultrafast")
