@@ -6,17 +6,14 @@
         v-for="(item, index) in collocateContentDtos"
         :key="index"
         @click.native="changevideo(index)"
-        :style="{
-          backgroundImage:'url('+' http://a52.photo.store.qq.com/http_imgload.cgi?/rurl4_s=5eb71a2038ad3a9a308277e2331794cd3e009c7bb1e5016be23328aef195736155dd067a475ec591b8b7c7877bfdd46c805c603d393adf5deedefc6a7efbec3e73649a650e0f522a6b7121ae10b1ed1c61646f73&;a=52&b=50 '+')',
-          backgroundSize: '100%',
-        }"
+        
       >
       <img :src= "item" width="100%">
         <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
-        <div class="bs-swiper-bottom">
-          <!-- <div>{{item.desc}}</div>
-            <div>{{item.date}}</div> -->
-        </div>
+        <!-- <div class="bs-swiper-bottom">
+          <div>{{item.desc}}</div>
+            <div>{{item.date}}</div>
+        </div> -->
       </swiper-slide>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
@@ -589,18 +586,18 @@ export default {
 .swiper-container {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 0px;
 }
 .swiper-slide {
   width: 30%;
-  height: 180px;
+  height: 100%;
   position: relative;
 }
 .bs-swiper-bottom {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 20px;
+  height: 0px;
   background-color: rgba(65, 105, 225, 0.7);
   color: #fff;
   font-size: 10px;

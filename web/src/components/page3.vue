@@ -1,18 +1,27 @@
 <template>
-  <div>
+  <div class="xx" style="height:100%">
+<el-container id="hh" style="height:100%">
+  <el-header style="height:5%">
     <Page3header/>
-    <Page3videoplayer/>
-    <Page3rightzone/>
-    <Page3leftzone/>
-    <Page3bottom/>
+  </el-header>
+  <el-container  style="height:70%">
+      <el-main>
+        <Page3videoplayer/>
+      </el-main>
+    <el-aside width="40%">
+      <Page3rightzone/>
+    </el-aside>
+  </el-container>
+      <div>
+        <Page3bottom/>
+      </div>
+</el-container>
   </div>
 </template>
-
 <script>
 import Page3header from './Page3header.vue'
 import Page3videoplayer from './Page3videoplayer.vue'
 import Page3rightzone from './Page3rightzone.vue'
-import Page3leftzone from './Page3leftzone.vue'
 import Page3bottom from './Page3bottom.vue'
 export default {
   name: "HelloWorld",
@@ -20,64 +29,57 @@ export default {
     Page3header,
     Page3videoplayer,
     Page3rightzone,
-    Page3leftzone,
     Page3bottom
   }
 };
 
 </script>
+<style>
+  .el-header{
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+  
+  .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+  }
+  
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+  }
+  
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
 
-<style scoped>
-  .videoplayer{
-    position: absolute;
-    top: 60px;
-    left:250px;
-    right:350px;
-    bottom:110px;
-  }
-  .header {
-    margin-bottom:0;
-    position: absolute;
-    line-height: 150px;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    background-color: transparent;
-  }
-  
-  .rightzone{
-    position: absolute;
-    text-align:center;
-    width: 350px;
-    top: 60px;  
-    right: 0px;
-    float:right;
-    bottom: 110px; 
-    /* overflow-y: auto;  */
-    background-color: transparent;
-  }
-  .leftzone {
-    position: absolute;
-    margin-bottom:0;
-    text-align:center;
-    width: 100px;
-    top: 50px; 
-    left: 0px;
-    bottom: 0px;
-    background-color:transparent;
-  }
-  
-  .bottom {
-    flex: 0;
-    position: absolute;
-    text-align:center;
-    /* top: 495px; */
-    left: 0px;
-    bottom: 0px;
-    height: 130px;
-    right: 0px; 
+  html,body,#app,.xx,.el-container {
     padding: 0px;
-    background-color: transparent;
+    margin: 0px;
+    height: 100%;
   }
-  </style>
- 
+  
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
+  
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
+
+</style>
