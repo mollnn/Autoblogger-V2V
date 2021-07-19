@@ -4,10 +4,11 @@ import extractor.pipeline
 import os
 import database.msql
 
-sql_res = database.msql.query("banime","select distinct bvid in Vinfo")
+sql_res = database.msql.query("banime","select distinct bvid from Vinfo;")
 for i in sql_res:
     bvid = i[0]
     filename = "/home/wzc/mtmp/%s.mp4"%bvid
+    if os.path.isfile(filename)==False: continue
     extractor.pipeline.importMedia(bvid, filename)
     extractor.pipeline.downloadInfo(bvid)
     extractor.pipeline.shotCut(bvid)
