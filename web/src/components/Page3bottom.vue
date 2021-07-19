@@ -1,45 +1,611 @@
 <template>
   <div class="bottom">
-    <div>{{this.$store.state.posterlist.length}}</div>
-    <hooper itemsToShow="7"
-    infiniteScroll="true"
-    mouseDrag = "true"
-    initialSlide = this.$store.state.index
-    wheelControl = "true"
-    hoverPause = "true"
-    :v-for="(o,index) in this.$store.state.posterlist"
-    >
-      <slide> <img :src="o" > </slide>
-    </hooper>
-    <hooper-navigation slot="hooper-addons"></hooper-navigation>
+    <swiper :options="swiperOption" ref="mySwiper">
+      <swiper-slide
+        class="swiper-slide"
+        v-for="(item, index) in collocateContentDtos"
+        :key="index"
+        @click.native="changevideo(index)"
+        :style="{
+          backgroundImage: 'url(' + item + ')',
+          backgroundSize: '100%',
+        }"
+      >
+        <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
+        <div class="bs-swiper-bottom">
+          <!-- <div>{{item.desc}}</div>
+            <div>{{item.date}}</div> -->
+        </div>
+      </swiper-slide>
+      <div class="swiper-button-prev" slot="button-prev"></div>
+      <div class="swiper-button-next" slot="button-next"></div>
+    </swiper>
   </div>
 </template>
 
-
 <script>
-import {
-  Hooper,
-  Slide,
-  Navigation as HooperNavigation
-  } from 'hooper';
-import "hooper/dist/hooper.css";
+// 引入插件
+import Bus from "../bus1.js";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.css";
 
 export default {
-  name: "App",
   components: {
-    Hooper,
-    Slide,
-    HooperNavigation
+    swiper,
+    swiperSlide,
+  },
+  methods: {
+    changevideo: function (e) {
+      this.$store.state.vlink = this.$store.state.videolist[e];
+      Bus.$emit("changevideo", this.$store.state.vlink);
+      // this.swiper.slideTo(this.$store.state.index + 1, 1000, false)
+      this.swiper.slideTo(this.$store.state.index - 3);
+      this.$forceUpdate();
+    },
+  },
+  data() {
+    return {
+      collocateContentDtos: [
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片1",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片2",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片3",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-2.jpg",
+          desc: "图片4",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片5",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-4.jpg",
+          desc: "图片6",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片7",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片8",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-1.jpg",
+          desc: "图片9",
+          date: "2020-01-05",
+        },
+        {
+          image: "https://img.yzcdn.cn/vant/apple-3.jpg",
+          desc: "图片10",
+          date: "2020-01-05",
+        },
+      ],
+
+      swiperOption: {
+        initialSlide:12,
+        slidesPerView: 7, //一行显示4个
+        spaceBetween: 10, //间隔30
+        freeMode: true,
+        speed: 1000, //滑动速度
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+
+        // on: {
+        //   click: (e) => {
+        //     this.$store.state.vlink = e;
+        //   },
+        // },
+      },
+    };
+  },
+  computed: {
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    },
   },
   mounted() {
-    
+    console.log("Current this instance object", this);
+    console.log("Current Swiper instance object", this.swiper);
+    this.collocateContentDtos = this.$store.state.posterlist;
     this.$forceUpdate();
+    this.swiper.slideTo(this.$store.state.index - 3);
+      Bus.$on("changethebottom", (val) => {
+        this.swiper.slideTo(val - 3, 500);
+      });
   },
 };
 </script>
-<style>
-  img{
-    width:150px;
-    height: 100px;
-  }
+<style scoped >
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  padding: 0 5px;
+}
+.swiper-slide {
+  width: 30%;
+  height: 150px;
+  position: relative;
+}
+.bs-swiper-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background-color: rgba(65, 105, 225, 0.7);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 </style>
+
