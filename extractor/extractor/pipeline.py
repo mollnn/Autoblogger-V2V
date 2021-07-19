@@ -1,15 +1,15 @@
+import os.path
+import download.biliMedia
+import extractor.naive
+import spider.stable
+import control.jsonconfig
+import control.cutidgen
+import database.msql
+import algorithm.shotcut.shotcut
+import media.importer
 import sys
 sys.path.append("..")
 
-import algorithm.shotcut.shotcut
-import database.msql
-import control.cutidgen
-import control.jsonconfig
-import spider.stable
-import extractor.naive
-import sys
-import download.biliMedia
-import os.path
 
 # --- Function List ---
 # def downloadMedia(bvid):
@@ -18,7 +18,9 @@ import os.path
 # def extract(bvid, src_type, clip_type):
 # ---------------------
 
+
 def extract(bvid, src_type, clip_type):
+    print("extractor.main.extract: Hello!")
     if len(database.msql.query(control.jsonconfig.readConfig("dbname"), """
         select * from extraction where bvid='{bvid}' and src_type='{src_type}' and clip_type='{clip_type}'
         """.format(bvid=bvid, src_type=src_type, clip_type=clip_type))) > 0:
@@ -31,6 +33,7 @@ def extract(bvid, src_type, clip_type):
 
 
 def shotCut(bvid):
+    print("extractor.main.shotCut: Hello!")
     if len(database.msql.query(control.jsonconfig.readConfig("dbname"), """
         select * from shotcut where bvid='{bvid}'
         """.format(bvid=bvid))) > 0:
@@ -60,6 +63,7 @@ def shotCut(bvid):
 
 
 def downloadInfo(bvid):
+    print("extractor.main.downloadInfo: Hello!")
     ans = database.msql.query(
         control.jsonconfig.readConfig("dbname"), "select * from Vinfo where bvid='%s'" % bvid)
     if len(ans) > 0:
@@ -69,8 +73,20 @@ def downloadInfo(bvid):
 
 
 def downloadMedia(bvid):
+    print("extractor.main.downloadMedia: Hello!")
     if os.path.isfile('../../data/media/'+bvid+'.mp4'):
         print("extractor.main.downloadMedia: Media already exists. Terminated.")
         return
     download.biliMedia.getMP4ByBid(
         bvid, ffmpeg_config="-c:v libx264 -c:a aac -vf scale=320:180 -r 24 -strict experimental -threads 4 -preset ultrafast")
+
+
+def importMedia(bvid, filename):
+    print("extractor.main.importMedia: Hello!")
+    if os.path.isfile('../../data/media/'+bvid+'.mp4'):
+        print("extractor.main.importMedia: Media already exists. Terminated.")
+        return
+    if os.path.isfile(filename) == False:
+        print("extractor.main.importMedia: Source media invalid. Terminated.")
+    media.importer.importMP4(
+        bvid, filename, ffmpeg_config="-c:v libx264 -c:a aac -vf scale=320:180 -r 24 -strict experimental -threads 4 -preset ultrafast")
