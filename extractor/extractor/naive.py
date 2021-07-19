@@ -74,7 +74,7 @@ def solve(bvid):
                 if i >= 0 and i < frame_total:
                     mark_final[i] = 0
 
-    threshold = algorithm.common.sig.getPropotionPoint(mark_final, 0.15)
+    threshold = algorithm.common.sig.getPropotionPoint(mark_final, 0.1)
     is_frame_good = [(mark_final[i] > threshold) for i in range(frame_total)]
 
     # Visualization
