@@ -181,7 +181,6 @@ def InsertDanmu(data,cursor,conn):
 def GetAllInfoByBid(vbid):
     DanmuList = GetDanmuByBid(vbid)
     VInfoObj, oid = GetVInfoByBid(vbid)
-
     return DanmuList, VInfoObj
 
 def solve(vbid,MYSQL_DBNAME=control.jsonconfig.readConfig("dbname"),MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
@@ -199,7 +198,6 @@ def solve(vbid,MYSQL_DBNAME=control.jsonconfig.readConfig("dbname"),MYSQL_HOST='
         passwd="123456",
         database=MYSQL_DBNAME,  # 需要连接的实例名
         charset='utf8')
-    
     cursor = conn.cursor()
     DanmuList,VInfoObj=GetAllInfoByBid(vbid)
     InsertVInfo(VInfoObj,cursor,conn)
