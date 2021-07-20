@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append("..")
 import database.msql
 import media.editor
 import control.xvidgen
@@ -12,10 +14,8 @@ import numpy as np
 import math
 import ffmpeg
 import json
-import sys
 from matplotlib import pyplot as plt
 from cv2 import data
-sys.path.append("..")
 
 
 def mark(bvid, duration, frame_total, danmu_list, shotcut_list):

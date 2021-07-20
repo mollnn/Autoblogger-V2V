@@ -58,14 +58,14 @@ def shotCut(bvid):
                 insert into shotcut 
                 (bvid, cutid, transition, start_frame, end_frame)
                 values
-                ('%s','%s','%s','%d','%d')
+                ('%s','%s','%s',%d,%d)
                 """ % (bvid, cutid, item["transition"], item["start_frame"], item["end_frame"]))
         else:
             database.msql.query(control.jsonconfig.readConfig("dbname"), """
                 insert into shotcut 
                 (bvid, cutid, transition, cut_frame)
                 values
-                ('%s','%s','%s','%d')
+                ('%s','%s','%s',%d)
                 """ % (bvid, cutid, item["transition"], item["cut_frame"]))
 
     print("extractor.main.doShotCut: Finish all SQL Writing.")

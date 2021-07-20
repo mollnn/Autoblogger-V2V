@@ -34,4 +34,4 @@ def getMP4ByBid(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental
 
 if __name__ == "__main__":  
     print("ok")
-    getMP4ByBid("BV1Uv411v7mM")
+    getMP4ByBid("BV1BA411q7oy")
