@@ -30,6 +30,7 @@ def SSHMysql(DB, SQL, isDict=False):
             cursor.execute(SQL.encode('utf8')) 
             data = cursor.fetchall()
             cursor.close()
+            db.commit()
             db.close()
             server.close()
             break

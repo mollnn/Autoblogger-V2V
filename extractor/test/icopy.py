@@ -8,7 +8,7 @@ sql_res = database.msql.query("banime","select distinct bvid from Vinfo")
 for i in sql_res:
     bvid = i[0]
     filename = "/home/wzc/mtmp/%s.mp4"%bvid
-    if os.path.isfile('../../data/media/'+bvid+'.mp4'):
+    if os.path.isfile("/home/wzc/mtmp/%s.mp4"%bvid):
         print("INVALID INPUT FILE.")
         continue
     extractor.pipeline.importMedia(bvid, filename)
