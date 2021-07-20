@@ -565,8 +565,8 @@ export default {
         // freeMode: true,
         speed: 1000, //滑动速度
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-pre",
+          nextEl: ".swiper-button-pre",
+          prevEl: ".swiper-button-next",
         },
         autoHeight: true,
         // on: {

@@ -45,14 +45,14 @@ export default {
 </script>
 <style>
 .el-header {
-  background-color: transparent;
+  background-color: #333;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
 
 .el-footer {
-  background-color: transparent;
+  background-color: #333;
   color: #333;
   text-align: center;
   line-height: 60px;
@@ -60,14 +60,14 @@ export default {
 }
 
 .el-aside {
-  background-color: transparent;
+  background-color: #282828;
   color: #333;
   text-align: center;
   line-height: 200px;
 }
 
 .el-main {
-  background-color: transparent;
+  background-color: #222;
   color: #333;
   text-align: center;
   line-height: 160px;

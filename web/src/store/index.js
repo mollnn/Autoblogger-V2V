@@ -10,6 +10,8 @@ export default new Vuex.Store({
     objlist : [],
     posterlist:[],
     videolist:[],
+    value3:'',
+    value4:'',
   },
   getters:{
 

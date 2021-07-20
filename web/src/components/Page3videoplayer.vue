@@ -49,7 +49,7 @@ export default {
             src: this.$store.state.vlink, //url地址
           },
         ],
-        poster:this.$store.state.posterlist[this.$store.state.index] , //你的封面地址
+        poster:this.$store.state.posterlist[this.$store.state.videolist.length-1-this.$store.state.index] , //你的封面地址
         // width: document.documentElement.clientWidth, //播放器宽度
         // height:20,
         // width:10,
