@@ -25,8 +25,8 @@ export default {
         
         console.log('player ended!', player);
         console.log(this.$store.state.index);
-        this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index + 1)%this.$store.state.videolist.length];
-        this.$store.state.index = (this.$store.state.index + 1) % this.$store.state.videolist.length;
+        this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index - 1 + this.$store.state.videolist.length)%this.$store.state.videolist.length];
+        this.$store.state.index = (this.$store.state.index - 1 + this.$store.state.videolist.length) % this.$store.state.videolist.length;
         this.playerOptions.poster = this.$store.state.posterlist[this.$store.state.index];
         this.$forceUpdate();
         Bus.$emit("changethebottom", this.$store.state.index);

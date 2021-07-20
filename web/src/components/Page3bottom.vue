@@ -6,9 +6,8 @@
         v-for="(item, index) in collocateContentDtos"
         :key="index"
         @click.native="changevideo(index)"
-        
       >
-      <img :src= "item" width="100%">
+        <img :src="item" width="100%" />
         <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
         <!-- <div class="bs-swiper-bottom">
           <div>{{item.desc}}</div>
@@ -547,26 +546,29 @@ export default {
       ],
 
       swiperOption: {
-        effect : 'coverflow',
-          coverflowEffect: {
-    rotate: -3,
-    stretch: 330,
-    depth: 300,
-    modifier: 1,
-    slideShadows : true
-  },
+        
+        effect: "coverflow",
+        coverflowEffect: {
+          rotate: -3,
+          stretch: 330,
+          depth: 300,
+          modifier: 1,
+          reverseDirection: true,
+          mousewheel: true,
+          slideShadows: true,
+        },
 
-  centeredSlides: true,
-        initialSlide:12,
+        centeredSlides: true,
+        initialSlide: 12,
         slidesPerView: 7, //一行显示4个
         spaceBetween: 30, //间隔30
-        freeMode: true,
+        // freeMode: true,
         speed: 1000, //滑动速度
         navigation: {
           nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
+          prevEl: ".swiper-button-pre",
         },
-        autoHeight:true,
+        autoHeight: true,
         // on: {
         //   click: (e) => {
         //     this.$store.state.vlink = e;
@@ -583,12 +585,14 @@ export default {
   mounted() {
     console.log("Current this instance object", this);
     console.log("Current Swiper instance object", this.swiper);
-    this.collocateContentDtos = this.$store.state.posterlist;
+    this.collocateContentDtos = this.$store.state.posterlist.reverse();
+    this.$store.state.videolist= this.$store.state.videolist.reverse();
+    // this.collocateContentDtos = this.$store.state.posterlist;
     this.$forceUpdate();
     this.swiper.slideTo(this.$store.state.index - 0);
-      Bus.$on("changethebottom", (val) => {
-        this.swiper.slideTo(val - 0, 500);
-      });
+    Bus.$on("changethebottom", (val) => {
+      this.swiper.slideTo(val - 0, 500);
+    });
   },
 };
 </script>
