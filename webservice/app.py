@@ -19,7 +19,7 @@ def api_index():
 
 @app.route('/list/<int:src_type>/<int:clip_type>/')
 def api_list(src_type, clip_type):
-    sql_result = msql.query("biliextract", "select id, bvid from extraction where src_type=%d and clip_type=%d;" % (
+    sql_result = msql.query("biliextract", "select id, bvid from extraction where src_type=%d and clip_type=%d order by rand();" % (
         src_type, clip_type), isDict=True)
     return jsonify(sql_result)
 
