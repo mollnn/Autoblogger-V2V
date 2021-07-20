@@ -556,7 +556,7 @@ export default {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         },
-
+        autoHeight:true,
         // on: {
         //   click: (e) => {
         //     this.$store.state.vlink = e;

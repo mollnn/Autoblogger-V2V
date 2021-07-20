@@ -1,5 +1,8 @@
 <template>
   <div>
+    <transition name="fade">
+      <Loading v-if="isLoading"></Loading>
+    </transition>
     <el-row
       ><el-button type="primary" class="button" @click="goback"
         >返回</el-button
@@ -20,7 +23,6 @@
           @click.native="gotolink(index)"
         >
           <img :src="o" class="image" />
-          
         </el-card>
       </el-col>
       <br />
@@ -29,13 +31,16 @@
 </template>
 <script>
 import Bus from "../bus1.js";
-var tempuse = [1,1];
+import Loading from "@/components/loading";
+var tempuse = [1, 1];
 export default {
+  components: { Loading },
   data() {
     return {
       list: [],
-      pplist: ["加载中..."],
-      kklist:[],
+      pplist: ["."],
+      kklist: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -65,7 +70,7 @@ export default {
           for (var i = 0; i < res.data.length; ++i) {
             this.pplist[i] =
               "http://131.mollnn.com:5001/poster/" + res.data[i].id + "/";
-            this.kklist[i] = 
+            this.kklist[i] =
               "http://131.mollnn.com:5001/video/" + res.data[i].id + "/";
           }
           this.$store.state.posterlist = this.pplist;
@@ -73,19 +78,27 @@ export default {
           console.log(this.$store.state.posterlist);
           document.getElementById("elcol").value = this.pplist;
           this.$forceUpdate();
+          this.isLoading = false;
         });
     },
   },
 
   mounted() {
-    
-        // this.draw();
+    // this.draw();
     Bus.$on("change", (val) => {
       tempuse = val;
       console.log("fuck me");
+      // setTimeout(function () {
+      //   this.isLoading = false;
+      //   this.$forceUpdate();
+      // }, 2000);
       this.draw();
+      
     });
-
+    // setTimeout(function () {
+    //   this.isLoading = false;
+    //   this.$forceUpdate();
+    // }, 2000);
   },
 };
 </script>
