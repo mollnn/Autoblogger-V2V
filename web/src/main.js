@@ -9,7 +9,7 @@ import VueResource from 'vue-resource'
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
 Vue.use(VideoPlayer)
-Vue.use( VueSplide );
+Vue.use(VueSplide);
 Vue.use(ElementUI) //使用elementUI
 Vue.use(VueResource)
 import Vuex from 'vuex'
@@ -18,7 +18,8 @@ import store from './store'
 // import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'swiper/css/swiper.css'
 // Vue.use(VueAwesomeSwiper)
-
+import VideoBackground from 'vue-responsive-video-background-player'
+Vue.component('video-background', VideoBackground);
 const Bus = new Vue()
 new Vue({
   router,
