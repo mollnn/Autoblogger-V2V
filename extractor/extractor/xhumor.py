@@ -1,4 +1,4 @@
-import os
+import sys
 sys.path.append("..")
 import database.msql
 import media.editor
@@ -13,7 +13,7 @@ import numpy as np
 import math
 import ffmpeg
 import json
-import sys
+import os
 from matplotlib import pyplot as plt
 from cv2 import data
 

@@ -7,7 +7,6 @@ import time
 def SSHMysql(DB, SQL, isDict=False):
     flag=0
     data=[]
-    print(DB,SQL)
     for i in range(20):
         print(">",end='')
         try:

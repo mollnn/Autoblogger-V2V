@@ -1,16 +1,16 @@
 import sys
 sys.path.append("..")
-import extractor.pipeline
-import os
+import threading
 import database.msql
+import os
+import extractor.pipeline
 
-sql_res = database.msql.query("banime","select distinct bvid from Vinfo")
-for i in sql_res:
-    bvid = i[0]
-    filename = "/home/wzc/mtmp/%s.mp4"%bvid
-    if os.path.isfile(("/home/wzc/mtmp/%s.mp4"%bvid))==False:
+
+def Fuck(bvid):
+    filename = "/home/wzc/mtmp/%s.mp4" % bvid
+    if os.path.isfile(("/home/wzc/mtmp/%s.mp4" % bvid)) == False:
         print("INVALID INPUT FILE.")
-        continue
+        return
     extractor.pipeline.importMedia(bvid, filename)
     extractor.pipeline.downloadInfo(bvid)
     extractor.pipeline.shotCut(bvid)
@@ -18,3 +18,26 @@ for i in sql_res:
     extractor.pipeline.extract(bvid, 0, 1)
     extractor.pipeline.extract(bvid, 0, 2)
     extractor.pipeline.extract(bvid, 0, 3)
+
+
+def ExecuteThreads(thread_handles):
+    for i in thread_handles:
+        i.start()
+    for i in thread_handles:
+        i.join()
+    print("test.icopy: Batch End")
+
+
+sql_res = database.msql.query("banime", "select distinct bvid from Vinfo")
+
+thread_handles = []
+
+for i in sql_res:
+    bvid = i[0]
+    thread_handle = threading.Thread(target=Fuck, args=(bvid,))
+    thread_handles.append(thread_handle)
+    if len(thread_handles) >= 16:
+        ExecuteThreads(thread_handles)
+        thread_handles = []
+
+print("test.icopy: All End")

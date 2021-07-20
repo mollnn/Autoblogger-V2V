@@ -8,7 +8,7 @@ def SSHMysql(DB, SQL, isDict=False):
     flag=0
     data=[]
     print(DB,SQL)
-    for i in range(20):
+    for i in range(50):
         print(">",end='')
         try:
             server = SSHTunnelForwarder(
@@ -38,7 +38,7 @@ def SSHMysql(DB, SQL, isDict=False):
             flag=0
         else:
             flag=0
-        time.sleep(0.2)
+        time.sleep(0.5)
     print("end")
     return data
 
