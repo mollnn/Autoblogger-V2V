@@ -24,3 +24,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+该版本用了一些tricy的方法来调整方向。谨慎使用。
