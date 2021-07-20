@@ -1,5 +1,5 @@
 <template>
-  <div class="xx" style="height: 100%">
+  <div class="xx" style="height: 100%"  :style= "styles">
     <el-container id="hh" style="height: 100%">
       <el-header style="height: 5%">
         <Page3header />
@@ -27,6 +27,14 @@ import Page3videoplayer from "./Page3videoplayer.vue";
 import Page3bottom from "./Page3bottom.vue";
 export default {
   name: "HelloWorld",
+  data(){
+    return{
+      styles:{
+        backgroundImage:'url(' + require('./xxx.jpg') + ')',
+      //  backgroundSize: cover;
+      }
+    }
+  },
   components: {
     Page3header,
     Page3videoplayer,
@@ -37,32 +45,33 @@ export default {
 </script>
 <style>
 .el-header {
-  background-color: #b3c0d1;
+  background-color: transparent;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
 
 .el-footer {
-  background-color: #b3c0d1;
+  background-color: transparent;
   color: #333;
   text-align: center;
   line-height: 60px;
+  height: 20% !important;
 }
 
 .el-aside {
-  background-color: #d3dce6;
+  background-color: transparent;
   color: #333;
   text-align: center;
   line-height: 200px;
 }
 
 .el-main {
-  background-color: #e9eef3;
+  background-color: transparent;
   color: #333;
   text-align: center;
   line-height: 160px;
-  min-height: calc(100vh - 200px)
+  height: calc(100vh - 100px)
 }
 
 body > .el-container {

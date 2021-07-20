@@ -37,7 +37,7 @@ export default {
       this.$store.state.vlink = this.$store.state.videolist[e];
       Bus.$emit("changevideo", this.$store.state.vlink);
       // this.swiper.slideTo(this.$store.state.index + 1, 1000, false)
-      this.swiper.slideTo(this.$store.state.index - 3);
+      this.swiper.slideTo(this.$store.state.index - 0);
       this.$forceUpdate();
     },
   },
@@ -547,6 +547,16 @@ export default {
       ],
 
       swiperOption: {
+        effect : 'coverflow',
+          coverflowEffect: {
+    rotate: -3,
+    stretch: 330,
+    depth: 300,
+    modifier: 1,
+    slideShadows : true
+  },
+
+  centeredSlides: true,
         initialSlide:12,
         slidesPerView: 7, //一行显示4个
         spaceBetween: 30, //间隔30
@@ -575,9 +585,9 @@ export default {
     console.log("Current Swiper instance object", this.swiper);
     this.collocateContentDtos = this.$store.state.posterlist;
     this.$forceUpdate();
-    this.swiper.slideTo(this.$store.state.index - 3);
+    this.swiper.slideTo(this.$store.state.index - 0);
       Bus.$on("changethebottom", (val) => {
-        this.swiper.slideTo(val - 3, 500);
+        this.swiper.slideTo(val - 0, 500);
       });
   },
 };
