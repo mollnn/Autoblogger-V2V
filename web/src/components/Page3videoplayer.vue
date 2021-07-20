@@ -2,11 +2,13 @@
   <div class="videoplayer">
     <!-- <el-empty description="暂无信息"></el-empty> -->
     <video-player
-      class="video-player vjs-custom-skin"
+      class="video-player vjs-custom-skin input_video "
       ref="videoPlayer"
       :playsinline="true"
       :options="playerOptions"
       @ended="onPlayerEnded($event)"
+
+      id="fff"
     ></video-player>
   </div>
 </template>
@@ -79,9 +81,7 @@ export default {
 </script>
 <style>
     .input_video{
-        width: 400px;
-        height: 400px;
         margin: 0 auto;
-
+        height: 100px;
     }
 </style>

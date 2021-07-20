@@ -6,16 +6,14 @@
         v-for="(item, index) in collocateContentDtos"
         :key="index"
         @click.native="changevideo(index)"
-        :style="{
-          backgroundImage: 'url(' + item + ')',
-          backgroundSize: '100%',
-        }"
+        
       >
+      <img :src= "item" width="100%">
         <!--          @click.native="goJump(item)" 每一个图片的点击事件-->
-        <div class="bs-swiper-bottom">
-          <!-- <div>{{item.desc}}</div>
-            <div>{{item.date}}</div> -->
-        </div>
+        <!-- <div class="bs-swiper-bottom">
+          <div>{{item.desc}}</div>
+            <div>{{item.date}}</div>
+        </div> -->
       </swiper-slide>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
@@ -551,14 +549,14 @@ export default {
       swiperOption: {
         initialSlide:12,
         slidesPerView: 7, //一行显示4个
-        spaceBetween: 10, //间隔30
+        spaceBetween: 30, //间隔30
         freeMode: true,
         speed: 1000, //滑动速度
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         },
-
+        autoHeight:true,
         // on: {
         //   click: (e) => {
         //     this.$store.state.vlink = e;
@@ -588,18 +586,18 @@ export default {
 .swiper-container {
   width: 100%;
   height: 100%;
-  padding: 0 5px;
+  padding: 0px;
 }
 .swiper-slide {
   width: 30%;
-  height: 150px;
+  height: 100%;
   position: relative;
 }
 .bs-swiper-bottom {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 20px;
+  height: 0px;
   background-color: rgba(65, 105, 225, 0.7);
   color: #fff;
   font-size: 10px;
