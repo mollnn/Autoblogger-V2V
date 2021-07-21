@@ -298,6 +298,3 @@ def shotcut(filename):
     sbd.open_video(filename)
     sbd.detect()
     return sbd.sb
-
-if __name__ == "__main__":
-    print(shotcut("input/1.mp4"))

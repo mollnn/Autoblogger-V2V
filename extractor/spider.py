@@ -1,17 +1,16 @@
-# Stable Bilibili Spider by wzc modified by mollnn
-# usage: solve(bid)
 import sys
 sys.path.append("..")
+
+import os
+import re
+import json
 import re
 import json
 import requests
 import pymysql
 import sys
-import database.msql
-import control.jsonconfig
+import common
 import sshtunnel
-sys.path.append("..")
-
 
 cookie = r"_uuid=FE18E94F-CAB1-69C0-753C-245A94DB063C04672infoc; buvid3=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; CURRENT_FNVAL=80; blackside_state=1; rpdid=|(k|RYJYllJY0J'uY|ukYlm||; buivd_fp=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; buvid_fp_plain=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; buvid_fp=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; DedeUserID=471644009; DedeUserID__ckMd5=bf15e248b5d4efa0; SESSDATA=310ee312,1639652841,6e913*61; bili_jct=d9b1b1df5c76395cf9d321ab48a3c41d; sid=6wmbwi63; fingerprint3=7cdce1880b09344ee0d74616931713d7; fingerprint=a6ec6277365ffa20b8973976cadc42f0; fingerprint_s=193f3299bcb4e2c36d107cd3a0b51a14; CURRENT_QUALITY=112; bp_video_offset_471644009=542730492934997055; bp_t_offset_471644009=542734418540372470; bsource=search_baidu; bfe_id=6f2695e1895fb89897286b11ddc486b0; PVID=3"
 
@@ -183,17 +182,10 @@ def GetAllInfoByBid(vbid):
     VInfoObj, oid = GetVInfoByBid(vbid)
     return DanmuList, VInfoObj
 
-def solve(vbid,MYSQL_DBNAME=control.jsonconfig.readConfig("dbname"),MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
-    server = sshtunnel.SSHTunnelForwarder(
-        ssh_address_or_host=('131.mollnn.com', 22),  # 指定ssh登录的跳转机的address
-        ssh_username='wzc',  # 跳转机的用户
-        ssh_password='123456',  # 跳转机的密码
-        local_bind_address=('127.0.0.1', 1268),  # 映射到本机的地址和端口
-        remote_bind_address=('localhost', 3306))  # 数据库的地址和端口
-    server.start()  # 启用SSH
+def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
     conn = pymysql.connect(
         host="127.0.0.1",  # 映射地址local_bind_address IP
-        port=1268,  # 映射地址local_bind_address端口
+        port=3306,  # 映射地址local_bind_address端口
         user="root",
         passwd="123456",
         database=MYSQL_DBNAME,  # 需要连接的实例名
@@ -205,9 +197,29 @@ def solve(vbid,MYSQL_DBNAME=control.jsonconfig.readConfig("dbname"),MYSQL_HOST='
         InsertDanmu(Danmu,cursor,conn)
     cursor.close()
     conn.close()
-    server.close()
     return VInfoObj
 
 
-if __name__ == "__main__":
-    print(solve("BV1db4y1r7cd"))
+def getMP4(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
+    pageUrl = "https://www.bilibili.com/video/" + video_id
+    htmlText = common.getRequestsText(pageUrl, pageUrl)
+    urlJson = json.loads(re.findall(
+        '<script>window\.__playinfo__=(.*?)</script>', htmlText)[0])
+
+
+    videoUrl = urlJson['data']['dash']['video'][0]['backupUrl'][0]
+    audioUrl = urlJson['data']['dash']['audio'][0]['backupUrl'][0]
+
+    print("Downloading...")
+
+    audioFile = common.getRequestsContent(audioUrl, pageUrl)
+    with open('../tmp/audio_'+video_id+'.mp3', 'wb') as f:
+        f.write(audioFile)
+    videoFile = common.getRequestsContent(videoUrl, pageUrl)
+    with open('../tmp/video_'+video_id+'.mp4', 'wb') as f:
+        f.write(videoFile)
+
+    os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
+              video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
+    print("Succeed! :)")
+

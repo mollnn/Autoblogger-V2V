@@ -1,9 +1,40 @@
-  
+import math
+import time
+import random
+import json
+import math
+import time
+import random
+
 import pymysql
 from sshtunnel import SSHTunnelForwarder
 import time
+import requests
 
 
+def getRequestsContentUtf8(url, referee=""):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
+        'Referer': referee
+    }
+    return requests.get(url, headers=headers).content.decode("utf-8")
+
+
+def getRequestsText(url, referee=""):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
+        'Referer': referee
+    }
+    return requests.get(url, headers=headers).text
+
+
+def getRequestsContent(url, referee=""):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
+        'Referer': referee
+    }
+    return requests.get(url, headers=headers).content
+    
 def SSHMysql(DB, SQL, isDict=False, isRemote=False):
     flag=0
     data=[]
@@ -58,11 +89,18 @@ def SSHMysql(DB, SQL, isDict=False, isRemote=False):
     return data
 
 
-def query(DB, SQL, isDict=False, isRemote=True):
+def query(DB, SQL, isDict=False, isRemote=False):
     return SSHMysql(DB, SQL, isDict=isDict, isRemote=isRemote)
 
 
-if __name__ == "__main__":
-    SQL = "SELECT * FROM Danmu;"
-    SelectResult = SSHMysql('bilibili', SQL)
-    print(SelectResult)  
+def readConfig(key, filename="config.json"):
+    f=open(filename, "r")
+    obj=json.load(f)
+    f.close()
+    return obj[key]
+
+def generateXvid():
+    return "XV"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)
+
+def generateCutid():
+    return "CT"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)
