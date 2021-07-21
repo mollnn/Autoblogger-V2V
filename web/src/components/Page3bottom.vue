@@ -554,7 +554,7 @@ export default {
           depth: 300,
           modifier: 1,
           reverseDirection: true,
-          mousewheel: true,
+          // mousewheel: true,
           slideShadows: true,
         },
 
@@ -583,6 +583,7 @@ export default {
     },
   },
   mounted() {
+    
     console.log("Current this instance object", this);
     console.log("Current Swiper instance object", this.swiper);
     this.collocateContentDtos = this.$store.state.posterlist.reverse();

@@ -59,10 +59,12 @@ export default {
       this.val[0] = this.$children[0].$children[0].$children[0].value;
       this.val[1] =this.$children[0].$children[0].$children[1].value;
       tempuse = this.val;
+      console.log(tempuse);
       this.$forceUpdate();
       this.draw();
     },
     gotolink: function (index) {
+      console.log("???");
       this.$store.state.index = this.$store.state.videolist.length - 1 - index;
       this.$store.state.vlink = this.kklist[index];
       this.$router.push("/page3");
@@ -113,7 +115,7 @@ export default {
       //   this.isLoading = false;
       //   this.$forceUpdate();
       // }, 2000);
-      this.draw();
+      this.draw(); 
     });
     // setTimeout(function () {
     //   this.isLoading = false;

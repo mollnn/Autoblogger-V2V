@@ -1,20 +1,21 @@
 <template>
-  <div class="xx" style="height: 100%"  :style= "styles">
+  <div class="xx" style="height: 100%" :style="styles">
     <el-container id="hh" style="height: 100%">
       <el-header style="height: 5%">
         <Page3header />
       </el-header>
       <el-container style="height: 65%">
-        <el-main >
+        <el-main>
           <Page3videoplayer />
         </el-main>
         <el-aside width="35%">
-          <!-- <Page3rightzone /> -->
+          <Page3rightzone />
+          <dammuciyun />
         </el-aside>
       </el-container>
       <el-footer>
         <div>
-          <Page3bottom  />
+          <Page3bottom />
         </div>
       </el-footer>
     </el-container>
@@ -23,30 +24,32 @@
 <script>
 import Page3header from "./Page3header.vue";
 import Page3videoplayer from "./Page3videoplayer.vue";
-// import Page3rightzone from "./Page3rightzone.vue";
+import Page3rightzone from "./Page3rightzone.vue";
 import Page3bottom from "./Page3bottom.vue";
+import dammuciyun from "./danmuciyun.vue";
 export default {
   name: "HelloWorld",
-  data(){
-    return{
-      styles:{
-        backgroundImage:'url(' + require('./xxx.jpg') + ')',
-      //  backgroundSize: cover;
-      }
-    }
+  data() {
+    return {
+      styles: {
+        backgroundImage: "url(" + require("./xxx.jpg") + ")",
+        //  backgroundSize: cover;
+      },
+    };
   },
   components: {
     Page3header,
     Page3videoplayer,
-    // Page3rightzone,
+    Page3rightzone,
     Page3bottom,
+    dammuciyun,
   },
 };
 </script>
 <style>
 .el-header {
-  background-color: #333;
-  color: #333;
+  background-color: transparent;
+  color: red;
   text-align: center;
   line-height: 60px;
 }
@@ -71,7 +74,7 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
-  height: calc(100vh - 100px)
+  height: calc(100vh - 100px);
 }
 
 body > .el-container {
@@ -95,5 +98,18 @@ body,
 
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
+}
+.text {
+  font-size: 14px;
+}
+
+.item {
+  padding: 18px 0;
+}
+
+.box-card {
+  width: 100%;
+  height: 40%;
+  background-color: #282828;
 }
 </style>

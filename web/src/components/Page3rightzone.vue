@@ -1,31 +1,47 @@
 <template>
-  <div class="rightzone">
-    <el-card :style="`height: ${height}px`">
-      <div slot="header" class="clearfix">
-        <span>视频信息概要</span>
-        <el-button style="float: right; padding: 3px 0" type="text"
-          >点击查看详情</el-button
-        >
-      </div>
-      <div v-for="o in 1" :key="o" class="text item">
-        {{ "视频信息条目 " + o }}
-      </div>
-    </el-card>
-  </div>
+  <el-card class="box-card">
+    <div id= "xxx1">fuck</div><br>
+  </el-card>
 </template>
 
 <script>
+var tempuse = '';
+import Bus from "../bus1.js";
 export default {
   data() {
     return {
-      height: 0
     };
   },
+  methods: {
+        draw() {
+          tempuse = this.$store.state.objlist[this.$store.state.index].id;
+      this.$http
+        .get(
+          "http://131.mollnn.com:5001/vinfo/" +
+            tempuse+
+            "/",
+          {
+            headers: { "Access-Control-Allow-Origin": "*" },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          document.getElementById("xxx1").textContent = res.data[0].title + "投币" + res.data[0].coin;
+        });
+    },
+  },
   mounted() {
-    const tr = document.getElementById('fff')
-    console.log(tr)
-    this.height = tr.clientHeight
-  }
+     console.log("rightookkk!");
+        this.draw();
+    Bus.$on("changethebottom", (val) => {
+      console.log(val);
+      this.draw();
+    });
+    Bus.$on("changevideo", (val) => {
+      console.log(val);
+      this.draw();
+    });
+  },
 };
 </script>>
 
@@ -36,7 +52,7 @@ export default {
 }
 
 .item {
-  margin-bottom: 18px;
+  margin-bottom: 0px;
 }
 
 .clearfix:before,
@@ -46,5 +62,11 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+
+.box-card {
+  width: 100%;
+  height: 40%;
+  background-color: #282828;
 }
 </style>

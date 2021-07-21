@@ -64,6 +64,7 @@ export default {
     };
   },
   mounted() {
+    console.log("videookkk!");
       Bus.$on("changevideo", (val) => {
       this.playerOptions.sources[0].src=val;
       for(var i = 0; i < this.$store.state.videolist.length; i++){
