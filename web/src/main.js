@@ -23,6 +23,9 @@ Vue.prototype.$echarts = echarts
 require('echarts-wordcloud');
 import VideoBackground from 'vue-responsive-video-background-player'
 Vue.component('video-background', VideoBackground);
+import animated from 'animate.css' // npm install animate.css --save安装，在引入
+
+Vue.use(animated)
 const Bus = new Vue()
 new Vue({
   router,

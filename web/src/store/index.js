@@ -12,6 +12,7 @@ export default new Vuex.Store({
     videolist:[],
     value3:'',
     value4:'',
+    isloading: true,
   },
   getters:{
 

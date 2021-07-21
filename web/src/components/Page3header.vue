@@ -1,11 +1,13 @@
 <template>
   <div class="header">
-    <el-page-header id = "xxx2"
-      @back="goBack"
+    <el-page-header
+      id="xxx3"
       content="V2V视频播放中..."
-      style="color: #fff"
+      style="color: #fff; line-height: 40px !important"
     >
+    
     </el-page-header>
+    <el-button type="primary" round @click.native="gobackhhh" style="float:right; position:absolute;top:0px;right:0px; background-color: #444;border:0px">返回</el-button>
   </div>
 </template>
 <script>
@@ -21,11 +23,16 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          document.getElementById("xxx2").content = res.data[0].title;
+          console.log("fuckkkk");
+          console.log(res.data[0].title);
+          document.getElementById("xxx3").textContent = res.data[0].title;
+          this.$forceUpdate();
         });
     },
-    goBack() {
-      this.$router.push("/page2");
+    gobackhhh() {
+      // this.$store.state.isloading = false;
+      this.$router.push('/page1');
+      Bus.$emit("changebacktoPage2", this.$store.state.index);
     },
   },
   mounted() {

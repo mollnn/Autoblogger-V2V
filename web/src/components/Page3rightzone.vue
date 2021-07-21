@@ -1,6 +1,9 @@
 <template>
   <el-card class="box-card">
-    <div id= "xxx1">fuck</div><br>
+    <div id= "xxxx1">Loading....</div><br>
+    <div id= "xxxx2">Loading....</div><br>
+    <div id= "xxxx3">Loading....</div><br>
+    <div id= "xxxx4">Loading....</div><br>
   </el-card>
 </template>
 
@@ -17,7 +20,7 @@ export default {
           tempuse = this.$store.state.objlist[this.$store.state.index].id;
       this.$http
         .get(
-          "http://131.mollnn.com:5001/vinfo/" +
+          "http://131.mollnn.com:5001/xv/danmu/" +
             tempuse+
             "/",
           {
@@ -26,7 +29,10 @@ export default {
         )
         .then((res) => {
           console.log(res);
-          document.getElementById("xxx1").textContent = res.data[0].title + "投币" + res.data[0].coin;
+          document.getElementById("xxxx1").textContent = res.data[0][0];
+          document.getElementById("xxxx2").textContent = res.data[1][0];
+          document.getElementById("xxxx3").textContent = res.data[2][0];
+          document.getElementById("xxxx4").textContent = res.data[3][0];
         });
     },
   },

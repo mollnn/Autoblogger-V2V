@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@splidejs/vue-splide": "^0.3.5",
+    "animate.css": "^4.1.1",
     "better-scroll": "^2.4.1",
     "core-js": "^3.6.5",
     "echarts": "^4.9.0",

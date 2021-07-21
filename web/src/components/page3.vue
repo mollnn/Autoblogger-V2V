@@ -1,7 +1,7 @@
 <template>
   <div class="xx" style="height: 100%" :style="styles">
     <el-container id="hh" style="height: 100%">
-      <el-header style="height: 5%">
+      <el-header style="height: 7%">
         <Page3header />
       </el-header>
       <el-container style="height: 65%">
@@ -32,7 +32,6 @@ export default {
   data() {
     return {
       styles: {
-        backgroundImage: "url(" + require("./xxx.jpg") + ")",
         //  backgroundSize: cover;
       },
     };
@@ -48,7 +47,7 @@ export default {
 </script>
 <style>
 .el-header {
-  background-color: transparent;
+  background-color: #333;
   color: red;
   text-align: center;
   line-height: 60px;
@@ -66,7 +65,7 @@ export default {
   background-color: #282828;
   color: #333;
   text-align: center;
-  line-height: 200px;
+  line-height: 18px;
 }
 
 .el-main {
@@ -101,6 +100,7 @@ body,
 }
 .text {
   font-size: 14px;
+  color:white !important
 }
 
 .item {
@@ -108,8 +108,12 @@ body,
 }
 
 .box-card {
+  background-color:#222 !important;
   width: 100%;
-  height: 40%;
+  height: 38%;
   background-color: #282828;
+  color:white !important
 }
+
+
 </style>

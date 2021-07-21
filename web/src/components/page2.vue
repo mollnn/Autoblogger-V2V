@@ -5,10 +5,13 @@
       <el-header>
         <checkbox3 class="box3" />
         <checkbox4 class="box4" />
-        <el-button type="primary" round @click="getagain" class="btn">Let's go!</el-button>
+        <el-button type="primary" round @click="getagain" class="btn"
+          >Let's go!</el-button
+        >
       </el-header>
       <transition name="fade">
-        <Loading v-if="isLoading"></Loading>
+        <Loading v-if="isLoading">
+        </Loading>
       </transition>
       <el-row><div style="padding: 10px"></div></el-row>
       <el-row>
@@ -42,7 +45,9 @@ import checkbox3 from "./checkbox3.vue";
 import checkbox4 from "./checkbox4.vue";
 var tempuse = [1, 1];
 export default {
-  components: { Loading, checkbox3, checkbox4 },
+  components: { 
+    Loading,
+   checkbox3, checkbox4 },
   data() {
     return {
       tstyle: { "background-color": "#111", padding: "8px" },
@@ -50,14 +55,14 @@ export default {
       pplist: ["."],
       kklist: [],
       isLoading: true,
-      val:[],
+      val: [],
     };
   },
   methods: {
-    getagain:function(){
+    getagain: function () {
       console.log(this.$children[0].$children[0].$children[0].value);
       this.val[0] = this.$children[0].$children[0].$children[0].value;
-      this.val[1] =this.$children[0].$children[0].$children[1].value;
+      this.val[1] = this.$children[0].$children[0].$children[1].value;
       tempuse = this.val;
       console.log(tempuse);
       this.$forceUpdate();
@@ -85,29 +90,37 @@ export default {
           }
         )
         .then((res) => {
-          this.list = res.data;
-          this.$store.state.objlist = res.data;
-          for (var i = 0; i < res.data.length; ++i) {
+          var len = res.data.length;
+          if (len >= 100) len = 100;
+          this.list = res.data.slice(0, len);
+          this.$store.state.objlist = res.data.slice(0, len);
+          for (var i = 0; i < len; ++i) {
             this.pplist[i] =
               "http://131.mollnn.com:5001/poster/" + res.data[i].id + "/";
             this.kklist[i] =
               "http://131.mollnn.com:5001/video/" + res.data[i].id + "/";
           }
           this.$children[0].$children[0].$children[0].value = tempuse[0];
+          this.$store.state.value3 = this.$children[0].$children[0].$children[0].value;
           this.$children[0].$children[0].$children[1].value = tempuse[1];
+          this.$store.state.value4 = this.$children[0].$children[0].$children[1].value;
           this.$store.state.posterlist = this.pplist;
           this.$store.state.videolist = this.kklist;
           console.log(this.$store.state.posterlist);
           document.getElementById("elcol").value = this.pplist;
-          this.$forceUpdate();
           this.isLoading = false;
+          this.$forceUpdate();
+          console.log("aaaaaaaaaaaaaaaaaa");
+          console.log(this.isLoading);
         });
     },
   },
 
   mounted() {
     // this.draw();
-    
+    // if(this.$store.state.isloading == false){
+    //   this.isLoading = false;
+    // }
     Bus.$on("change", (val) => {
       tempuse = val;
       console.log("fuck me");
@@ -115,7 +128,15 @@ export default {
       //   this.isLoading = false;
       //   this.$forceUpdate();
       // }, 2000);
-      this.draw(); 
+      this.draw();
+    });
+      Bus.$on("changebacktoPage2", (val) => {
+ 
+        this.isLoading = false;
+      console.log(val);
+      tempuse[0] = this.$store.state.value3;
+      tempuse[1] = this.$store.state.value4;
+      this.draw();
     });
     // setTimeout(function () {
     //   this.isLoading = false;
@@ -131,7 +152,7 @@ export default {
 .box4 {
   left: 10%;
 }
-.btn{
+.btn {
   float: right;
 }
 .black {
