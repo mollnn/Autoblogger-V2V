@@ -4,8 +4,9 @@ import os
 import re
 import json
 
+# 根据片段描述符数组剪辑视频
+# clip_desc_list is a list of dict{'filename'=?, 'start'=?, 'duration'=?}
 def edit(clip_desc_list, output_filename, quiet=True):
-    # clip_desc_list is a list of dict{'filename'=?, 'start'=?, 'duration'=?}
     clip_list = []
     for clip_desc in clip_desc_list:
         clip = ffmpeg.input(

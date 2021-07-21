@@ -86,6 +86,16 @@ def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
 
 def solve(bvid):
     print("extractor.naive: Hello ", bvid)
+
+    src_type=0
+    clip_type=0
+
+    if len(common.query(common.readConfig("dbname"), """
+        select * from extraction where bvid='{bvid}' and src_type='{src_type}' and clip_type='{clip_type}'
+        """.format(bvid=bvid, src_type=src_type, clip_type=clip_type))) > 0:
+        print("extractor.main.extract: Already extracted with same bvid, src_type and clip_type. Terminated.")
+        return
+
     duration = int(math.ceil(
         float(ffmpeg.probe("../data/media/%s.mp4" % bvid)["format"]["duration"])))
     frame_rate = 24     # Forced
@@ -131,12 +141,15 @@ def solve(bvid):
     print("extractor.naive: writing...")
     for i in result:
         xvid = common.generateXvid()
+        score_maxpos=np.argmax(mark_final[i[0]:i[1]])+i[0]
+        score_maxval=np.max(mark_final[i[0]:i[1]])
         extraction_obj = {"id": xvid, "bvid": bvid,
-                 "frame_begin": i[0], "frame_end": i[1], "src_type": 0, "clip_type": 0}
+                 "frame_begin": i[0], "frame_end": i[1], "src_type": src_type, "clip_type": clip_type, "score_maxpos":score_maxpos, "score_maxval":score_maxval}
         editor.edit([{"filename": "../data/media/%s.mp4" % bvid, "start": extraction_obj["frame_begin"]/frame_rate,
                           "duration":(extraction_obj["frame_end"]-extraction_obj["frame_begin"])/frame_rate}], "../data/output/%s.mp4" % xvid, quiet=True)
+        
         os.system("ffmpeg -i ../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../data/poster/%s.jpg  -hide_banner -loglevel error" % (xvid, xvid))
-        common.query(common.readConfig("dbname"), "INSERT INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type) VALUES ('%s','%s',%d,%d,%d,%d);" % (
-            extraction_obj["id"], extraction_obj["bvid"], extraction_obj["frame_begin"], extraction_obj["frame_end"], extraction_obj["src_type"], extraction_obj["clip_type"]))
+        common.query(common.readConfig("dbname"), "INSERT INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type, score_maxpos, score_maxval) VALUES ('%s','%s',%d,%d,%d,%d,%d,%d);" % (
+            extraction_obj["id"], extraction_obj["bvid"], extraction_obj["frame_begin"], extraction_obj["frame_end"], extraction_obj["src_type"], extraction_obj["clip_type"], extraction_obj["score_maxpos"], extraction_obj["score_maxval"]))
 
     print("extractor.naive: OK!")

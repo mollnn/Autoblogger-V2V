@@ -1,4 +1,6 @@
 {
     "dbname": "biliextrefactor",
-    "db_banime": "banime"
+    "db_banime": "banime",
+    "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=1920:1080 -r 24 -strict experimental -threads 4 -preset ultrafast",
+    "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90 -r 24 -strict experimental -threads 4 -preset ultrafast"
 }

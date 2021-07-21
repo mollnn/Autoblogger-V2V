@@ -12,6 +12,14 @@ import sys
 import common
 import sshtunnel
 
+
+def importMP4(video_id, input_filename):
+    ffmpeg_config=common.readConfig("ffmpeg_hd")
+    os.system('ffmpeg -y -i ' + input_filename + ' ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
+    ffmpeg_config=common.readConfig("ffmpeg_ld")
+    os.system('ffmpeg -y -i ' + input_filename + ' ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
+
+
 cookie = r"_uuid=FE18E94F-CAB1-69C0-753C-245A94DB063C04672infoc; buvid3=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; CURRENT_FNVAL=80; blackside_state=1; rpdid=|(k|RYJYllJY0J'uY|ukYlm||; buivd_fp=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; buvid_fp_plain=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; buvid_fp=5D8ED97F-100C-4AAE-951D-9720D91F29EC143079infoc; DedeUserID=471644009; DedeUserID__ckMd5=bf15e248b5d4efa0; SESSDATA=310ee312,1639652841,6e913*61; bili_jct=d9b1b1df5c76395cf9d321ab48a3c41d; sid=6wmbwi63; fingerprint3=7cdce1880b09344ee0d74616931713d7; fingerprint=a6ec6277365ffa20b8973976cadc42f0; fingerprint_s=193f3299bcb4e2c36d107cd3a0b51a14; CURRENT_QUALITY=112; bp_video_offset_471644009=542730492934997055; bp_t_offset_471644009=542734418540372470; bsource=search_baidu; bfe_id=6f2695e1895fb89897286b11ddc486b0; PVID=3"
 
 
@@ -24,13 +32,13 @@ def GetHTMLContent(url, cookie=''):
     return response.content.decode("utf-8")
 
 
-# def GetBidsBySearch(searchKeyword, page=1):
-#     urlSearch = "https://search.bilibili.com/all?keyword=" + \
-#         searchKeyword+"&from_source=web_search&page=" + str(page)
-#     htmlSearch = GetHTMLContent(urlSearch)
-#     reBid = re.compile(r'//www.bilibili.com/video/(.*?)\?from=search')
-#     listBid = re.findall(reBid, htmlSearch)
-#     return listBid
+def GetBidsBySearch(searchKeyword, page=1):
+    urlSearch = "https://search.bilibili.com/all?keyword=" + \
+        searchKeyword+"&from_source=web_search&page=" + str(page)
+    htmlSearch = GetHTMLContent(urlSearch)
+    reBid = re.compile(r'//www.bilibili.com/video/(.*?)\?from=search')
+    listBid = re.findall(reBid, htmlSearch)
+    return listBid
 
 
 def GetDanmuFromXml(list, cid):
@@ -95,7 +103,6 @@ def GetVInfoFromResponse(response):
     objVInfo['now_rank'] = stat['now_rank']  # 当前排名
     objVInfo['his_rank'] = stat['his_rank']  # 历史最高排名
 
-    # UP主信息
     owner = data['owner']
     objVInfo['mid'] = owner['mid']  # UP主ID
 
@@ -116,7 +123,6 @@ def GetRlistByResponse(response):
         objRepli['rpid'] = Repli['rpid']
 
         ReplyList.append(objRepli)
-    # print(RepliList[0]['content']['message'])
     return ReplyList
 
 
@@ -200,12 +206,11 @@ def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST='localhost'
     return VInfoObj
 
 
-def getMP4(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
+def getMP4(video_id):
     pageUrl = "https://www.bilibili.com/video/" + video_id
     htmlText = common.getRequestsText(pageUrl, pageUrl)
     urlJson = json.loads(re.findall(
         '<script>window\.__playinfo__=(.*?)</script>', htmlText)[0])
-
 
     videoUrl = urlJson['data']['dash']['video'][0]['backupUrl'][0]
     audioUrl = urlJson['data']['dash']['audio'][0]['backupUrl'][0]
@@ -219,7 +224,41 @@ def getMP4(video_id, ffmpeg_config="-c:v copy -c:a aac -strict experimental"):
     with open('../tmp/video_'+video_id+'.mp4', 'wb') as f:
         f.write(videoFile)
 
+    ffmpeg_config=common.readConfig("ffmpeg_hd")
+    os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
+              video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
+    ffmpeg_config=common.readConfig("ffmpeg_ld")
     os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
               video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
     print("Succeed! :)")
 
+####################################################
+
+# 如果 bv 信息不存在，则下载 bv 信息
+def downloadInfo(bvid):
+    print("extractor.main.downloadInfo: Hello!")
+    ans = common.query(
+        common.readConfig("dbname"), "select * from Vinfo where bvid='%s'" % bvid)
+    if len(ans) > 0:
+        print("extractor.main.downloadInfo: Info already exists. Terminated.")
+        return
+    getInfo(bvid)
+
+# 如果 bv 媒体不存在，则拉取 bv 信息
+def downloadMedia(bvid):
+    print("extractor.main.downloadMedia: Hello!")
+    if os.path.isfile('../data/media/'+bvid+'.mp4') and os.path.isfile('../data/media/'+bvid+'.hd.mp4'):
+        print("extractor.main.downloadMedia: Media already exists. Terminated.")
+        return
+    getMP4(bvid)
+
+# 导入本地媒体，filename 为文件路径
+def importMedia(bvid, filename):
+    print("extractor.main.importMedia: Hello!")
+    if os.path.isfile('../data/media/'+bvid+'.mp4') and os.path.isfile('../data/media/'+bvid+'.hd.mp4'):
+        print("extractor.main.importMedia: Media already exists. Terminated.")
+        return
+    if os.path.isfile(filename) == False:
+        print("extractor.main.importMedia: Source media invalid. Terminated.")
+    importMP4(
+        bvid, filename)
