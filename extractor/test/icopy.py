@@ -7,6 +7,7 @@ import extractor.pipeline
 
 
 def Fuck(bvid):
+    print("THREAD START ",bvid)
     filename = "/home/wzc/mtmp/%s.mp4" % bvid
     if os.path.isfile(("/home/wzc/mtmp/%s.mp4" % bvid)) == False:
         print("INVALID INPUT FILE.")
@@ -36,8 +37,9 @@ for i in sql_res:
     bvid = i[0]
     thread_handle = threading.Thread(target=Fuck, args=(bvid,))
     thread_handles.append(thread_handle)
-    if len(thread_handles) >= 16:
+    if len(thread_handles) >= 64:
         ExecuteThreads(thread_handles)
         thread_handles = []
+ExecuteThreads(thread_handles)
 
 print("test.icopy: All End")

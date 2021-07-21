@@ -22,6 +22,7 @@ shotcut_list = json.load(f)
 video = cv2driver.readVideo(video_filename)
 n_frame = len(video)
 
+
 shotcut_flags = [0]*n_frame
 for shotcut in shotcut_list:
     if shotcut["transition"] == "cut":
@@ -30,8 +31,10 @@ for shotcut in shotcut_list:
         for i in range(shotcut["start_frame"], shotcut["end_frame"]):
             shotcut_flags[i] = 2
 
+
 output_video_filename="output.avi"
 cv_writer=cv2.VideoWriter(output_video_filename,cv2.VideoWriter_fourcc(*'XVID'),24,(640,360),True)
+
 
 for i in range(n_frame):
     try:
