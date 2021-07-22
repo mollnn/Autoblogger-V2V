@@ -78,12 +78,12 @@ def publish(ovid):
 #     load(i[0])
 
 def main():
-    # common.query(common.readConfig("dbname"), "truncate table state_board")
-    # common.query(common.readConfig("dbname"), "truncate table state_gen")
-    # common.query(common.readConfig("dbname"), "truncate table state_out")
-    # common.query(common.readConfig("dbname"), "truncate table out_editdesc")
-    # common.query(common.readConfig("dbname"), "truncate table out_template")
-    # common.query(common.readConfig("dbname"), "truncate table extraction")
+    common.query(common.readConfig("dbname"), "truncate table state_board")
+    common.query(common.readConfig("dbname"), "truncate table state_gen")
+    common.query(common.readConfig("dbname"), "truncate table state_out")
+    common.query(common.readConfig("dbname"), "truncate table out_editdesc")
+    common.query(common.readConfig("dbname"), "truncate table out_template")
+    common.query(common.readConfig("dbname"), "truncate table extraction")
     source_list=common.query(common.readConfig("dbname"), "select distinct bvid from in_source;")
     for i in source_list:
         bvid=i[0]

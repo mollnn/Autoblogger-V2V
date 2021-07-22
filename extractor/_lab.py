@@ -18,11 +18,11 @@ video_filename = "../../data/media/BV1BA411q7oy.mp4"
 
 output_filename="../data/media/black.hd.avi"
 output_video_filename="../data/media/black.onlyvideo.avi"
-cv_writer=cv2.VideoWriter(output_video_filename,cv2.VideoWriter_fourcc(*'XVID'),24,(1920,1080),True)
+cv_writer=cv2.VideoWriter(output_video_filename,cv2.VideoWriter_fourcc(*'XVID'),24,(320,180),True)
 
 n_frame=24*60
 
-frame = [[[0]*3]*1920]*1080
+frame = [[[0]*3]*320]*180
 f=np.array(frame,np.uint8)
 for i in range(n_frame):
     print(i)

@@ -5,8 +5,8 @@
     "mysql_user": "mollnn",
     "mysql_password": "Abc123456",
     "mysql_port": 3306,
-    "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=1920:1080,setsar=1:1 -r 24 -strict experimental -threads 8 -preset ultrafast",
+    "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=320:180,setsar=1:1 -r 24 -strict experimental -threads 8 -preset ultrafast",
     "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90,setsar=1:1 -r 24 -strict experimental -threads 8 -preset ultrafast",
-    "ffmpeg_default": "-threads 8 -preset ultrafast ",
+    "ffmpeg_default": "-threads 8 -preset ultrafast -b:v 100k",
     "ffmpeg_quiet": " -hide_banner -loglevel error "
 }
