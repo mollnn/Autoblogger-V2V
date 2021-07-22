@@ -22,7 +22,7 @@ def readVideo(videoname):
             ans.append(img)
             if not ret:break # 当获取完最后一帧就结束
     else:
-        print('common.readVideo: 视频打开失败！')
+        print('readVideo: 视频打开失败！')
     return ans
 
 
@@ -53,10 +53,10 @@ def SSHMysql(DB, SQL, isDict=False, isRemote=False):
     flag=0
     data=[]
     db = pymysql.connect(
-        host="127.0.0.1",  # 映射地址local_bind_address IP
-        port=3306,  # 映射地址local_bind_address端口
-        user="root",
-        passwd="123456",
+        host=readConfig("mysql_host"),  # 映射地址local_bind_address IP
+        port=readConfig("mysql_port"),  # 映射地址local_bind_address端口
+        user=readConfig("mysql_user"),
+        passwd=readConfig("mysql_password"),
         database=DB, 
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor if isDict==True else pymysql.cursors.Cursor)
@@ -87,3 +87,7 @@ def generateCutid():
 
 def generateOvid():
     return "OV"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)
+
+
+def generateTempid():
+    return "T"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)

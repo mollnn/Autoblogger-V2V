@@ -44,6 +44,6 @@ def generate(bvid, src_type, clip_type):
         common.query(common.readConfig("dbname"), "insert ignore into out_editdesc (ovid, id, xvid, start, duration) values ('%s',%d,'%s',%f,%f)"%(ovid, id, i["xvid"], i["start"],i["duration"]))
         id+=1
     common.query(common.readConfig("dbname"), "insert ignore into out_template (ovid, bvid) values ('%s','%s')"%(ovid, bvid))
-        
+    return ovid
     # editor.edit(edit_desc,"output_mid.mp4")
     # os.system("ffmpeg -i output_mid.mp4 -i %s -c copy -map 0:0 -map 1:1 -y -shortest output.mp4" % video_filename)

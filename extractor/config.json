@@ -1,6 +1,12 @@
 {
-    "dbname": "biliextrefactor",
+    "dbname": "testdb",
     "db_banime": "banime",
-    "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=1920:1080,setsar=1:1 -r 24 -strict experimental -threads 4 -preset ultrafast",
-    "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90,setsar=1:1 -r 24 -strict experimental -threads 4 -preset ultrafast"
+    "mysql_host": "rm-bp15x62q3095543qygo.mysql.rds.aliyuncs.com",
+    "mysql_user": "mollnn",
+    "mysql_password": "Abc123456",
+    "mysql_port": 3306,
+    "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=1920:1080,setsar=1:1 -r 24 -strict experimental -threads 8 -preset ultrafast",
+    "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90,setsar=1:1 -r 24 -strict experimental -threads 8 -preset ultrafast",
+    "ffmpeg_default": "-threads 8 -preset ultrafast ",
+    "ffmpeg_quiet": " -hide_banner -loglevel error "
 }

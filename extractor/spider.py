@@ -188,12 +188,12 @@ def GetAllInfoByBid(vbid):
     VInfoObj, oid = GetVInfoByBid(vbid)
     return DanmuList, VInfoObj
 
-def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST='localhost',MYSQL_USER= 'root',MYSQL_PASSWD= '123456',MYSQL_PORT= 3306):
+def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST=common.readConfig("mysql_host"),MYSQL_USER=common.readConfig("mysql_user"),MYSQL_PASSWD=common.readConfig("mysql_password"),MYSQL_PORT=common.readConfig("mysql_port")):
     conn = pymysql.connect(
-        host="127.0.0.1",  # 映射地址local_bind_address IP
-        port=3306,  # 映射地址local_bind_address端口
-        user="root",
-        passwd="123456",
+        host=MYSQL_HOST,  # 映射地址local_bind_address IP
+        port=MYSQL_PORT,  # 映射地址local_bind_address端口
+        user=MYSQL_USER,
+        passwd=MYSQL_PASSWD,
         database=MYSQL_DBNAME,  # 需要连接的实例名
         charset='utf8')
     cursor = conn.cursor()
@@ -215,7 +215,7 @@ def getMP4(video_id):
     videoUrl = urlJson['data']['dash']['video'][0]['backupUrl'][0]
     audioUrl = urlJson['data']['dash']['audio'][0]['backupUrl'][0]
 
-    print("Downloading...")
+    print("Downloading...", video_id)
 
     audioFile = common.getRequestsContent(audioUrl, pageUrl)
     with open('../tmp/audio_'+video_id+'.mp3', 'wb') as f:
@@ -224,6 +224,7 @@ def getMP4(video_id):
     with open('../tmp/video_'+video_id+'.mp4', 'wb') as f:
         f.write(videoFile)
 
+    print("Converting...", video_id)
     ffmpeg_config=common.readConfig("ffmpeg_hd")
     os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
               video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
