@@ -236,29 +236,19 @@ def getMP4(video_id):
 
 # 如果 bv 信息不存在，则下载 bv 信息
 def downloadInfo(bvid):
-    print("extractor.main.downloadInfo: Hello!")
     ans = common.query(
         common.readConfig("dbname"), "select * from Vinfo where bvid='%s'" % bvid)
     if len(ans) > 0:
-        print("extractor.main.downloadInfo: Info already exists. Terminated.")
+        print("spider: Info already exists. Terminated.", bvid)
         return
     getInfo(bvid)
 
-# 如果 bv 媒体不存在，则拉取 bv 信息
+# 拉取 bv 
 def downloadMedia(bvid):
-    print("extractor.main.downloadMedia: Hello!")
-    if os.path.isfile('../data/media/'+bvid+'.mp4') and os.path.isfile('../data/media/'+bvid+'.hd.mp4'):
-        print("extractor.main.downloadMedia: Media already exists. Terminated.")
-        return
     getMP4(bvid)
 
 # 导入本地媒体，filename 为文件路径
 def importMedia(bvid, filename):
-    print("extractor.main.importMedia: Hello!")
-    if os.path.isfile('../data/media/'+bvid+'.mp4') and os.path.isfile('../data/media/'+bvid+'.hd.mp4'):
-        print("extractor.main.importMedia: Media already exists. Terminated.")
-        return
     if os.path.isfile(filename) == False:
-        print("extractor.main.importMedia: Source media invalid. Terminated.")
-    importMP4(
-        bvid, filename)
+        print("spider: Source media invalid. Terminated.", bvid)
+    importMP4(bvid, filename)

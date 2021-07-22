@@ -8,7 +8,7 @@ import numpy as np
 
 import common
 
-class ShotBoundaryDetection:
+class ShotcutDetector:
     def __init__(self):
         # Video attributes
         self._vid = None
@@ -240,7 +240,7 @@ class ShotBoundaryDetection:
                 set_progress(65, "Finalizing results...")
             return cuts, gradual_transitions
         else:
-            print("algorithm.shotcut.shotcut: Error: Video is not available!")
+            print("shotcut: Error: Video is not available!")
 
     def detect(self, set_progress=None, finish=None):
 
@@ -289,17 +289,19 @@ class ShotBoundaryDetection:
             finish()
 
 def solve_shotcut(filename):
-    sbd = ShotBoundaryDetection()
+    sbd = ShotcutDetector()
     sbd.open_video(filename)
     sbd.detect()
     return sbd.sb
 
-def shotcut(bvid):
-    print("extractor.main.shotCut: Hello!")
+####################################################
+
+# 镜头分割，并写入数据库（弃用）
+def shotcut_to_sql(bvid):
     if len(common.query(common.readConfig("dbname"), """
         select * from shotcut where bvid='{bvid}'
         """.format(bvid=bvid))) > 0:
-        print("extractor.main.doShotCut: Already cut. Shotcut process terminated.")
+        print("shotcut: Already cut. Shotcut process terminated.")
         return
 
     ans = solve_shotcut('../data/media/'+bvid+'.mp4')
@@ -321,4 +323,7 @@ def shotcut(bvid):
                 ('%s','%s','%s',%d)
                 """ % (bvid, cutid, item["transition"], item["cut_frame"]))
 
-    print("extractor.main.doShotCut: Finish all SQL Writing.")
+# 返回镜头分割结果
+def shotcut(bvid):
+    ans = solve_shotcut('../data/media/'+bvid+'.mp4')
+    return ans
