@@ -50,7 +50,7 @@
         />
         <NavLink
             :activeItem="activeItem"
-            header="Typography"
+            header="管理"
             link="/app/typography"
             iconName="flaticon-list"
             index="typography"
@@ -58,7 +58,7 @@
         />
                 <NavLink
             :activeItem="activeItem"
-            header="Tables Basic"
+            header="状态"
             link="/app/tables"
             iconName="flaticon-equal-1"
             index="tables"

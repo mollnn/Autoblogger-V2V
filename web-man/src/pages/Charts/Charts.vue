@@ -1,8 +1,8 @@
 <template>
   <div class="charts-overview">
     <h1 class="page-title">
-      Visual -
-      <span class="fw-semi-bold">Charts</span>
+      视频
+      <span class="fw-semi-bold"></span>
     </h1>
     <div>
     <b-row>
