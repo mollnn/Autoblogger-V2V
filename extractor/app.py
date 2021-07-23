@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import common
+# import pipeline 
 
 app = Flask(__name__)
 
@@ -42,6 +43,24 @@ def api_template_query():
 
 
 
+@app.route('/api/status/source/')
+def api_status_source():
+    return jsonify(common.query(common.readConfig("dbname_backend"),""" select in_source.bvid, cast(round(count(*)*33.34) as signed) as progress from state_board inner join in_source on state_board.bvid=in_source.bvid group by in_source.bvid; """))
+
+@app.route('/api/status/templates/')
+def api_status_templates():
+    return jsonify(common.query(common.readConfig("dbname_backend"),""" select in_templates.bvid, cast(round(count(*)*100) as signed) as progress from state_board inner join in_templates on state_board.bvid=in_templates.bvid group by in_templates.bvid; """))
+
+@app.route('/api/status/output/')
+def api_status_output():
+    return jsonify(common.query(common.readConfig("dbname_backend"),""" select TT.ovid, bvid, src_type, clip_type,progress  from (select ovid, cast(count(*)*50 as signed) as progress from (select ovid from state_gen union all select ovid from state_out) as T group by ovid) as TT inner join state_gen; """))
+
+@app.route('/api/exec/')
+def api_exec():
+    # if len(common.query(common.readConfig("dbname_backend"),""" select * from state_exec; """))>0:
+    #     return "fail"
+    # pipeline.execute()
+    return "ok"
 
 if __name__ == '__main__':
     app.run(host="172.26.55.117", port=5000, debug=True)
