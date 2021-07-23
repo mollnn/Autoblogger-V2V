@@ -85,7 +85,7 @@ def edit():
             output_filename="../data/edited/%s.mp4"%ovid
             editor.edit(edit_desc,output_filename+".temp.mp4")
             template_bvid=common.query(common.readConfig("dbname"), "select bvid from out_template where ovid='%s'"%ovid)[0][0]
-            os.system("ffmpeg -i "+output_filename+".temp.mp4"+" -i ../data/media/%s.hd.mp4 -c copy -map 0:0 -map 1:1 -y %s" % (template_bvid,output_filename))
+            os.system("ffmpeg -i "+output_filename+".temp.mp4"+" -i ../data/media/%s.hd.mp4 -c copy -map 0:0 -map 1:1 -y %s %s" % (template_bvid,output_filename,common.readConfig("ffmpeg_quiet")))
             common.query(common.readConfig("dbname"), "insert ignore into state_out (ovid,`desc`) values ('%s','%s')" % (ovid,"ok"))
 
 # 将视频和相关信息推送到发布池

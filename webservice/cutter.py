@@ -42,16 +42,16 @@ def calcDanmuDensity(danmu_list, duration, Delta=15):
     ans=[max(ans[i],0) for i in range(duration)]
     return ans
 
-# 评分算法示例：弹幕情感计算函数
-def calcDanmuSentiments(danmu_list, duration):
-    ans = [0]*duration
-    cans = [0]*duration
-    for danmu in danmu_list:
-        ans[max(0, min(duration-1, int(math.ceil(float(danmu["floattime"])))))
-            ] += math.pow(2*SnowNLP(danmu["text"]).sentiments-1, 2)
-        cans[max(0, min(duration-1, int(math.ceil(float(danmu["floattime"])))))] += 1
-    ans = [min(1,max(ans[i]/(cans[i]+0.5), 0)) for i in range(duration)]
-    return ans
+# # 评分算法示例：弹幕情感计算函数
+# def calcDanmuSentiments(danmu_list, duration):
+#     ans = [0]*duration
+#     cans = [0]*duration
+#     for danmu in danmu_list:
+#         ans[max(0, min(duration-1, int(math.ceil(float(danmu["floattime"])))))
+#             ] += math.pow(2*SnowNLP(danmu["text"]).sentiments-1, 2)
+#         cans[max(0, min(duration-1, int(math.ceil(float(danmu["floattime"])))))] += 1
+#     ans = [min(1,max(ans[i]/(cans[i]+0.5), 0)) for i in range(duration)]
+#     return ans
 
 
 # 评分算法示例：使用弹幕密度进行评分
@@ -63,10 +63,7 @@ def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
     density_wide = calcDanmuDensity(
         danmu_list, duration, Delta=15)
     ratio = [density_narrow[i]/(density_wide[i]+0.1) for i in range(duration)]
-    sentiments = calcDanmuSentiments(
-        danmu_list, duration)
-    ans_per_sec = [ratio[i] * math.sqrt(density_narrow[i]) *
-            (0.5+0.5*math.sqrt(sentiments[i])) for i in range(duration)]
+    ans_per_sec = [ratio[i] * math.sqrt(density_narrow[i])  for i in range(duration)]
     ans = []
     for i in ans_per_sec:
         ans += [i]*24
@@ -111,11 +108,12 @@ def solve(bvid, src_type):
         common.readConfig("dbname"), "select * from Danmu where cid='%s'" % cid, isDict=True)
     shotcut_list = shotcut.shotcut(bvid)
 
-    # 利用各种评分器进行评分，你可以在这里添加自己的评分器
+    # 利用各种评分器进行评分
     for i in range(0,4):
         clip_type=i
         print("cutter: analysing...", bvid, "clip_type:",i)
 
+        # 你可以在这里添加自己的评分器
         if i==0:
             mark_original = mark(bvid, duration, frame_total, danmu_list, shotcut_list)
         elif i==1:
@@ -129,6 +127,8 @@ def solve(bvid, src_type):
         if np.max(mark_original)<0.0001:
             print("cutter: skip clip_type", clip_type)
             continue
+
+        # mark_original 格式形如 [mark0, mark1, ..., markm] 其中 marki 表示对第 i 帧的评分
 
         # 将镜头分割的结果应用到评分上
         mark_final = mark_original
@@ -149,8 +149,8 @@ def solve(bvid, src_type):
         # 二分法确定阈值，并计算结果区间
         l=np.min(mark_final)+0.001
         r=np.max(mark_final)
-        ratio=0.2
-        dura_min=3*24
+        ratio=0.8
+        dura_min=1*24
         dura_max=20*24
         while abs(r-l)>1e-4:
             mid=(l+r)/2
@@ -160,10 +160,12 @@ def solve(bvid, src_type):
                 l=mid
             else:
                 r=mid
+        print("threshold =",l)
         threshold = l
         is_frame_good = [(mark_final[i] > threshold) for i in range(frame_total)]
         result, total = makeRanges(is_frame_good, dura_min, dura_max)
 
+        # result 格式形如 [[start_1,end_1], [start_2,end_2], ...]，单位为帧
         # 生成视频片段并将信息写入数据库
         print("cutter: writing...", bvid)
         def _solve_xvid(xvid):

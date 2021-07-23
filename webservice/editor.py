@@ -13,7 +13,7 @@ def edit(clip_desc_list, output_filename, quiet=True):
     ffcmd="""ffmpeg -i "concat:"""
     flag=0
     def _solve_one(clip_desc):
-        os.system("ffmpeg -i %s -ss %f -t %f ../tmp/%s.ts %s"%(clip_desc["filename"],clip_desc["start"],clip_desc["duration"],clip_desc["tid"],common.readConfig("ffmpeg_quiet")+common.readConfig("ffmpeg_default")))
+        os.system("ffmpeg -i %s -ss %f -t %f -b:v 1000k ../tmp/%s.ts %s"%(clip_desc["filename"],clip_desc["start"],clip_desc["duration"],clip_desc["tid"],common.readConfig("ffmpeg_quiet")+common.readConfig("ffmpeg_default")))
     handles=[]
     for clip_desc in clip_desc_list:
         if 'xvid' in clip_desc:
@@ -26,6 +26,6 @@ def edit(clip_desc_list, output_filename, quiet=True):
         flag=1
     for i in handles:
         i.join()
-    ffcmd+="""" -vcodec libx264 -acodec aac %s"""%output_filename
+    ffcmd+="""" -vcodec libx264 -acodec aac -b:v 100k %s"""%output_filename
     ffcmd+=" "+common.readConfig("ffmpeg_default")+common.readConfig("ffmpeg_quiet")
     os.system(ffcmd)
