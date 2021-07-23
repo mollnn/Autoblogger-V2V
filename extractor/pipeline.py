@@ -8,6 +8,8 @@ import generator
 import editor
 import time
 
+global_ths=[]
+
 # 装载已存在的视频文件，分析后加入素材库
 def load(bvid):
     print("load",bvid)
@@ -45,6 +47,9 @@ def pull(bvid):
 
 
 def downloadTemplate(template_bvid):
+    if len(common.query(common.readConfig("dbname"),  """ select * from in_source where bvid='%s'; """%template_bvid ))>0:
+        print("Template is already in source. No need to download. ",bvid)
+        return
     if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(template_bvid,"media")))==0:
         spider.downloadMedia(template_bvid)
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (template_bvid,"media"))
@@ -124,6 +129,13 @@ def main():
     edit()
     time_out=time.time()-time_gen-time_pull-time_begin
     print("各阶段用时：",time_pull,time_gen,time_out)
+    common.query(common.readConfig("dbname_backend"),""" truncate table state_exec; """)
     
+def main_test():
+    print("hahaha")
+    common.query(common.readConfig("dbname_backend"),""" truncate table state_exec; """)
 
-main()
+def execute():
+    th=Thread(target=main)
+    th.start()
+    global_ths.append(th)
