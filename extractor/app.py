@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import common
+import spider
 # import pipeline 
 
 app = Flask(__name__)
@@ -19,6 +20,24 @@ def api_source_insert(bvid, src_type):
 @app.route('/api/template/insert/<bvid>/<int:src_type>/<int:clip_type>/')
 def api_template_insert(bvid, src_type, clip_type):
     common.query(common.readConfig("dbname_backend"),""" insert into in_templates (bvid, src_type, clip_type) values ("%s",%d, %d); """%(bvid,src_type,clip_type))
+    return "ok"
+
+
+@app.route('/api/source/searchinsert/<kw>/<int:src_type>/')
+def api_source_insert_x(kw, src_type):
+    res=spider.getSearchResult(kw)
+    for i in range(min(len(res),20)):
+        bvid=res[i]
+        common.query(common.readConfig("dbname_backend"),""" insert into in_source (bvid, src_type) values ("%s",%d); """%(bvid,src_type))
+    return "ok"
+
+
+@app.route('/api/template/searchinsert/<kw>/<int:src_type>/<int:clip_type>/')
+def api_template_insert_x(kw, src_type, clip_type):
+    res=spider.getSearchResult(kw)
+    for i in range(min(len(res),5)):
+        bvid=res[i]
+        common.query(common.readConfig("dbname_backend"),""" insert into in_templates (bvid, src_type, clip_type) values ("%s",%d, %d); """%(bvid,src_type,clip_type))
     return "ok"
 
 
@@ -53,7 +72,7 @@ def api_status_templates():
 
 @app.route('/api/status/output/')
 def api_status_output():
-    return jsonify(common.query(common.readConfig("dbname_backend"),""" select TT.ovid, bvid, src_type, clip_type,progress  from (select ovid, cast(count(*)*50 as signed) as progress from (select ovid from state_gen union all select ovid from state_out) as T group by ovid) as TT inner join state_gen; """))
+    return jsonify(common.query(common.readConfig("dbname_backend"),""" select distinct TT.ovid, src_type, clip_type,progress  from (select ovid, cast(count(*)*50 as signed) as progress from (select ovid from state_gen union all select ovid from state_out) as T group by ovid) as TT inner join state_gen; """))
 
 @app.route('/api/exec/')
 def api_exec():
@@ -61,6 +80,7 @@ def api_exec():
     #     return "fail"
     # pipeline.execute()
     return "ok"
+
 
 if __name__ == '__main__':
     app.run(host="172.26.55.117", port=5000, debug=True)

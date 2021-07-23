@@ -147,11 +147,11 @@ def solve(bvid, src_type):
                         mark_final[i] = 0
 
         # 二分法确定阈值，并计算结果区间
-        l=np.min(mark_final)
+        l=np.min(mark_final)+0.001
         r=np.max(mark_final)
-        ratio=0.1
-        dura_min=0.5*24
-        dura_max=15*24
+        ratio=0.2
+        dura_min=3*24
+        dura_max=20*24
         while abs(r-l)>1e-4:
             mid=(l+r)/2
             is_frame_good = [(mark_final[i] > mid) for i in range(frame_total)]

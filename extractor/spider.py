@@ -253,3 +253,7 @@ def importMedia(bvid, filename):
     if os.path.isfile(filename) == False:
         print("spider: Source media invalid. Terminated.", bvid)
     importMP4(bvid, filename)
+
+# 获取搜索结果（第一页）
+def getSearchResult(keyword):
+    return GetBidsBySearch(keyword)
