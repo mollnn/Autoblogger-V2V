@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 
 import common
+import time
 
 class ShotcutDetector:
     def __init__(self):
@@ -289,9 +290,11 @@ class ShotcutDetector:
             finish()
 
 def solve_shotcut(filename):
+    time_start=time.time()
     sbd = ShotcutDetector()
     sbd.open_video(filename)
     sbd.detect()
+    print("shotcut time usage: ", time.time()-time_start)
     return sbd.sb
 
 ####################################################

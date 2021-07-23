@@ -35,15 +35,18 @@ def generate(bvid, src_type, clip_type):
                 last_cut_frame=i
         except Exception:
             print("error")
+    print("generator: div ok")
     for i in edit_desc:
-        ans=common.query(common.readConfig("dbname"), "select id from extraction where src_type=%d and clip_type=%d and frame_end-frame_begin>%d order by rand() limit 1;"%(src_type, clip_type, int(i["duration"]*24)))
+        ans=common.query(common.readConfig("dbname"), "select id from extraction where src_type=%d and clip_type=%d and frame_end-frame_begin>%d+1 order by rand() limit 1;"%(src_type, clip_type, int(i["duration"]*24)))
         if len(ans)>0:
             i["xvid"]=ans[0][0]
+    print("generator: sel ok")
     id=0
     for i in edit_desc:
         common.query(common.readConfig("dbname"), "insert ignore into out_editdesc (ovid, id, xvid, start, duration) values ('%s',%d,'%s',%f,%f)"%(ovid, id, i["xvid"], i["start"],i["duration"]))
         id+=1
     common.query(common.readConfig("dbname"), "insert ignore into out_template (ovid, bvid) values ('%s','%s')"%(ovid, bvid))
+    print("generator: write ok")
     return ovid
     # editor.edit(edit_desc,"output_mid.mp4")
     # os.system("ffmpeg -i output_mid.mp4 -i %s -c copy -map 0:0 -map 1:1 -y -shortest output.mp4" % video_filename)
