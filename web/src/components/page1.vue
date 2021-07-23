@@ -1,7 +1,7 @@
 <template>
   <div>
     <video-background
-      src="https://stream7.iqilu.com/10339/upload_transcode/202002/18/20200218114723HDu3hhxqIT.mp4"
+      src="http://131.mollnn.com:5002/travel_cloud.mp4"
       style="max-height: 100vh; height: 100vh "
     >
     </video-background>

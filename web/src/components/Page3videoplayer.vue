@@ -25,8 +25,8 @@ export default {
         
         console.log('player ended!', player);
         console.log(this.$store.state.index);
-        this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index + 1)%this.$store.state.videolist.length];
-        this.$store.state.index = (this.$store.state.index + 1) % this.$store.state.videolist.length;
+        this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index - 1 + this.$store.state.videolist.length)%this.$store.state.videolist.length];
+        this.$store.state.index = (this.$store.state.index - 1 + this.$store.state.videolist.length) % this.$store.state.videolist.length;
         this.playerOptions.poster = this.$store.state.posterlist[this.$store.state.index];
         this.$forceUpdate();
         Bus.$emit("changethebottom", this.$store.state.index);
@@ -41,7 +41,7 @@ export default {
         loop: false, // 导致视频一结束就重新开始。
         preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
         language: "zh-CN",
-        aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        aspectRatio: "16:8", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
         fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         sources: [
           {
@@ -49,7 +49,7 @@ export default {
             src: this.$store.state.vlink, //url地址
           },
         ],
-        poster:this.$store.state.posterlist[this.$store.state.index] , //你的封面地址
+        poster:this.$store.state.posterlist[this.$store.state.videolist.length-1-this.$store.state.index] , //你的封面地址
         // width: document.documentElement.clientWidth, //播放器宽度
         // height:20,
         // width:10,
@@ -64,6 +64,7 @@ export default {
     };
   },
   mounted() {
+    console.log("videookkk!");
       Bus.$on("changevideo", (val) => {
       this.playerOptions.sources[0].src=val;
       for(var i = 0; i < this.$store.state.videolist.length; i++){
@@ -82,6 +83,5 @@ export default {
 <style>
     .input_video{
         margin: 0 auto;
-        height: 100px;
     }
 </style>

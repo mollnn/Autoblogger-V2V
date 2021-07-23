@@ -1,31 +1,53 @@
 <template>
-  <div class="rightzone">
-    <el-card :style="`height: ${height}px`">
-      <div slot="header" class="clearfix">
-        <span>视频信息概要</span>
-        <el-button style="float: right; padding: 3px 0" type="text"
-          >点击查看详情</el-button
-        >
-      </div>
-      <div v-for="o in 1" :key="o" class="text item">
-        {{ "视频信息条目 " + o }}
-      </div>
-    </el-card>
-  </div>
+  <el-card class="box-card">
+    <div id= "xxxx1">Loading....</div><br>
+    <div id= "xxxx2">Loading....</div><br>
+    <div id= "xxxx3">Loading....</div><br>
+    <div id= "xxxx4">Loading....</div><br>
+  </el-card>
 </template>
 
 <script>
+var tempuse = '';
+import Bus from "../bus1.js";
 export default {
   data() {
     return {
-      height: 0
     };
   },
+  methods: {
+        draw() {
+          tempuse = this.$store.state.objlist[this.$store.state.index].id;
+      this.$http
+        .get(
+          "http://131.mollnn.com:5001/xv/danmu/" +
+            tempuse+
+            "/",
+          {
+            headers: { "Access-Control-Allow-Origin": "*" },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          document.getElementById("xxxx1").textContent = res.data[0][0];
+          document.getElementById("xxxx2").textContent = res.data[1][0];
+          document.getElementById("xxxx3").textContent = res.data[2][0];
+          document.getElementById("xxxx4").textContent = res.data[3][0];
+        });
+    },
+  },
   mounted() {
-    const tr = document.getElementById('fff')
-    console.log(tr)
-    this.height = tr.clientHeight
-  }
+     console.log("rightookkk!");
+        this.draw();
+    Bus.$on("changethebottom", (val) => {
+      console.log(val);
+      this.draw();
+    });
+    Bus.$on("changevideo", (val) => {
+      console.log(val);
+      this.draw();
+    });
+  },
 };
 </script>>
 
@@ -36,7 +58,7 @@ export default {
 }
 
 .item {
-  margin-bottom: 18px;
+  margin-bottom: 0px;
 }
 
 .clearfix:before,
@@ -46,5 +68,11 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+
+.box-card {
+  width: 100%;
+  height: 40%;
+  background-color: #282828;
 }
 </style>
