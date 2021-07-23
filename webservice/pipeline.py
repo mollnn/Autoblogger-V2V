@@ -48,7 +48,7 @@ def pull(bvid):
 
 def downloadTemplate(template_bvid):
     if len(common.query(common.readConfig("dbname"),  """ select * from in_source where bvid='%s'; """%template_bvid ))>0:
-        print("Template is already in source. No need to download. ",bvid)
+        print("Template is already in source. No need to download. ",template_bvid)
         return
     if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(template_bvid,"media")))==0:
         spider.downloadMedia(template_bvid)
@@ -131,9 +131,9 @@ def main():
     print("各阶段用时：",time_pull,time_gen,time_out)
     common.query(common.readConfig("dbname_backend"),""" truncate table state_exec; """)
     
-def main_test():
-    print("hahaha")
-    common.query(common.readConfig("dbname_backend"),""" truncate table state_exec; """)
+# def main_test():
+#     print("hahaha")
+#     common.query(common.readConfig("dbname_backend"),""" truncate table state_exec; """)
 
 def execute():
     th=Thread(target=main)

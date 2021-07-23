@@ -110,6 +110,17 @@ def readConfig(key, filename="config.json"):
     f.close()
     return obj[key]
 
+def getFileList(file_dir):
+    for root, dirs, files in os.walk(file_dir):
+        return files
+
+
+def getBinaryFile(filename):
+	f = open(filename, "rb")
+	data = f.read()
+	f.close()
+	return data
+
 def generateXvid():
     return "XV"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)
 
