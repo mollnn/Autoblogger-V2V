@@ -16,7 +16,7 @@ def api_source_insert(bvid, src_type):
     common.query(common.readConfig("dbname_backend"),""" insert into in_source (bvid, src_type) values ("%s",%d); """%(bvid,src_type))
     return "ok"
 
-@app.route('/api/template/insert/<bvid>/<int:src_type>/<int:clip_type>')
+@app.route('/api/template/insert/<bvid>/<int:src_type>/<int:clip_type>/')
 def api_template_insert(bvid, src_type, clip_type):
     common.query(common.readConfig("dbname_backend"),""" insert into in_templates (bvid, src_type, clip_type) values ("%s",%d, %d); """%(bvid,src_type,clip_type))
     return "ok"
@@ -27,7 +27,7 @@ def apt_source_delete(bvid, src_type):
     common.query(common.readConfig("dbname_backend"),""" delete from in_source where bvid="%s" and src_type=%d; """%(bvid,src_type))
     return "ok"
 
-@app.route('/api/template/delete/<bvid>/<int:src_type>/<int:clip_type>')
+@app.route('/api/template/delete/<bvid>/<int:src_type>/<int:clip_type>/')
 def api_template_delete(bvid, src_type, clip_type):
     common.query(common.readConfig("dbname_backend"),""" delete from in_templates where bvid="%s" and src_type=%d and clip_type=%d; """%(bvid,src_type,clip_type))
     return "ok"

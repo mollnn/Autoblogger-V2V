@@ -27,7 +27,7 @@ def load(bvid):
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (bvid,"info"))
 
     if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(bvid,"cut")))==0:
-        cutter.solve(bvid)
+        cutter.solve(bvid, 0)
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (bvid,"cut"))
 
 # 从网络拉取视频文件，分析后加入素材库
@@ -42,7 +42,7 @@ def pull(bvid):
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (bvid,"info"))
 
     if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(bvid,"cut")))==0:
-        cutter.solve(bvid)
+        cutter.solve(bvid, 0)
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (bvid,"cut"))
 
 
@@ -139,3 +139,6 @@ def execute():
     th=Thread(target=main)
     th.start()
     global_ths.append(th)
+
+if __name__=="__main__":
+    main()

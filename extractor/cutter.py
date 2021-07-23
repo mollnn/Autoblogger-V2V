@@ -10,26 +10,13 @@ import scipy.signal
 import shotcut
 from threading import Thread
 
-def positionsBeyond(a, val):
-    return [i for i in range(len(a)) if a[i]>=val]
-
-def getPropotionPoint(a, prop):
-    l=np.min(a)
-    r=np.max(a)
-    while abs(r-l) > 1e-4:
-        mid=(l+r)/2
-        tmp=len(positionsBeyond(a, mid))
-        if tmp/len(a) > prop:
-            l=mid
-        else:
-            r=mid
-    return l
-
+# 给定二值化后的波形，提取时长合法的片段
 def makeRanges(bans, lim_min, lim_max):
     ans=[]
     length=len(bans)
     last=-2
     now=0
+    tot=0
     for i in range(length):
         if bans[i]>0:
             if i==now+1:
@@ -39,12 +26,14 @@ def makeRanges(bans, lim_min, lim_max):
                     dura=now-last
                     if lim_min<dura and dura<lim_max:
                         ans+=[[last,now]]
+                        tot+=now-last
                     last=-2
                 else:
                     last=i
                     now=i
-    return ans
+    return ans, tot
 
+# 评分算法示例：弹幕密度计算函数
 def calcDanmuDensity(danmu_list, duration, Delta=15):
     ans = [0]*duration
     for danmu in danmu_list:
@@ -53,7 +42,7 @@ def calcDanmuDensity(danmu_list, duration, Delta=15):
     ans=[max(ans[i],0) for i in range(duration)]
     return ans
 
-
+# 评分算法示例：弹幕情感计算函数
 def calcDanmuSentiments(danmu_list, duration):
     ans = [0]*duration
     cans = [0]*duration
@@ -65,7 +54,7 @@ def calcDanmuSentiments(danmu_list, duration):
     return ans
 
 
-
+# 评分算法示例：使用弹幕密度进行评分
 def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
     # Output: ans: The mark of each frame. len(ans)==frame_total
     media_file_name = "../data/media/%s.mp4" % bvid
@@ -85,6 +74,7 @@ def mark(bvid, duration, frame_total, danmu_list, shotcut_list):
     ans = scipy.signal.savgol_filter(ans, 97, 3)
     return ans
 
+# 从数据库中拉取已经计算的评分
 def get_mark(bvid, duration, frame_total, danmu_list, shotcut_list, colname):
     # Output: ans: The mark of each frame. len(ans)==frame_total
     sql_ans = common.query(common.readConfig(
@@ -95,10 +85,12 @@ def get_mark(bvid, duration, frame_total, danmu_list, shotcut_list, colname):
     ans = [max(i,0) for i in ans]
     return ans
 
-def solve(bvid):
-    print("cutter: Hello ", bvid)
+######################################################################
 
-    src_type=0
+
+# 对某个原始素材进行分割与评分，选取其中优质部分装入素材库
+def solve(bvid, src_type):
+    print("cutter: Hello ", bvid)
 
     # if len(common.query(common.readConfig("dbname"), """
     #     select * from extraction where bvid='{bvid}' and src_type='{src_type}' and clip_type='{clip_type}'
@@ -106,17 +98,20 @@ def solve(bvid):
     #     print("extractor.main.extract: Already extracted with same bvid, src_type and clip_type. Terminated.")
     #     return
 
+    # 读取视频基本信息
     duration = int(math.ceil(
         float(ffmpeg.probe("../data/media/%s.mp4" % bvid)["format"]["duration"])))
     frame_rate = 24     # Forced
     frame_total = int(math.ceil(duration*frame_rate))
 
+    # 读取视频附加信息
     cid = common.query(
         common.readConfig("dbname"), "select cid from Vinfo where bvid='%s'" % bvid)[0][0]
     danmu_list = common.query(
         common.readConfig("dbname"), "select * from Danmu where cid='%s'" % cid, isDict=True)
     shotcut_list = shotcut.shotcut(bvid)
 
+    # 利用各种评分器进行评分，你可以在这里添加自己的评分器
     for i in range(0,4):
         clip_type=i
         print("cutter: analysing...", bvid, "clip_type:",i)
@@ -130,12 +125,13 @@ def solve(bvid):
         elif i==3:
             mark_original=get_mark(bvid, duration, frame_total, danmu_list, shotcut_list, 'humor')
 
-        if np.max(mark_original)<0.001:
+        # 处理拉取失败的情况
+        if np.max(mark_original)<0.0001:
             print("cutter: skip clip_type", clip_type)
             continue
 
+        # 将镜头分割的结果应用到评分上
         mark_final = mark_original
-
         for sc in shotcut_list:
             if sc["transition"] == "cut":
                 fid = sc["cut_frame"]
@@ -150,18 +146,26 @@ def solve(bvid):
                     if i >= 0 and i < frame_total:
                         mark_final[i] = 0
 
-        threshold = getPropotionPoint(mark_final, 0.2)
+        # 二分法确定阈值，并计算结果区间
+        l=np.min(mark_final)
+        r=np.max(mark_final)
+        ratio=0.1
+        dura_min=0.5*24
+        dura_max=15*24
+        while abs(r-l)>1e-4:
+            mid=(l+r)/2
+            is_frame_good = [(mark_final[i] > mid) for i in range(frame_total)]
+            result, total = makeRanges(is_frame_good, dura_min, dura_max)
+            if total/frame_total > ratio:
+                l=mid
+            else:
+                r=mid
+        threshold = l
         is_frame_good = [(mark_final[i] > threshold) for i in range(frame_total)]
+        result, total = makeRanges(is_frame_good, dura_min, dura_max)
 
-        # Visualization
-        # plt.plot(mark_original)
-        # plt.plot(is_frame_good)
-        # plt.show()
-
-        result = makeRanges(is_frame_good, 24, 360)
-
+        # 生成视频片段并将信息写入数据库
         print("cutter: writing...", bvid)
-
         def _solve_xvid(xvid):
             score_maxpos=np.argmax(mark_final[i[0]:i[1]])+i[0]
             score_maxval=np.max(mark_final[i[0]:i[1]])
@@ -174,7 +178,6 @@ def solve(bvid):
             os.system("ffmpeg -i ../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../data/poster/%s.jpg  %s" % (xvid, xvid, common.readConfig("ffmpeg_default")+common.readConfig("ffmpeg_quiet")))
             common.query(common.readConfig("dbname"), "INSERT ignore INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type, score_maxpos, score_maxval) VALUES ('%s','%s',%d,%d,%d,%d,%d,%f);" % (
                 extraction_obj["id"], extraction_obj["bvid"], extraction_obj["frame_begin"], extraction_obj["frame_end"], extraction_obj["src_type"], extraction_obj["clip_type"], extraction_obj["score_maxpos"], extraction_obj["score_maxval"]))
-
         handles=[]
         for i in result:
             xvid = common.generateXvid()
