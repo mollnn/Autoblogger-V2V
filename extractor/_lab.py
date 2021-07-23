@@ -25,7 +25,6 @@ n_frame=24*60
 frame = [[[0]*3]*320]*180
 f=np.array(frame,np.uint8)
 for i in range(n_frame):
-    print(i)
     cv_writer.write(f)
 cv_writer.release()
 

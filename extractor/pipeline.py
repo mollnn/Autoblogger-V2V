@@ -1,4 +1,4 @@
-import threading
+from threading import Thread
 import os
 import common
 import spider
@@ -6,6 +6,7 @@ import shotcut
 import cutter
 import generator
 import editor
+import time
 
 # 装载已存在的视频文件，分析后加入素材库
 def load(bvid):
@@ -42,18 +43,31 @@ def pull(bvid):
         cutter.solve(bvid)
         common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (bvid,"cut"))
 
+
+def downloadTemplate(template_bvid):
+    if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(template_bvid,"media")))==0:
+        spider.downloadMedia(template_bvid)
+        common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (template_bvid,"media"))
+
 # 生成剪辑描述表
 def generate(src_type, clip_type):
     print("generate",src_type,clip_type)
     template_list=common.query(common.readConfig("dbname"), "select bvid from in_templates where src_type=%d and clip_type=%d;"%(src_type, clip_type))
-    for i in template_list:
-        template_bvid=i[0]
+    handles=[]
+    def _solve_one(template_bvid):
         if len(common.query(common.readConfig("dbname"), "select * from state_board where bvid='%s' and `desc`='%s'"%(template_bvid,"media")))==0:
             spider.downloadMedia(template_bvid)
             common.query(common.readConfig("dbname"), "insert ignore into state_board (bvid,`desc`) values ('%s','%s')" % (template_bvid,"media"))
         if len(common.query(common.readConfig("dbname"), "select * from state_gen where bvid='%s' and src_type=%d and clip_type=%d"%(template_bvid,src_type,clip_type)))==0:
             ovid = generator.generate(template_bvid, src_type, clip_type)
             common.query(common.readConfig("dbname"), "insert ignore into state_gen (ovid,`desc`,bvid,src_type,clip_type) values ('%s','%s','%s',%d,%d)" %(ovid,"ok",template_bvid,src_type,clip_type))
+    for i in template_list:
+        template_bvid=i[0]
+        th = Thread(target=_solve_one,args=(template_bvid,))
+        th.start()
+        handles.append(th)
+    for i in handles:
+        i.join()
 
 # 根据剪辑描述表剪辑视频
 def edit():
@@ -85,10 +99,31 @@ def main():
     common.query(common.readConfig("dbname"), "truncate table out_template")
     common.query(common.readConfig("dbname"), "truncate table extraction")
     source_list=common.query(common.readConfig("dbname"), "select distinct bvid from in_source;")
+    template_list=common.query(common.readConfig("dbname"), "select distinct bvid from in_templates;")
+    time_begin=time.time()
+    # 并行拉取
+    handles=[]
     for i in source_list:
         bvid=i[0]
-        pull(bvid)
+        th = Thread(target=pull,args=(bvid,))
+        th.start()
+        handles.append(th)
+
+    for i in template_list:
+        bvid=i[0]
+        th = Thread(target=downloadTemplate,args=(bvid,))
+        th.start()
+        handles.append(th)
+    for i in handles:
+        i.join()
+    time_pull=time.time()-time_begin
+    # 生成阶段
     generate(0,0)
+    time_gen=time.time()-time_pull-time_begin
+    # 输出阶段
     edit()
+    time_out=time.time()-time_gen-time_pull-time_begin
+    print("各阶段用时：",time_pull,time_gen,time_out)
+    
 
 main()

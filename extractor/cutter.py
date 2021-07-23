@@ -8,6 +8,7 @@ import editor
 import os
 import scipy.signal
 import shotcut
+from threading import Thread
 
 def positionsBeyond(a, val):
     return [i for i in range(len(a)) if a[i]>=val]
@@ -160,8 +161,8 @@ def solve(bvid):
         result = makeRanges(is_frame_good, 24, 360)
 
         print("cutter: writing...", bvid)
-        for i in result:
-            xvid = common.generateXvid()
+
+        def _solve_xvid(xvid):
             score_maxpos=np.argmax(mark_final[i[0]:i[1]])+i[0]
             score_maxval=np.max(mark_final[i[0]:i[1]])
             extraction_obj = {"id": xvid, "bvid": bvid,
@@ -170,9 +171,17 @@ def solve(bvid):
                             "duration":(extraction_obj["frame_end"]-extraction_obj["frame_begin"])/frame_rate}], "../data/output/%s.mp4" % xvid, quiet=True)
             editor.edit([{"filename": "../data/media/%s.hd.mp4" % bvid, "start": extraction_obj["frame_begin"]/frame_rate,
                             "duration":(extraction_obj["frame_end"]-extraction_obj["frame_begin"])/frame_rate}], "../data/output/%s.hd.mp4" % xvid, quiet=True)
-            
-            os.system("ffmpeg -i ../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../data/poster/%s.jpg  -hide_banner -loglevel error" % (xvid, xvid))
+            os.system("ffmpeg -i ../data/output/%s.mp4 -r 24 -ss 00:00:00 -vframes 1 ../data/poster/%s.jpg  %s" % (xvid, xvid, common.readConfig("ffmpeg_default")+common.readConfig("ffmpeg_quiet")))
             common.query(common.readConfig("dbname"), "INSERT ignore INTO extraction (id, bvid, frame_begin, frame_end, src_type, clip_type, score_maxpos, score_maxval) VALUES ('%s','%s',%d,%d,%d,%d,%d,%f);" % (
                 extraction_obj["id"], extraction_obj["bvid"], extraction_obj["frame_begin"], extraction_obj["frame_end"], extraction_obj["src_type"], extraction_obj["clip_type"], extraction_obj["score_maxpos"], extraction_obj["score_maxval"]))
+
+        handles=[]
+        for i in result:
+            xvid = common.generateXvid()
+            th=Thread(target=_solve_xvid, args=(xvid,))
+            th.start()
+            handles.append(th)
+        for i in handles:
+            i.join()
 
     print("cutter: OK!", bvid)
