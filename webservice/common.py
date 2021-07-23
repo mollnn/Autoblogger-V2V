@@ -7,12 +7,14 @@ import json
 import math
 import time
 import random
-
+import wave
+import numpy as np
+from scipy import signal
 import pymysql
 from sshtunnel import SSHTunnelForwarder
 import time
 import requests
-
+import os
 import cv2
 
 def generateBlackVideo():

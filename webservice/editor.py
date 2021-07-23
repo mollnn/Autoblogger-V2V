@@ -29,3 +29,11 @@ def edit(clip_desc_list, output_filename, quiet=True):
     ffcmd+="""" -vcodec libx264 -acodec aac -b:v 100k %s"""%output_filename
     ffcmd+=" "+common.readConfig("ffmpeg_default")+common.readConfig("ffmpeg_quiet")
     os.system(ffcmd)
+
+def edit_by_ovid(ovid):
+    edit_desc = common.query(common.readConfig("dbname"), "select * from out_editdesc where ovid='%s';"%ovid, isDict=True)
+    output_filename="../data/edited/%s.mp4"%ovid
+    edit(edit_desc,output_filename+".temp.mp4")
+    template_bvid=common.query(common.readConfig("dbname"), "select bvid from out_template where ovid='%s'"%ovid)[0][0]
+    os.system("ffmpeg -i "+output_filename+".temp.mp4"+" -i ../data/media/%s.hd.mp4 -c copy -map 0:0 -map 1:1 -y %s %s" % (template_bvid,output_filename,common.readConfig("ffmpeg_quiet")))
+    common.query(common.readConfig("dbname"), "insert ignore into state_out (ovid,`desc`) values ('%s','%s')" % (ovid,"ok"))

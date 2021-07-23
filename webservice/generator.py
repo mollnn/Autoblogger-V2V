@@ -4,51 +4,60 @@ import os
 import common
 import editor
 import shotcut
-
-def calcShotcutFlag(shotcut_list, n_frame):
-    shotcut_flags = [0]*n_frame
-    for shotcut in shotcut_list:
-        if shotcut["transition"] == "cut":
-            shotcut_flags[min(n_frame-1, shotcut["cut_frame"])] = 1
-        else:
-            shotcut_flags[min(n_frame-1,shotcut["start_frame"])] = 2
-            shotcut_flags[min(n_frame-1,shotcut["end_frame"])] = 3
-    return shotcut_flags
+import math
+import ffmpeg
 
 
 def generate(bvid, src_type, clip_type):
-    ovid=common.generateOvid()
-    video_filename = "../data/media/%s.mp4" % bvid
-    video = common.readVideo(video_filename)
-    n_frame = len(video)
+    # 以 bvid 作为模板，以类型为 (src_type, clip_type) 的所有片段作为素材，生成视频
+
+    # 获取基本信息
+    output_video_id = common.generateOvid()
+    target_video_filename = "../data/media/%s.mp4" % bvid
+    duration = int(math.ceil(
+        float(ffmpeg.probe("../data/media/%s.mp4" % bvid)["format"]["duration"])))
+    frame_rate = 24     # Forced
+    count_frame = int(math.ceil(duration*frame_rate))
+
+    # 分析模板视频中的转场情况
     shotcut_list = shotcut.shotcut(bvid)
-    shotcut_flags = calcShotcutFlag(shotcut_list, n_frame)
-    edit_desc=[]
-    last_cut_frame=0
-    for i in range(n_frame):
+    shotcut_tag = [0]*count_frame
+    for shot_cut in shotcut_list:
+        if shot_cut["transition"] == "cut":
+            shotcut_tag[min(count_frame-1, shot_cut["cut_frame"])] = 1
+        else:
+            shotcut_tag[min(count_frame-1, shot_cut["start_frame"])] = 2
+            shotcut_tag[min(count_frame-1, shot_cut["end_frame"])] = 3
+
+    # 生成剪辑描述（视频文件待定）
+    edit_description = []
+    last_cut_frame = 0
+    for frame_id in range(count_frame):
         try:
-            frame = video[i]
-            if shotcut_flags[i] >0:
-                clip_begin=last_cut_frame
-                clip_end=i
-                clip_duration=i-last_cut_frame
-                clip_desc={"xvid":"","start":0,"duration":clip_duration/24}
-                edit_desc.append(clip_desc)
-                last_cut_frame=i
+            if shotcut_tag[frame_id] > 0:
+                clip_begin = last_cut_frame
+                clip_end = frame_id
+                clip_duration = frame_id-last_cut_frame
+                clip_desc = {"xvid": "", "start": 0,
+                             "duration": clip_duration/24}
+                edit_description.append(clip_desc)
+                last_cut_frame = frame_id
         except Exception:
             print("error")
-    print("generator: div ok")
-    for i in edit_desc:
-        ans=common.query(common.readConfig("dbname"), "select id from extraction where src_type=%d and clip_type=%d and frame_end-frame_begin>%d+1 order by rand() limit 1;"%(src_type, clip_type, int(i["duration"]*24)))
-        if len(ans)>0:
-            i["xvid"]=ans[0][0]
-    print("generator: sel ok")
-    id=0
-    for i in edit_desc:
-        common.query(common.readConfig("dbname"), "insert ignore into out_editdesc (ovid, id, xvid, start, duration) values ('%s',%d,'%s',%f,%f)"%(ovid, id, i["xvid"], i["start"],i["duration"]))
-        id+=1
-    common.query(common.readConfig("dbname"), "insert ignore into out_template (ovid, bvid) values ('%s','%s')"%(ovid, bvid))
-    print("generator: write ok")
-    return ovid
-    # editor.edit(edit_desc,"output_mid.mp4")
-    # os.system("ffmpeg -i output_mid.mp4 -i %s -c copy -map 0:0 -map 1:1 -y -shortest output.mp4" % video_filename)
+
+    # 选择合适的视频片段填入剪辑描述中
+    for frame_id in edit_description:
+        sql_result = common.query(common.readConfig(
+            "dbname"), "select id from extraction where src_type=%d and clip_type=%d and frame_end-frame_begin>%d+1 order by rand() limit 1;" % (src_type, clip_type, int(frame_id["duration"]*24)))
+        if len(sql_result) > 0:
+            frame_id["xvid"] = sql_result[0][0]
+
+    # 将剪辑描述写入数据库中
+    id = 0
+    for frame_id in edit_description:
+        common.query(common.readConfig("dbname"), "insert ignore into out_editdesc (ovid, id, xvid, start, duration) values ('%s',%d,'%s',%f,%f)" % (
+            output_video_id, id, frame_id["xvid"], frame_id["start"], frame_id["duration"]))
+        id += 1
+    common.query(common.readConfig(
+        "dbname"), "insert ignore into out_template (ovid, bvid) values ('%s','%s')" % (output_video_id, bvid))
+    return output_video_id

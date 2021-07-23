@@ -5,6 +5,7 @@ from flask_cors import CORS
 import common
 import spider
 import pipeline 
+import jieba
 
 app = Flask(__name__)
 
