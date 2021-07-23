@@ -1,3 +1,5 @@
+# 公用函数，数据库读写，配置文件读取
+
 import math
 import time
 import random
@@ -133,3 +135,28 @@ def generateOvid():
 
 def generateTempid():
     return "T"+str(int(math.floor(time.time()*1000000000000)+random.randint(0,1000000000))%10000000000000000000000)
+
+
+# 给定二值化后的波形，提取时长合法的片段并计算总长
+# 您不需要关心该函数的具体实现
+def makeRanges(bans, lim_min, lim_max):
+    ans=[]
+    length=len(bans)
+    last=-2
+    now=0
+    tot=0
+    for i in range(length):
+        if bans[i]>0:
+            if i==now+1:
+                now=i
+            else: 
+                if last>-2:
+                    dura=now-last
+                    if lim_min<dura and dura<lim_max:
+                        ans+=[[last,now]]
+                        tot+=now-last
+                    last=-2
+                else:
+                    last=i
+                    now=i
+    return ans, tot

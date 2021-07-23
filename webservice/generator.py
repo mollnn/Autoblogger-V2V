@@ -1,3 +1,5 @@
+# 自定义 generator
+
 import os
 import common
 import editor

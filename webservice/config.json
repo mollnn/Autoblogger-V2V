@@ -1,6 +1,6 @@
 {
     "dbname": "testdb",
-    "dbname_backend": "testback",
+    "dbname_backend": "testdb",
     "db_banime": "banime",
     "mysql_host": "rm-bp15x62q3095543qygo.mysql.rds.aliyuncs.com",
     "mysql_user": "mollnn",
