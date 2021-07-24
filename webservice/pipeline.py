@@ -97,7 +97,7 @@ def edit():
     for i in outvideo_list:
         ovid = i[0]
         if len(common.query(common.readConfig("dbname"), "select * from state_out where ovid='%s' and `desc`='%s'" % (ovid, "ok"))) == 0:
-            edit(ovid)
+            editor.edit_by_ovid(ovid)
 
 
 def publish(ovid):
