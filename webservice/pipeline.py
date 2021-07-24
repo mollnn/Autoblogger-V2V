@@ -39,24 +39,24 @@ if __name__ == "__main__":
     # clearDatafile()
     # sqlQuery("truncate table vinfo")
     # sqlQuery("truncate table danmu")
-    sqlQuery("truncate table extraction")
+    # sqlQuery("truncate table extraction")
     sqlQuery("truncate table editdesc")
     sqlQuery("truncate table status")
     
     lt=time.time()
 
-    # singleImport("BV1q4411d7wZ")
-    # singleImport("BV1sk4y1k73b")
+    # singleImport("BV1h4411Y78Y")
+    # singleImport("BV1BA411q7oy")
 
     print("----- import",time.time()-lt)
     lt=time.time()
 
-    singleExtract("BV1q4411d7wZ")
+    # singleExtract("BV1h4411Y78Y")
     
     print("----- extract",time.time()-lt)
     lt=time.time()
 
-    singleGenerate("BV1sk4y1k73b", 1)
+    singleGenerate("BV1BA411q7oy", 1)
     
     print("----- generate",time.time()-lt)
     lt=time.time()

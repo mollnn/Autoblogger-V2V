@@ -80,51 +80,49 @@ def generateByVideoTemplate(template_bvid, tag):
 
     def fillClips(score_thres):
         # 获取素材库
-        srcs = sqlQuery("select id, fe-fb as len, smv from extraction where tag=%d and smv>=%f order by rand();" %
+        src_lib = sqlQuery("select id, fe-fb as len, smv from extraction where tag=%d and smv>=%f order by rand();" %
                         (tag, score_thres), isDict=True)
 
         edit_desc_tmp = edit_desc
-        for i in srcs:
+        for i in src_lib:
             i["cnt"] = 0
-        use_max = 0
+        clip_max_usage = 0
         for clip_desc in edit_desc_tmp:
-            cand_id = 0
-            for src_id in range(len(srcs)):
-                src = srcs[src_id]
-                if src["len"] <= clip_desc["duration"]*24:
+            candidate_id = 0
+            for src_id in range(len(src_lib)):
+                src_clip = src_lib[src_id]
+                if src_clip["len"] <= clip_desc["duration"]*24:
                     continue
-                if src["cnt"] < srcs[cand_id]["cnt"]:
-                    cand_id = src_id
-                elif src["smv"] > srcs[cand_id]["smv"]:
-                    cand_id = src_id
-            clip_desc["xvid"] = srcs[cand_id]["id"]
-            srcs[cand_id]["cnt"] += 1
-            use_max = max(use_max, srcs[cand_id]["cnt"])
+                if src_clip["cnt"] < src_lib[candidate_id]["cnt"]:
+                    candidate_id = src_id
+                elif src_clip["cnt"] == src_lib[candidate_id]["cnt"] and src_clip["smv"] > src_lib[candidate_id]["smv"]:
+                    candidate_id = src_id
 
-        return edit_desc_tmp, use_max
+            clip_desc["xvid"] = src_lib[candidate_id]["id"]
+            src_lib[candidate_id]["cnt"] += 1
+            clip_max_usage = max(clip_max_usage, src_lib[candidate_id]["cnt"])
 
-    l = 0
-    r = src_maxsmv
+        return edit_desc_tmp, clip_max_usage
 
-    while r-l > 1e-4:
-        mid = (l+r)/2
-        edit_desc_ans, use_max = fillClips(mid)
-        if use_max > 3:
-            r = mid
+    bisect_l = 0
+    bisect_r = src_maxsmv
+
+    while bisect_r-bisect_l > 1e-3:
+        bisect_mid = (bisect_l+bisect_r)/2
+        edit_desc_ans, clip_max_usage = fillClips(bisect_mid)
+        if clip_max_usage > 3:
+            bisect_r = bisect_mid
         else:
-            l = mid
+            bisect_l = bisect_mid
 
-    edit_desc, use_max = fillClips(mid)
-    if use_max > 3:
+    edit_desc, clip_max_usage = fillClips(bisect_mid)
+    if clip_max_usage > 3:
         print("    gen Warning: use max exceeded.")
-
-    print(edit_desc)
 
     # 根据剪辑描述符剪辑视频
     edit(edit_desc, "../tmp/%s.vtmp.mp4" % ovid)
 
     # 特殊：替换音轨
-
     os.system("ffmpeg -i {fin_v} -i {fin_a} {cfg} {fout} {fg}".format(
         fin_v="../tmp/%s.vtmp.mp4" % ovid,
         fin_a="../data/media/%s.hd.mp4" % template_bvid,
@@ -180,11 +178,11 @@ def writeEditDesc(ovid, edit_desc):
     MYSQL_PORT = common.readConfig("mysql_port")
 
     conn = pymysql.connect(
-        host=MYSQL_HOST,  # 映射地址local_bind_address IP
-        port=MYSQL_PORT,  # 映射地址local_bind_address端口
+        host=MYSQL_HOST, 
+        port=MYSQL_PORT,
         user=MYSQL_USER,
         passwd=MYSQL_PASSWD,
-        database=MYSQL_DBNAME,  # 需要连接的实例名
+        database=MYSQL_DBNAME, 
         charset='utf8')
 
     cursor = conn.cursor()
