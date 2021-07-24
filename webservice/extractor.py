@@ -7,6 +7,37 @@ import math
 import numpy as np
 import os
 
+def export_clips(clips, score, bvid, frame_rate, tag):
+    # 片段输出封装
+    for clip in clips:
+        xvid = common.generateXvid()
+        l, r = clip[0], clip[1]
+        score_argmax = np.argmax(score[l:r])+l
+        score_max = np.max(score[l:r])
+        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/media/%s.mp4" % bvid,
+            fout="../data/output/%s.mp4" % xvid,
+            ts=l/frame_rate,
+            tt=(r-l)/frame_rate,
+            cfg=conf("ffmpeg_ld")
+        ))
+        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/media/%s.hd.mp4" % bvid,
+            fout="../data/output/%s.hd.mp4" % xvid,
+            ts=l/frame_rate,
+            tt=(r-l)/frame_rate,
+            cfg=conf("ffmpeg_hd")
+        ))
+        os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/output/%s.mp4" % xvid,
+            fout="../data/poster/%s.jpg" % xvid
+        ))
+        sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%d,%d)"
+                 % (xvid, bvid, tag, l, r, score_max, score_argmax))
+
 
 def extractor_sine(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
@@ -34,8 +65,8 @@ def extractor_sine(tag, bvid, danmus, shotcuts):
     len_max = 20*24
 
     # 二分确定阈值
-    l = np.min(score)
-    r = np.max(score)
+    l = np.min(score)+1e-5
+    r = np.max(score)-1e-5
     while r-l > 1e-4:
         mid = (l+r)/2
         clips, total = common.makeRanges(
@@ -52,19 +83,7 @@ def extractor_sine(tag, bvid, danmus, shotcuts):
     print("  extractor.sine:", threshold, total)
 
     # 片段输出
-    for clip in clips:
-        xvid = common.generateXvid()
-        l, r = clip[0], clip[1]
-        score_argmax = np.argmax(score[l:r])+l
-        score_max = np.max(score[l:r])
-        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {fout} {fg}".format(fg=conf("ffmpeg_default"),
-                  fin="../data/media/%s.mp4" % bvid, fout="../data/output/%s.mp4" % xvid, ts=l/frame_rate, tt=(r-l)/frame_rate))
-        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {fout} {fg}".format(fg=conf("ffmpeg_default"),
-                  fin="../data/media/%s.hd.mp4" % bvid, fout="../data/output/%s.hd.mp4" % xvid, ts=l/frame_rate, tt=(r-l)/frame_rate))
-        os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(fg=conf(
-            "ffmpeg_default"), fin="../data/output/%s.mp4" % xvid, fout="../data/poster/%s.jpg" % xvid))
-        sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%d,%d)" % (
-            xvid, bvid, tag, l, r, score_max, score_argmax))
+    export_clips(clips, score, bvid, frame_rate, tag)
 
     print("  extractor.sine: ok")
 
