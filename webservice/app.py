@@ -102,17 +102,17 @@ def api_list(src_type, clip_type):
 
 @app.route('/video/<name>/')
 def api_video(name):
-    return osapi.getBinaryFile("../data/output/%s.mp4" % name)
+    return common.getBinaryFile("../data/output/%s.mp4" % name)
 
 
 @app.route('/poster/<name>/')
 def api_poster(name):
-    return osapi.getBinaryFile("../data/poster/%s.jpg" % name)
+    return common.getBinaryFile("../data/poster/%s.jpg" % name)
 
 
 @app.route('/assets/<name>/')
 def api_assets(name):
-    return osapi.getBinaryFile("assets/%s" % name)
+    return common.getBinaryFile("assets/%s" % name)
 
 
 @app.route('/vinfo/<xvid>/')

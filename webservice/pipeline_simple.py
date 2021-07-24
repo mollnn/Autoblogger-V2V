@@ -63,10 +63,8 @@ def main():
 
     time_begin = time.time()
     # 读取源素材列表和模板列表并拉取
-    source_list = common.query(common.readConfig(
-        "dbname"), "select distinct bvid from in_source;")
-    template_list = common.query(common.readConfig(
-        "dbname"), "select distinct bvid from in_templates;")
+    source_list = common.query(common.readConfig("dbname"), "select distinct bvid from in_source;")
+    template_list = common.query(common.readConfig("dbname"), "select distinct bvid from in_templates;")
     for i in source_list:
         bvid = i[0]
         pull(bvid)

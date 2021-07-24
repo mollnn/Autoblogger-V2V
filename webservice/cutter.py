@@ -126,8 +126,8 @@ def solve(bvid, src_type):
                         mark_final[i] = 0
 
         # 目标提取比例，时长要求（现在的提取比例是考虑了时长要求后的提取比例）
-        ratio=0.8
-        dura_min=1*24
+        ratio=0.2
+        dura_min=3*24
         dura_max=20*24
 
         # 二分法确定阈值
