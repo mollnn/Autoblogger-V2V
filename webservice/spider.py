@@ -200,7 +200,8 @@ def GetAllInfoByBid(vbid):
     VInfoObj, oid = GetVInfoByBid(vbid)
     return DanmuList, VInfoObj
 
-def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST=common.readConfig("mysql_host"),MYSQL_USER=common.readConfig("mysql_user"),MYSQL_PASSWD=common.readConfig("mysql_password"),MYSQL_PORT=common.readConfig("mysql_port")):
+def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST=common.readConfig("mysql_host"),MYSQL_USER=common.readConfig("mysql_user"),
+MYSQL_PASSWD=common.readConfig("mysql_password"),MYSQL_PORT=common.readConfig("mysql_port")):
     conn = pymysql.connect(
         host=MYSQL_HOST,  # 映射地址local_bind_address IP
         port=MYSQL_PORT,  # 映射地址local_bind_address端口

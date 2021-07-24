@@ -36,16 +36,17 @@ def clearDatafile():
 
 
 if __name__ == "__main__":
-    clearDatafile()
-    sqlQuery("truncate table vinfo")
-    sqlQuery("truncate table danmu")
+    # clearDatafile()
+    # sqlQuery("truncate table vinfo")
+    # sqlQuery("truncate table danmu")
     sqlQuery("truncate table extraction")
     sqlQuery("truncate table editdesc")
     sqlQuery("truncate table status")
     
     lt=time.time()
 
-    singleImport("BV1q4411d7wZ")
+    # singleImport("BV1q4411d7wZ")
+    # singleImport("BV1sk4y1k73b")
 
     print("----- import",time.time()-lt)
     lt=time.time()
@@ -55,7 +56,7 @@ if __name__ == "__main__":
     print("----- extract",time.time()-lt)
     lt=time.time()
 
-    singleGenerate("ConcatAll", 0)
+    singleGenerate("BV1sk4y1k73b", 1)
     
     print("----- generate",time.time()-lt)
     lt=time.time()
