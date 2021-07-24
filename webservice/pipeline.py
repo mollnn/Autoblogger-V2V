@@ -10,8 +10,8 @@ import time
 
 def singleImport(bvid):
     print("singleImport", bvid)
-    spider.downloadMedia(bvid)
     spider.downloadInfo(bvid)
+    spider.downloadMedia(bvid)
 
 
 def singleExtract(bvid):
@@ -36,25 +36,26 @@ def clearDatafile():
 
 
 if __name__ == "__main__":
-    # clearDatafile()
-    # sqlQuery("truncate table vinfo")
-    # sqlQuery("truncate table danmu")
+    clearDatafile()
+    sqlQuery("truncate table vinfo")
+    sqlQuery("truncate table danmu")
     sqlQuery("truncate table extraction")
     sqlQuery("truncate table editdesc")
+    sqlQuery("truncate table status")
     
     lt=time.time()
 
-    # singleImport("BV1q4411d7wZ")
+    singleImport("BV1q4411d7wZ")
 
-    print("--- import",time.time()-lt)
+    print("----- import",time.time()-lt)
     lt=time.time()
 
     singleExtract("BV1q4411d7wZ")
     
-    print("--- extract",time.time()-lt)
+    print("----- extract",time.time()-lt)
     lt=time.time()
 
     singleGenerate("ConcatAll", 0)
     
-    print("--- generate",time.time()-lt)
+    print("----- generate",time.time()-lt)
     lt=time.time()

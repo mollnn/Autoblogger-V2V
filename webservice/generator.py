@@ -1,9 +1,11 @@
+from random import randint
 import common
 import os
 import ffmpeg
 from common import conf
 from common import sqlQuery
-
+from threading import Thread
+import random
 # 剪辑描述符 edit_desc is a list of dict{'xvid'=?, 'start'=?, 'duration'=?}
 
 
@@ -22,16 +24,22 @@ def edit(edit_desc, output_filename):
     # 根据剪辑描述符剪辑视频
     # 先把每个片段切成 .ts
     ts_list=[]
+    thread_handles=[]
     for i in edit_desc:
-        tsid=common.generateTempid()
-        ts_list.append(tsid)
-        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} -b:v 20000k {fout} {fg}".format(
-            fin="../data/output/%s.hd.mp4"%i["xvid"],
-            ts=i["start"],
-            tt=i["duration"],
-            fout="../tmp/%s.ts"%tsid,
-            fg=conf("ffmpeg_default")
-        ))
+        def A():
+            tsid=common.generateTempid()
+            ts_list.append(tsid)
+            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} -b:v 20000k {fout} {fg}".format(
+                fin="../data/output/%s.hd.mp4"%i["xvid"],
+                ts=i["start"],
+                tt=i["duration"],
+                fout="../tmp/%s.ts"%tsid,
+                fg=conf("ffmpeg_default")
+            ))
+        thread_handles.append(Thread(target=A))
+    for th in thread_handles: th.start()
+    for th in thread_handles: th.join()
+    
     # 将一堆 .ts 合并并重新编码
     os.system(""" ffmpeg -i "concat:{fin}" {fconf} {fout} {fg}""".format(
         fin="|".join(["../tmp/%s.ts"%tsid for tsid in ts_list]),
@@ -53,12 +61,23 @@ def main(description, tag):
     # tag: 素材标记号
     # 按照 description 的方法（可能是视频模板，可能是音乐），利用所有带 tag 的素材生成视频
     ovid=common.generateOvid()
+
+    common.wstat(ovid, random.randint(0,5))
+
     if description=="ConcatAll":
         edit_desc = generateByConcatAll(description, tag)
     elif len(description)>2 and description[0:2]=="BV":
         # 按视频模板剪辑
         edit_desc = generateByVideoTemplate(description, tag)
+
+    common.wstat(ovid, 40+random.randint(0,20))
+
     # 根据剪辑描述符剪辑视频
     edit(edit_desc, "../data/edited/%s.mp4"%ovid)
+
+    common.wstat(ovid, 90+random.randint(0,5))
+    
     # 将剪辑描述符写入数据库
     writeEditDesc(ovid, edit_desc)
+
+    common.wstat(ovid, 100)

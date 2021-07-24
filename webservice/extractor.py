@@ -6,38 +6,45 @@ import ffmpeg
 import math
 import numpy as np
 import os
+from threading import Thread
+import random
 
 def export_clips(clips, score, bvid, frame_rate, tag):
     # 片段输出封装
+    thread_handles=[]
     for clip in clips:
-        xvid = common.generateXvid()
-        l, r = clip[0], clip[1]
-        score_argmax = np.argmax(score[l:r])+l
-        score_max = np.max(score[l:r])
-        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
-            fg=conf("ffmpeg_default"),
-            fin="../data/media/%s.mp4" % bvid,
-            fout="../data/output/%s.mp4" % xvid,
-            ts=l/frame_rate,
-            tt=(r-l)/frame_rate,
-            cfg=conf("ffmpeg_ld")
-        ))
-        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
-            fg=conf("ffmpeg_default"),
-            fin="../data/media/%s.hd.mp4" % bvid,
-            fout="../data/output/%s.hd.mp4" % xvid,
-            ts=l/frame_rate,
-            tt=(r-l)/frame_rate,
-            cfg=conf("ffmpeg_hd")
-        ))
-        os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
-            fg=conf("ffmpeg_default"),
-            fin="../data/output/%s.mp4" % xvid,
-            fout="../data/poster/%s.jpg" % xvid
-        ))
-        sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%d,%d)"
-                 % (xvid, bvid, tag, l, r, score_max, score_argmax))
-
+        def A():
+            xvid = common.generateXvid()
+            l, r = clip[0], clip[1]
+            score_argmax = np.argmax(score[l:r])+l
+            score_max = np.max(score[l:r])
+            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+                fg=conf("ffmpeg_default"),
+                fin="../data/media/%s.mp4" % bvid,
+                fout="../data/output/%s.mp4" % xvid,
+                ts=l/frame_rate,
+                tt=(r-l)/frame_rate,
+                cfg=conf("ffmpeg_ld")
+            ))
+            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+                fg=conf("ffmpeg_default"),
+                fin="../data/media/%s.hd.mp4" % bvid,
+                fout="../data/output/%s.hd.mp4" % xvid,
+                ts=l/frame_rate,
+                tt=(r-l)/frame_rate,
+                cfg=conf("ffmpeg_hd")
+            ))
+            os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
+                fg=conf("ffmpeg_default"),
+                fin="../data/output/%s.mp4" % xvid,
+                fout="../data/poster/%s.jpg" % xvid
+            ))
+            sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%d,%d)"
+                    % (xvid, bvid, tag, l, r, score_max, score_argmax))
+        thread_handles.append(Thread(target=A))
+    for th in thread_handles: th.start()
+    for th in thread_handles: th.join()
+    
 
 def extractor_sine(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
@@ -89,14 +96,22 @@ def extractor_sine(tag, bvid, danmus, shotcuts):
 
 
 def main(bvid):
-    print("  extractor: shotcut...")
+    print("  extractor: prep...")
+
+    common.wstat(bvid, 0+random.randint(0,5), ext=True)
+
     shotcuts = shotcut(bvid)
 
-    print("  extractor: read danmu...")
+    common.wstat(bvid, 30+random.randint(0,10), ext=True)
+
     cid = sqlQuery(
         "select cid from vinfo where bvid='{bvid}'".format(bvid=bvid))[0][0]
     danmus = sqlQuery(
         "select * from danmu where cid='{cid}'".format(cid=cid), isDict=True)
 
+    common.wstat(bvid, 40+random.randint(0,20), ext=True)
+
     # 在这里接入您的 extractor
     extractor_sine(0, bvid, danmus, shotcuts)
+
+    common.wstat(bvid, 100, ext=True)

@@ -11,11 +11,18 @@ import pymysql
 import sys
 import common
 import sshtunnel
+import random
+from threading import Thread
 
 
 def importMP4(video_id, input_filename):
+    common.wstat(video_id,0+random.randint(0,10))
+
     ffmpeg_config=common.readConfig("ffmpeg_hd")
     os.system('ffmpeg -y -i ' + input_filename + ' ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
+
+    common.wstat(video_id,50+random.randint(0,30))
+
     ffmpeg_config=common.readConfig("ffmpeg_ld")
     os.system('ffmpeg -y -i ' + input_filename + ' ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
 
@@ -174,12 +181,17 @@ def InsertVInfo(data,cursor,conn):
     conn.commit()
 
 
-def InsertDanmu(data,cursor,conn):
+def InsertDanmu(datas,cursor,conn):
     # data = dict(item)
-    keys = ', '.join(data.keys())
-    values = ', '.join(['%s'] * len(data))
-    sql = 'insert ignore into %s (%s) values (%s)' % ('Danmu', keys, values)
-    cursor.execute(sql, tuple(data.values()))
+    if len(datas)==0:
+        return
+    keys = ', '.join(datas[0].keys())
+    values = ', '.join(['%s'] * len(datas[0]))
+    sql = ('insert ignore into %s (%s) values (%s);' % ('Danmu', keys, values))
+    ls=[]
+    for data in datas:
+        ls.append(tuple(data.values()))
+    cursor.executemany(sql, ls)
     conn.commit()
 
 
@@ -199,14 +211,15 @@ def getInfo(vbid,MYSQL_DBNAME=common.readConfig("dbname"),MYSQL_HOST=common.read
     cursor = conn.cursor()
     DanmuList,VInfoObj=GetAllInfoByBid(vbid)
     InsertVInfo(VInfoObj,cursor,conn)
-    for Danmu in  DanmuList:
-        InsertDanmu(Danmu,cursor,conn)
+    InsertDanmu(DanmuList,cursor,conn)
     cursor.close()
     conn.close()
     return VInfoObj
 
 
 def getMP4(video_id):
+    common.wstat(video_id,0)
+
     pageUrl = "https://www.bilibili.com/video/" + video_id
     htmlText = common.getRequestsText(pageUrl, pageUrl)
     urlJson = json.loads(re.findall(
@@ -215,20 +228,35 @@ def getMP4(video_id):
     videoUrl = urlJson['data']['dash']['video'][0]['backupUrl'][0]
     audioUrl = urlJson['data']['dash']['audio'][0]['backupUrl'][0]
 
+    common.wstat(video_id,1+random.randint(0,5))
+
     audioFile = common.getRequestsContent(audioUrl, pageUrl)
     with open('../tmp/audio_'+video_id+'.mp3', 'wb') as f:
         f.write(audioFile)
+    common.wstat(video_id,10+random.randint(0,10))
     videoFile = common.getRequestsContent(videoUrl, pageUrl)
     with open('../tmp/video_'+video_id+'.mp4', 'wb') as f:
         f.write(videoFile)
 
-    ffmpeg_config=common.readConfig("ffmpeg_hd")
-    os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
-              video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
-    ffmpeg_config=common.readConfig("ffmpeg_ld")
-    os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
-              video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
+    common.wstat(video_id,50+random.randint(0,30))
 
+    def A():
+        ffmpeg_config=common.readConfig("ffmpeg_hd")
+        os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
+                video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.hd.mp4  -hide_banner -loglevel error')
+    def B():
+        ffmpeg_config=common.readConfig("ffmpeg_ld")
+        os.system('ffmpeg -y -i ../tmp/video_'+video_id+'.mp4 -i ../tmp/audio_' +
+                video_id+'.mp3 ' + ffmpeg_config + ' ../data/media/'+video_id+'.mp4  -hide_banner -loglevel error')
+    
+    thread_handles=[]
+    thread_handles.append(Thread(target=A))
+    thread_handles.append(Thread(target=B))
+    for th in thread_handles: th.start()
+    for th in thread_handles: th.join()
+
+    common.wstat(video_id,100)
+    
 ####################################################
 
 # 如果 bv 信息不存在，则下载 bv 信息
@@ -236,7 +264,7 @@ def downloadInfo(bvid):
     ans = common.query(
         common.readConfig("dbname"), "select * from Vinfo where bvid='%s'" % bvid)
     if len(ans) > 0:
-        print("spider: Info already exists. Terminated.", bvid)
+        print("  spider: Info already exists. Terminated.", bvid)
         return
     getInfo(bvid)
 
@@ -247,7 +275,7 @@ def downloadMedia(bvid):
 # 导入本地媒体，filename 为文件路径
 def importMedia(bvid, filename):
     if os.path.isfile(filename) == False:
-        print("spider: Source media invalid. Terminated.", bvid)
+        print("  spider: Source media invalid. Terminated.", bvid)
     importMP4(bvid, filename)
 
 # 获取搜索结果（第一页）

@@ -295,7 +295,7 @@ def solve_shotcut(filename):
     sbd = ShotcutDetector()
     sbd.open_video(filename)
     sbd.detect()
-    print("shotcut time usage: ", time.time()-time_start)
+    print("    shotcut time usage: ", time.time()-time_start)
     return sbd.sb
 
 ####################################################

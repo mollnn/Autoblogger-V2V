@@ -168,3 +168,6 @@ def makeRanges(bans, lim_min, lim_max):
 
 def conf(key):
     return readConfig(key)
+
+def wstat(id, s, ext=False):
+    sqlQuery("insert into status (id, p, ext) values ('%s',%d,%d);" %(id,s,1 if ext else 0))
