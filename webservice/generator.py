@@ -27,8 +27,16 @@ def generateByConcatAll(description, tag):
                   "duration":src_clip[1]/24} for src_clip in src_clips]
     # 根据剪辑描述符剪辑视频
     edit(edit_desc, "../data/edited/%s.mp4" % ovid)
+    # 生成视频封面
+    os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
+        fg=conf("ffmpeg_default"),
+        fin="../data/edited/%s.mp4" % ovid,
+        fout="../data/edited/%s.jpg" % ovid
+    ))
     # 将剪辑描述符写入数据库
     writeEditDesc(ovid, edit_desc)
+    # 将 OV 信息写入数据库
+    sqlQuery("insert into out_info (ovid, description, tag) values ('%s','%s',%d)"%(ovid, description, tag))
     common.wstat(ovid, 100)
 
 
@@ -134,9 +142,17 @@ def generateByVideoTemplate(template_bvid, tag):
         fg=conf("ffmpeg_default")
     ))
 
+    # 生成视频封面
+    os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
+        fg=conf("ffmpeg_default"),
+        fin="../data/edited/%s.mp4" % ovid,
+        fout="../data/edited/%s.jpg" % ovid
+    ))
+
     # 将剪辑描述符写入数据库
     writeEditDesc(ovid, edit_desc)
-
+    # 将 OV 信息写入数据库
+    sqlQuery("insert into out_info (ovid, description, tag) values ('%s','%s',%d)"%(ovid, template_bvid, tag))
     common.wstat(ovid, 100)
 
 ###########################################################################
@@ -171,7 +187,6 @@ def edit(edit_desc, output_filename):
         fout=output_filename,
         fg=conf("ffmpeg_default")
     ))
-
 
 def writeEditDesc(ovid, edit_desc):
     MYSQL_DBNAME = common.readConfig("dbname")

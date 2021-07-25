@@ -8,11 +8,17 @@ import generator
 import time
 from threading import Thread
 
+# 下载一个视频
 def singleDownload(bvid):
     print("singleDownload", bvid)
     spider.downloadInfo(bvid)
     spider.downloadMedia(bvid)
 
+# 导入一个视频
+def singleImport(bvid):
+    print("singleImport",bvid)
+    spider.downloadInfo(bvid)   # 下载 vinfo+danmu 不怎么吃资源就现场下载好了
+    spider.importMedia(bvid)
 
 def singleExtract(bvid):
     print("singleExtract", bvid)
@@ -41,6 +47,7 @@ def execute():
     sqlQuery("truncate table extraction")
     sqlQuery("truncate table editdesc")
     sqlQuery("truncate table status")
+    sqlQuery("truncate table out_info")
     
     in_src=sqlQuery("select * from in_src")
     in_gen=sqlQuery("select * from in_gen")
@@ -48,9 +55,10 @@ def execute():
     lt=time.time()
 
     download_list=[]
-    for i in in_src: download_list.append(i[0])
+    for i in in_src:
+        if i[0] not in download_list: download_list.append(i[0])
     for i in in_gen: 
-        if len(i[0])>2 and i[0][0:2]=="BV": download_list.append(i[0])
+        if len(i[0])>2 and i[0][0:2]=="BV" and i[0] not in download_list: download_list.append(i[0])
 
     thread_handles=[]
     for i in download_list:
