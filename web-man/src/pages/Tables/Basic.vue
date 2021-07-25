@@ -2,9 +2,9 @@
   <div class="tables-basic">
     <h1 class="page-title">状态<span class="fw-semi-bold"></span></h1>
     <b-row>
-      <b-col lg="5">
+      <b-col lg="6">
         <Widget customHeader settings close>
-          <h3>素材导入状态 <span class="fw-semi-bold"></span></h3>
+          <h3>媒体载入段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -25,9 +25,9 @@
           </div>
         </Widget>
       </b-col>
-      <b-col lg="7">
+      <b-col lg="6">
         <Widget customHeader settings close>
-          <h3>模板导入状态<span class="fw-semi-bold"></span></h3>
+          <h3>片段提取段<span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -48,15 +48,13 @@
           </div>
         </Widget>
         <Widget customHeader settings close>
-          <h3>视频生成状态 <span class="fw-semi-bold"></span></h3>
+          <h3>成片生成段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th>序号</th>
                   <th>OVID</th>
-                  <th>类型号1</th>
-                  <th>类型号2</th>
                   <th>进度</th>
                 </tr>
               </thead>
@@ -64,9 +62,7 @@
                 <tr v-cloak v-for="(item, index) of clist" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
-                  <td>{{ item[2] }}</td>
-                  <td>{{ item[3] }} %</td>
+                  <td>{{ item[1] }}%</td>
                 </tr>
               </tbody>
             </table>
@@ -183,19 +179,19 @@ export default {
     this.draw3();
     this.timer = setInterval(() => {
       setTimeout(this.draw1(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
     this.timer = setInterval(() => {
       setTimeout(this.draw2(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
     this.timer = setInterval(() => {
       setTimeout(this.draw3(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
   },
   methods: {
     draw1() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/source/", {
+        .get("http://v2v.mollnn.com:5000/api/status/load/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
@@ -207,7 +203,7 @@ export default {
     draw2() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/templates/", {
+        .get("http://v2v.mollnn.com:5000/api/status/extract/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
@@ -219,7 +215,7 @@ export default {
     draw3() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/output/", {
+        .get("http://v2v.mollnn.com:5000/api/status/generate/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {

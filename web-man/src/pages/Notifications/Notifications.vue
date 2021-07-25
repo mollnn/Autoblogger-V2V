@@ -1,121 +1,258 @@
 <template>
-  <div>
-    <h1 class="page-title">Messages - <span class="fw-semi-bold">Notifications</span>
-    </h1>
-
-    <Widget
-      title="<h6> Vue Toasted </h6>"
-      close collapse settings customHeader
-    >
-      <b-row>
-        <b-col lg="4" xs="12">
-          <h5 class="m-t-1">Layout options</h5>
-          <p>There are few position options available for notifications. You can click any of
-            them
-            to change notifications position:</p>
-          <div class="location-selector">
-            <div
-                    class="bit top left" @click="toggleLocation('top-left')"
-            />
-            <div
-                    class="bit top right" @click="toggleLocation('top-right')"
-            />
-            <div
-                    class="bit top" @click="toggleLocation('top-center')"
-            />
-            <div
-                    class="bit bottom left" @click="toggleLocation('bottom-left')"
-            />
-            <div
-                    class="bit bottom right" @click="toggleLocation('bottom-right')"
-            />
-            <div
-                    class="bit bottom" @click="toggleLocation('bottom-center')"
-            />
+  <div class="tables-basic">
+    <h2 class="page-title">
+      成片<span class="fw-semi-bold"></span>
+    </h2>
+    <b-row>
+      <b-col>
+        <Widget
+          title="<h5>成片 <span class='fw-semi-bold'>列表</span></h5>"
+          customHeader
+          settings
+          close
+        >
+          <div class="table-resposive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="hidden-sm-down">#</th>
+                  <th>生成封面</th>
+                  <th>成片的标题</th>
+                  <th class="hidden-sm-down">成片的模板号</th>
+                  <th class="hidden-sm-down">成片的素材类型</th>
+                  <th class="hidden-sm-down">点此查看</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in slist" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>
+                    <img
+                      class="img-rounded"
+                      :src="photolist[index]"
+                      alt=""
+                      height="50"
+                    />
+                  </td>
+                  <td>
+                    {{ item[3] }}
+                  </td>
+                  <td>
+                    <!-- <p>
+                      <small>
+                        <span class="fw-semi-bold">Dimensions:</span>
+                        <span class="text-muted"
+                          >&nbsp; {{ row.info.dimensions }}</span
+                        >
+                      </small>
+                    </p> --> 
+                  </td>
+                  <td class="text-semi-muted">
+                    {{ item[1] }}
+                  </td>
+                  <td class="text-semi-muted">
+                    {{ item[2] }}
+                  </td>
+                  <td class="width-150">
+                    <!-- <b-progress
+                      :variant="row.progress.colorClass"
+                      :value="row.progress.percent"
+                      :max="100"
+                      class="progress-sm mb-xs"
+                    /> -->
+                    <a :href= "videolist[index]">here!</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </b-col>
-
-        <b-col lg="4" xs="12">
-          <h5 class="m-t-1">Notification Types</h5>
-          <p>Different types of notifications for lots of use cases. Custom classes are also
-            supported.</p>
-          <p><b-button variant="info" id="show-info-message" @click="addInfoNotification">Info
-            Message</b-button></p>
-          <p><b-button variant="danger" id="show-error-message" @click="addErrorNotification">Error
-            Message</b-button></p>
-          <p><b-button
-            variant="success" id="show-success-message" @click="addSuccessNotification"
-          >Success Message</b-button></p>
-        </b-col>
-
-        <b-col lg="4" xs="12">
-          <h5 class="m-t-1">Dead Simple Usage</h5>
-          <p>Just few lines of code to instantiate a notifications object. Does not require
-            passing any options:</p>
-          <pre><code>this.$toasted.show("Thanks for checking out Messenger!");</code></pre>
-          <p>More complex example:</p>
-          <pre>
-            <code>this.$toasted.error('There was an explosion while processing your request.', {
-  duration: 5000,
-  position: 'top-center'
-});</code>
-          </pre>
-        </b-col>
-      </b-row>
-    </Widget>
+          <div class="clearfix">
+            <div class="float-right">
+              <b-button variant="default" class="mr-3" size="sm"
+                >Send to...</b-button
+              >
+              <b-dropdown
+                variant="inverse"
+                class="mr-xs"
+                size="sm"
+                text="Clear"
+                right
+              >
+                <b-dropdown-item>Clear</b-dropdown-item>
+                <b-dropdown-item>Move ...</b-dropdown-item>
+                <b-dropdown-item>Something else here</b-dropdown-item>
+                <b-dropdown-divider />
+                <b-dropdown-item>Separated link</b-dropdown-item>
+              </b-dropdown>
+            </div>
+            <!-- <p>成片列表如上所示</p> -->
+          </div>
+        </Widget>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
-import Widget from '@/components/Widget/Widget';
+import Vue from "vue";
+import Widget from "@/components/Widget/Widget";
+import Sparklines from "../../components/Sparklines/Sparklines";
 
 export default {
-  name: 'Notifications',
-  components: { Widget },
-  methods: {
-    addSuccessNotification() {
-      this.$toasted.success('Showing success message was successful!', {
-        action: {
-          text: 'Close',
-          onClick: (e, toastObject) => {
-            toastObject.goAway(0);
-          }
-        }
-      })
-    },
-    addInfoNotification() {
-      this.$toasted.info('Launching thermonuclear war...', {
-        action: {
-          text: 'Cancel launch',
-          onClick: (e, toastObject) => {
-            toastObject.text('Thermonuclear war averted').goAway(1000);
-          }
-        }
-      });
-    },
-    addErrorNotification() {
-      this.$toasted.error('Launching thermonuclear war...', {
-        action: [
-          {
-            text: 'Cancel',
-            onClick: (e, toastObject) => {
-              toastObject.el.classList.remove('info');
-              toastObject.el.classList.add('success');
-              toastObject.text('Alien planet destroyed!').goAway(2000);
-            }
-          }
-        ]
-      });
-    },
-    toggleLocation(position = 'top-right') {
-      this.$toasted.options.position = position;
-      this.$toasted.show(null);
-    },
+  name: "Notifications",
+  components: { Widget, Sparklines },
+  mounted() {
+    this.draw();
   },
-  created() {
-    this.$toasted.show('Thanks for checking out Messenger!');
+  data() {
+    return {
+      slist: [],
+      photolist: [],
+      videolist: [],
+      tableStyles: [
+        {
+          id: 1,
+          picture: require("../../assets/tables/1.jpg"), // eslint-disable-line global-require
+          description: "Palo Alto",
+          info: {
+            type: "JPEG",
+            dimensions: "200x150",
+          },
+          date: new Date("September 14, 2012"),
+          size: "45.6 KB",
+          progress: {
+            percent: 29,
+            colorClass: "success",
+          },
+        },
+        {
+          id: 2,
+          picture: require("../../assets/tables/2.jpg"), // eslint-disable-line global-require
+          description: "The Sky",
+          info: {
+            type: "PSD",
+            dimensions: "2400x1455",
+          },
+          date: new Date("November 14, 2012"),
+          size: "15.3 MB",
+          progress: {
+            percent: 33,
+            colorClass: "warning",
+          },
+        },
+        {
+          id: 3,
+          picture: require("../../assets/tables/3.jpg"), // eslint-disable-line global-require
+          description: "Down the road",
+          label: {
+            colorClass: "danger",
+            text: "INFO!",
+          },
+          info: {
+            type: "JPEG",
+            dimensions: "200x150",
+          },
+          date: new Date("September 14, 2012"),
+          size: "49.0 KB",
+          progress: {
+            percent: 38,
+            colorClass: "inverse",
+          },
+        },
+        {
+          id: 4,
+          picture: require("../../assets/tables/4.jpg"), // eslint-disable-line global-require
+          description: "The Edge",
+          info: {
+            type: "PNG",
+            dimensions: "210x160",
+          },
+          date: new Date("September 15, 2012"),
+          size: "69.1 KB",
+          progress: {
+            percent: 17,
+            colorClass: "danger",
+          },
+        },
+        {
+          id: 5,
+          picture: require("../../assets/tables/5.jpg"), // eslint-disable-line global-require
+          description: "Fortress",
+          info: {
+            type: "JPEG",
+            dimensions: "1452x1320",
+          },
+          date: new Date("October 1, 2012"),
+          size: "2.3 MB",
+          progress: {
+            percent: 41,
+            colorClass: "primary",
+          },
+        },
+      ],
+      checkboxes1: [false, false, false, false],
+      checkboxes2: [false, false, false, false, false, false],
+      checkboxes3: [false, false, false, false, false, false],
+    };
+  },
+  methods: {
+    draw() {
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/ov/list/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          console.log(res);
+          this.slist = res.data;
+          this.getphotos();
+          this.getvideos();
+          this.$forceUpdate();
+        });
+    },
+    getphotos() {
+      for (var i = 0; i < this.slist.length; ++i) {
+        this.photolist.push("http://v2v.mollnn.com:5000/api/ov/poster/" + this.slist[i][0] +"/");
+      }
+    },
+    getvideos() {
+      for (var i = 0; i < this.slist.length; ++i) {
+        this.videolist.push("http://39.101.139.97:8081/edited/" + this.slist[i][0]+".mp4");
+      }
+    },
+    parseDate(date) {
+      const dateSet = date.toDateString().split(" ");
+      return `${date.toLocaleString("en-us", { month: "long" })} ${
+        dateSet[2]
+      }, ${dateSet[3]}`;
+    },
+    checkAll(ev, checkbox) {
+      const checkboxArr = new Array(this[checkbox].length).fill(
+        ev.target.checked
+      );
+      Vue.set(this, checkbox, checkboxArr);
+    },
+    changeCheck(ev, checkbox, id) {
+      this[checkbox][id] = ev.target.checked;
+      if (!ev.target.checked) {
+        this[checkbox][0] = false;
+      }
+    },
+    getRandomData() {
+      const result = [];
+
+      for (let i = 0; i <= 8; i += 1) {
+        result.push(Math.floor(Math.random() * 20) + 1);
+      }
+
+      return [{ data: result }];
+    },
+    getRandomColor() {
+      const { primary, success, info, danger } = this.appConfig.colors;
+      const colors = [info, primary, danger, success];
+      return { colors: [colors[Math.floor(Math.random() * colors.length)]] };
+    },
   },
 };
 </script>
 
-<style src="./Notifications.scss" lang="scss" scoped />
+<style src="./Basic.scss" lang="scss" scoped />

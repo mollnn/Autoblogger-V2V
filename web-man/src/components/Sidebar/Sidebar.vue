@@ -22,14 +22,6 @@
         />
         <!-- <NavLink
             :activeItem="activeItem"
-            header="Notifications"
-            link="/app/notifications"
-            iconName="flaticon-bell"
-            index="notifications"
-            isHeader
-        /> -->
-        <!-- <NavLink
-            :activeItem="activeItem"
             header="Components"
             link="/app/components"
             iconName="flaticon-network"
@@ -62,6 +54,14 @@
             link="/app/tables"
             iconName="flaticon-equal-1"
             index="tables"
+            isHeader
+        />
+                <NavLink
+            :activeItem="activeItem"
+            header="成片"
+            link="/app/notifications"
+            iconName="flaticon-bell"
+            index="notifications"
             isHeader
         />
       </ul>

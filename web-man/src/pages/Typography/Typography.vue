@@ -16,7 +16,7 @@
                   class="form-control"
                   v-model="msgaa"
                 />
-                <span style="padding: 5px"></span>
+                <span style="padding: 10px"></span>
                 <input
                   type="text"
                   placeholder="BVID"
@@ -25,8 +25,21 @@
                 />
               </div>
               <span style="padding: 5px"></span>
+            </form>
+            <br />
+
+            <form class="form-inline" role="form">
+              <span style="padding: 14px"></span>
               <button type="button" @click="addinfo1" class="btn btn-primary">
-                添加
+                添加素材信息
+              </button>
+              <span style="padding: 26px"></span>
+              <button
+                type="button"
+                @click="clearsource"
+                class="btn btn-primary"
+              >
+                清空素材信息
               </button>
             </form>
             <br />
@@ -76,7 +89,7 @@
               <span style="padding: 24px"></span>
               <input
                 type="text"
-                placeholder="cliptype"
+                placeholder="tag"
                 class="form-control"
                 v-model="msg5"
               />
@@ -84,11 +97,21 @@
             <form class="form-inline" role="form">
               <span style="padding: 14px !important"></span>
               <button type="button" @click="addinfo2" class="btn btn-primary">
-                添加信息
+                添加
               </button>
-              <span style="padding: 23px"></span>
+              <span style="padding: 10px"></span>
               <button type="button" @click="execall" class="btn btn-primary">
-                执行！
+                执行
+              </button>
+            </form>
+            <form class="form-inline" role="form">
+              <span style="padding: 10px"></span>
+              <button
+                type="button"
+                @click="cleartemplate"
+                class="btn btn-primary"
+              >
+                清空
               </button>
             </form>
           </b-row>
@@ -138,6 +161,7 @@ export default {
         .then((res) => {
           console.log(res);
         });
+        alert("正在执行....");
     },
     del1(index) {
       this.$forceUpdate();
@@ -159,10 +183,7 @@ export default {
         });
     },
     addinfo1() {
-      if (this.msg2 == "") {
-        alert("格式错误，请重新填写！");
-        return;
-      } else if (this.msgaa == "" && this.msg1 == "") {
+      if (this.msgaa == "" && this.msg1 == "") {
         alert("格式错误，请重新填写！");
         return;
       } else if (this.msgaa != "" && this.msg1 != "") {
@@ -172,11 +193,7 @@ export default {
         if (this.msgaa == "") {
           this.$http
             .get(
-              "http://v2v.mollnn.com:5000/api/source/insert/" +
-                this.msg1 +
-                "/" +
-                this.msg2 +
-                "/",
+              "http://v2v.mollnn.com:5000/api/source/insert/" + this.msg1 + "/",
               {
                 headers: { "Access-Control-Allow-Origin": "*" },
               }
@@ -191,8 +208,6 @@ export default {
             .get(
               "http://v2v.mollnn.com:5000/api/source/searchinsert/" +
                 this.msgaa +
-                "/" +
-                this.msg2 +
                 "/",
               {
                 headers: { "Access-Control-Allow-Origin": "*" },
@@ -205,7 +220,6 @@ export default {
             });
         }
         this.msg1 = "";
-        this.msg2 = "";
         this.msgaa = "";
       }
     },
@@ -216,6 +230,17 @@ export default {
         })
         .then((res) => {
           this.slist = res.data;
+          this.$forceUpdate();
+        });
+    },
+    clearsource() {
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/source/clear/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          console.log(res);
+          this.draw1();
           this.$forceUpdate();
         });
     },
@@ -257,8 +282,6 @@ export default {
               "http://v2v.mollnn.com:5000/api/template/insert/" +
                 this.msg3 +
                 "/" +
-                this.msg4 +
-                "/" +
                 this.msg5 +
                 "/",
               {
@@ -276,8 +299,6 @@ export default {
               "http://v2v.mollnn.com:5000/api/template/searchinsert/" +
                 this.msgbb +
                 "/" +
-                this.msg4 +
-                "/" +
                 this.msg5 +
                 "/",
               {
@@ -292,7 +313,6 @@ export default {
         }
         this.msgbb = "";
         this.msg3 = "";
-        this.msg4 = "";
         this.msg5 = "";
       }
     },
@@ -306,6 +326,17 @@ export default {
           this.$forceUpdate();
         });
     },
+    cleartemplate() {
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/template/clear/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          console.log(res);
+          this.draw2();
+          this.$forceUpdate();
+        });
+    },
   },
   data() {
     return {
@@ -314,9 +345,7 @@ export default {
       msgaa: "",
       msgbb: "",
       msg1: "",
-      msg2: 0,
       msg3: "",
-      msg4: 0,
       msg5: "",
     };
   },
