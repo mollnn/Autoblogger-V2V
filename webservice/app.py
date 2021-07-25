@@ -138,7 +138,7 @@ def api_video(name):
 # 下载生成的封面
 @app.route('/api/ov/poster/<name>/')
 def api_poster(name):
-    return common.getBinaryFile("../data/edited/%s.jpg" % name)
+    return common.getBinaryFile("../data/poster/%s.jpg" % name)
 
 ######################################################################
 # 视频终端 API

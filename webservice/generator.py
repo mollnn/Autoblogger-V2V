@@ -31,7 +31,7 @@ def generateByConcatAll(description, tag):
     os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
         fg=conf("ffmpeg_default"),
         fin="../data/edited/%s.mp4" % ovid,
-        fout="../data/edited/%s.jpg" % ovid
+        fout="../data/poster/%s.jpg" % ovid
     ))
     # 将剪辑描述符写入数据库
     writeEditDesc(ovid, edit_desc)
@@ -121,7 +121,7 @@ def generateByVideoTemplate(template_bvid, tag):
     while bisect_r-bisect_l > 1e-3:
         bisect_mid = (bisect_l+bisect_r)/2
         edit_desc_ans, clip_max_usage = fillClips(bisect_mid)
-        if clip_max_usage > 3:
+        if clip_max_usage > 2:
             bisect_r = bisect_mid
         else:
             bisect_l = bisect_mid
@@ -146,7 +146,7 @@ def generateByVideoTemplate(template_bvid, tag):
     os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
         fg=conf("ffmpeg_default"),
         fin="../data/edited/%s.mp4" % ovid,
-        fout="../data/edited/%s.jpg" % ovid
+        fout="../data/poster/%s.jpg" % ovid
     ))
 
     # 将剪辑描述符写入数据库

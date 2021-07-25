@@ -65,7 +65,7 @@ def execute():
         thread_handles.append(Thread(target=singleDownload, args=(i,)))
     for th in thread_handles: 
         th.start()
-        time.sleep(0.2)  # 防止请求并发度过大
+        time.sleep(0.5)  # 防止请求并发度过大
     for th in thread_handles:
         th.join()
 
@@ -83,9 +83,14 @@ def execute():
     print("----- extract",time.time()-lt)
     lt=time.time()
 
+    thread_handles=[]
     for i in in_gen: 
-        singleGenerate(i[0], int(i[1]))
-    
+        thread_handles.append(Thread(target=singleGenerate, args=(i[0], int(i[1]),)))
+    for th in thread_handles: 
+        th.start()
+    for th in thread_handles:
+        th.join()
+
     print("----- generate",time.time()-lt)
 
 if __name__ == "__main__":
