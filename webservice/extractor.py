@@ -48,7 +48,7 @@ def export_clips(clips, score, bvid, frame_rate, tag):
 
 
 ########################################################################
-    
+# 在这里编写您的提取器
 
 def extractor_sine(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记

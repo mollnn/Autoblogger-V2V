@@ -12,6 +12,9 @@ import pymysql
 # 剪辑描述符 edit_desc is a list of dict{'xvid'=?, 'start'=?, 'duration'=?}
 
 
+############################################################################
+# 在这里编写您的生成器
+
 def generateByConcatAll(description, tag):
     # 此函数返回一个剪辑描述符
     # 自行从数据表 extraction 中读取素材
