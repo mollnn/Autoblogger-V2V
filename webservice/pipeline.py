@@ -45,7 +45,7 @@ def execute():
     sqlQuery("truncate table vinfo")
     sqlQuery("truncate table danmu")
     sqlQuery("truncate table extraction")
-    sqlQuery("truncate table editdesc")
+    sqlQuery("truncate table edition")
     sqlQuery("truncate table status")
     sqlQuery("truncate table out_info")
     

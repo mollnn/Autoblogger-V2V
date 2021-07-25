@@ -218,7 +218,7 @@ def writeEditDesc(ovid, edit_desc):
     keys = ', '.join(datas[0].keys())
     values = ', '.join(['%s'] * len(datas[0]))
     sql = ('insert ignore into %s (%s) values (%s);' %
-           ('editdesc', keys, values))
+           ('edition', keys, values))
     ls = []
     for data in datas:
         ls.append(tuple(data.values()))
