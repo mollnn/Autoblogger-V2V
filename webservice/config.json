@@ -1,6 +1,6 @@
 {
     "dbname": "pipeline",
-    "dbname_backend": "testdb",
+    "dbname_backend": "pipeline",
     "db_banime": "banime",
     "mysql_host": "rm-bp15x62q3095543qygo.mysql.rds.aliyuncs.com",
     "mysql_user": "mollnn",

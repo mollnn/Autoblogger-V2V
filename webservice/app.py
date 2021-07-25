@@ -6,6 +6,7 @@ import common
 import spider
 import pipeline 
 import jieba
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -14,17 +15,25 @@ app.config['JSONIFY_MIMETYPE'] = "application/json;charset=utf-8"
 
 CORS(app, resources=r'/*')
 
+app_thread_handles=[]
+
 #######################################################################
 # 萃取机控制 API
 
-@app.route('/api/source/insert/<x>/')
-def api_source_insert(x):
-    common.query(common.readConfig("dbname_backend"),""" insert into in_src (bvid) values ("%s"); """%(x))
+### 参数说明
+# bvid：你懂的
+# template 的 bvid：用作模板的 bvid，实际上已经被泛化，但总归是一个字符串
+# tag: 每个 XV 和 OV 以及 Template 会唯一对应一个 tag，表示它的类型
+# 源素材在表 in_src 中，生成描述（模板）在表 in_gen 中
+
+@app.route('/api/source/insert/<bvid>/')
+def api_source_insert(bvid):
+    common.query(common.readConfig("dbname_backend"),""" insert into in_src (bvid) values ("%s"); """%bvid)
     return "ok"
 
-@app.route('/api/template/insert/<x>/<int:y>/')
-def api_template_insert(x, y):
-    common.query(common.readConfig("dbname_backend"),""" insert into in_gen (description, tag) values ("%s",%d, %d); """%(x,y))
+@app.route('/api/template/insert/<bvid>/<int:tag>/')
+def api_template_insert(bvid, tag):
+    common.query(common.readConfig("dbname_backend"),""" insert into in_gen (description, tag) values ("%s", %d); """%(bvid,tag))
     return "ok"
 
 
@@ -34,7 +43,7 @@ def api_source_insert_x(kw):
     for i in range(min(len(res),20)):
         if i%2==1: continue
         bvid=res[i]
-        common.query(common.readConfig("dbname_backend"),""" insert into in_src (bvid) values ("%s",%d); """%(bvid))
+        common.query(common.readConfig("dbname_backend"),""" insert into in_src (bvid) values ("%s"); """%(bvid))
     return "ok"
 
 
@@ -44,18 +53,28 @@ def api_template_insert_x(kw, tag):
     for i in range(min(len(res),10)):
         if i%2==1: continue
         bvid=res[i]
-        common.query(common.readConfig("dbname_backend"),""" insert into in_gen (bvid, tag) values ("%s",%d, %d); """%(bvid,tag))
+        common.query(common.readConfig("dbname_backend"),""" insert into in_gen (bvid, tag) values ("%s", %d); """%(bvid,tag))
     return "ok"
 
 
 @app.route('/api/source/delete/<bvid>/')
-def apt_source_delete(bvid):
+def api_source_delete(bvid):
     common.query(common.readConfig("dbname_backend"),""" delete from in_src where bvid="%s"; """%(bvid))
     return "ok"
 
 @app.route('/api/template/delete/<bvid>/<int:tag>/')
 def api_template_delete(bvid, tag):
     common.query(common.readConfig("dbname_backend"),""" delete from in_gen where bvid="%s" and tag=%d; """%(bvid,tag))
+    return "ok"
+
+@app.route('/api/source/clear/')
+def api_source_clear():
+    common.query(common.readConfig("dbname_backend"),""" truncate table in_src; """)
+    return "ok"
+
+@app.route('/api/template/clear/')
+def api_template_clear():
+    common.query(common.readConfig("dbname_backend"),""" truncate table in_gen """)
     return "ok"
 
 
@@ -83,10 +102,18 @@ def api_status_output():
 
 @app.route('/api/exec/')
 def api_exec():
-    if len(common.query(common.readConfig("dbname_backend"),""" select * from state_exec; """))>0:
+    if len(common.query(common.readConfig("dbname_backend"),""" select * from status_mutex; """))>0:
         return "fail"
-    common.query(common.readConfig("dbname_backend"),"""insert into state_exec (s) values ("s")""")
-    pipeline.execute()
+    common.query(common.readConfig("dbname_backend"),"""insert into status_mutex (s) values ("s")""")
+
+    def A():
+        print("new exec start")
+        pipeline.execute()
+        common.query(common.readConfig("dbname_backend"),"""truncate table status_mutex""")
+
+    th = Thread(target=A)
+    th.start()
+    app_thread_handles.append(th)
     return "ok"
 
 
@@ -160,4 +187,4 @@ def api_exec():
 
 
 if __name__ == '__main__':
-    app.run(host="172.26.55.118", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

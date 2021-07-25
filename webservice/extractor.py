@@ -122,8 +122,8 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
                 score[i] = 0
 
     # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.2
-    len_min = 1.5*24
+    ratio = 0.05
+    len_min = 3*24
     len_max = 20*24
 
     # 二分确定阈值
@@ -165,7 +165,7 @@ def main(bvid):
     common.wstat(bvid, 40+random.randint(0,20), ext=True)
 
     thread_handles=[]
-    for i in range(0,2):
+    for i in range(1,2):
         def A(ext_id):
             # 在这里接入您的 extractor
             if ext_id==0:
