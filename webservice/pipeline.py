@@ -91,7 +91,18 @@ def execute():
     for th in thread_handles:
         th.join()
 
-    print("----- generate",time.time()-lt)
+    # print("----- generate",time.time()-lt)
 
 if __name__ == "__main__":
-    execute()
+    # execute()
+    sqlQuery("truncate table edition")
+    sqlQuery("truncate table status")
+    sqlQuery("truncate table out_info")
+    in_gen=sqlQuery("select * from in_gen")
+    thread_handles=[]
+    for i in in_gen: 
+        thread_handles.append(Thread(target=singleGenerate, args=(i[0], int(i[1]),)))
+    for th in thread_handles: 
+        th.start()
+    for th in thread_handles:
+        th.join()

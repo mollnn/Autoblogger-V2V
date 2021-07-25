@@ -41,7 +41,7 @@ def GetHTMLContent(url, cookie=''):
 
 def GetBidsBySearch(searchKeyword, page=1):
     urlSearch = "https://search.bilibili.com/all?keyword=" + \
-        searchKeyword+"&from_source=web_search&page=" + str(page)
+        searchKeyword+"&from_source=web_search&page=" + str(page) + "&duration=1" # 测试阶段，限制下长度
     htmlSearch = GetHTMLContent(urlSearch)
     reBid = re.compile(r'//www.bilibili.com/video/(.*?)\?from=search')
     listBid = re.findall(reBid, htmlSearch)
