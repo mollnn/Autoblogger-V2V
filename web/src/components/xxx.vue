@@ -47,7 +47,7 @@ export default {
     draw() {
       this.$http
         .get(
-          "http://131.mollnn.com:5001/list/" +
+          "http://v2v.mollnn.com:5000/list/" +
             tempuse[0] +
             "/" +
             tempuse[1] +
@@ -61,7 +61,7 @@ export default {
           for (var i = 0; i < res.data.length; ++i) {
             console.log(i);
             this.pplist[i] =
-              "http://131.mollnn.com:5001/poster/" + res.data[i].id + "/";
+              "http://v2v.mollnn.com:5000/poster/" + res.data[i].id + "/";
           }
           console.log("hahaha");
           console.log(this.pplist);

@@ -15,6 +15,6 @@
     "ffmpeg_quiet": " -hide_banner -loglevel error ",
     "timeline_cut_begin": 10,
     "timeline_cut_end": 10,
-    "is_upload": 1,
+    "is_upload": 0,
     "title_prefix": "AI混剪:第二轮测试,批次2,参数"
 }

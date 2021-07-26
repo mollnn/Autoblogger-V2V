@@ -16,12 +16,20 @@ export default {
     return {
       options: [
         {
-          value: "0",
-          label: "电影",
+          value: "1",
+          label: "热点",
         },
         {
-          value: "1",
-          label: "其他",
+          value: "2",
+          label: "高甜",
+        },
+        {
+          value: "3",
+          label: "养眼",
+        },
+        {
+          value: "4",
+          label: "幽默",
         },
       ],
       value: "",

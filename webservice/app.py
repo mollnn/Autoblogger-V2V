@@ -8,6 +8,7 @@ import pipeline
 import jieba
 from threading import Thread
 from common import sqlQuery
+from common import conf
 
 app = Flask(__name__)
 
@@ -132,81 +133,150 @@ def api_ov_list():
 
 # 下载生成的媒体
 @app.route('/api/ov/video/<name>/')
-def api_video(name):
+def api_ov_video(name):
     return common.getBinaryFile("../data/edited/%s.mp4" % name)
 
 # 下载生成的封面
 @app.route('/api/ov/poster/<name>/')
-def api_poster(name):
+def api_ov_poster(name):
     return common.getBinaryFile("../data/poster/%s.jpg" % name)
 
 ######################################################################
 # 视频终端 API
 
-# @app.route('/list/<int:src_type>/<int:tag>/')
-# def api_list(src_type, tag):
-#     sql_result = common.query(common.readConfig("dbname_backend"), "select id, bvid from extraction where src_type=%d and tag=%d order by rand();" % (
-#         src_type, tag), isDict=True)
-#     return jsonify(sql_result)
+@app.route('/list/<int:tag>/')
+def api_list(tag):
+    sql_result = common.query(common.readConfig("dbname_backend"), "select id, bvid from extraction where tag=%d order by rand();" % (
+        tag), isDict=True)
+    return jsonify(sql_result)
 
 
-# @app.route('/video/<name>/')
-# def api_video(name):
-#     return common.getBinaryFile("../data/output/%s.mp4" % name)
+@app.route('/video/<name>/')
+def api_video(name):
+    return common.getBinaryFile("../data/output/%s.mp4" % name)
 
 
-# @app.route('/poster/<name>/')
-# def api_poster(name):
-#     return common.getBinaryFile("../data/poster/%s.jpg" % name)
+@app.route('/poster/<name>/')
+def api_poster(name):
+    return common.getBinaryFile("../data/poster/%s.jpg" % name)
 
 
-# @app.route('/assets/<name>/')
-# def api_assets(name):
-#     return common.getBinaryFile("assets/%s" % name)
+@app.route('/assets/<name>/')
+def api_assets(name):
+    return common.getBinaryFile("assets/%s" % name)
 
 
-# @app.route('/vinfo/<xvid>/')
-# def api_vinfo(xvid):
-#     return jsonify(common.query(common.readConfig("dbname_backend"), """select * from Vinfo where bvid in (select bvid from extraction where id = '{xvid}');""".format(xvid=xvid), isDict=True))
+@app.route('/vinfo/<xvid>/')
+def api_vinfo(xvid):
+    return jsonify(common.query(common.readConfig("dbname_backend"), """select * from Vinfo where bvid in (select bvid from extraction where id = '{xvid}');""".format(xvid=xvid), isDict=True))
 
 
-# @app.route('/xv/danmu/<xvid>/')
-# def api_vtdanmu(xvid):
-#     return jsonify(common.query(common.readConfig("dbname_backend"), """select text from (select text,abs(floattime-tm) as dt from Danmu,(select frame_begin/24 as tm from extraction 
-#         where id = '{xvid}') as T1 where cid in (select cid from Vinfo where bvid in 
-#         (select bvid from extraction where id = '{xvid}')) order by dt limit 20) as T2;""".format(xvid=xvid), isDict=False))
+@app.route('/xv/danmu/<xvid>/')
+def api_vtdanmu(xvid):
+    return jsonify(common.query(common.readConfig("dbname_backend"), """select text from (select text,abs(floattime-tm) as dt from Danmu,(select frame_begin/24 as tm from extraction 
+        where id = '{xvid}') as T1 where cid in (select cid from Vinfo where bvid in 
+        (select bvid from extraction where id = '{xvid}')) order by dt limit 20) as T2;""".format(xvid=xvid), isDict=False))
 
 
-# def wordFreqCount(txt):
-#     words = jieba.lcut(txt)
-#     counts = {}
-#     for word in words:
-#         if len(word) == 1:
-#             continue
-#         else:
-#             counts[word] = counts.get(word, 0) + 1
-#     items = list(counts.items())
-#     items.sort(key=lambda x: x[1], reverse=True)
-#     return items
+def wordFreqCount(txt):
+    words = jieba.lcut(txt)
+    counts = {}
+    for word in words:
+        if len(word) == 1:
+            continue
+        else:
+            counts[word] = counts.get(word, 0) + 1
+    items = list(counts.items())
+    items.sort(key=lambda x: x[1], reverse=True)
+    return items
 
-# @app.route('/xv/wordcloud/<xvid>/')
-# def api_vtwordcloud(xvid):
-#     sqlres= common.query(common.readConfig("dbname_backend"), """select text from (select text,abs(floattime-tm) as dt from Danmu,(select frame_begin/24 as tm from extraction 
-#         where id = '{xvid}') as T1 where cid in (select cid from Vinfo where bvid in 
-#         (select bvid from extraction where id = '{xvid}')) order by dt limit 200) as T2;""".format(xvid=xvid), isDict=False)
-#     lst = []
-#     cnt=100
-#     for i in sqlres:
-#         lst += [i[0]]
-#     str = ' '.join(lst)
-#     wf = wordFreqCount(str)
-#     ans = []
-#     for i in wf:
-#         ans += [{"name":i[0], "value":i[1]}]
-#         cnt -= 1
-#         if cnt == 0:
-#             break
-#     return jsonify(ans)
+@app.route('/xv/wordcloud/<xvid>/')
+def api_vtwordcloud(xvid):
+    sqlres= common.query(common.readConfig("dbname_backend"), """select text from (select text,abs(floattime-tm) as dt from Danmu,(select frame_begin/24 as tm from extraction 
+        where id = '{xvid}') as T1 where cid in (select cid from Vinfo where bvid in 
+        (select bvid from extraction where id = '{xvid}')) order by dt limit 200) as T2;""".format(xvid=xvid), isDict=False)
+    lst = []
+    cnt=100
+    for i in sqlres:
+        lst += [i[0]]
+    str = ' '.join(lst)
+    wf = wordFreqCount(str)
+    ans = []
+    for i in wf:
+        ans += [{"name":i[0], "value":i[1]}]
+        cnt -= 1
+        if cnt == 0:
+            break
+    return jsonify(ans)
+
+
+####################################################################
+# 数据可视化 API
+
+@app.route('/')
+def api_index():
+    return render_template("index.html")
+
+
+@app.route('/getrc/<path:name>/')
+def api_getrc(name):
+    print(name)
+    return common.getRequestsContent(name)
+
+
+@app.route('/api/sum/')
+def api_sum():
+    return jsonify(common.query(conf("dbview"), "SELECT count(*) as scnt, cast(sum(view) as signed) as sview, cast(sum(danmaku) as signed) as sdanmaku,cast(sum(coin) as signed) as scoin, cast(sum(likes) as signed) as slikes FROM ovinfo;", isDict=True))
+
+
+@app.route('/api/view/distrib/')
+def api_view_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from oviewdistrib;"))
+
+
+@app.route('/api/likes/distrib/')
+def api_likes_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from olikesdistrib;"))
+
+
+@app.route('/api/coin/distrib/')
+def api_coin_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from ocoindistrib;"))
+
+
+@app.route('/api/favorite/distrib/')
+def api_favorite_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from ofavoritedistrib;"))
+
+
+@app.route('/api/duration/distrib/')
+def api_duration_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from odurationdistrib;"))
+
+
+@app.route('/api/reply/distrib/')
+def api_reply_distrib():
+    return jsonify(common.query(conf("dbview"), "select * from oreplydistrib;"))
+
+
+@app.route('/api/type/distrib/')
+def api_type_distrib():
+    return jsonify(common.query(conf("dbview"), "select tname as name, cnt as value from otype;", isDict=True))
+
+
+@app.route('/api/v/info/<bv>/')
+def api_v_info(bv):
+    return jsonify(common.query(conf("dbview"), """select * from ovinfo where bvid = "{bv}";""".format(bv=bv), isDict=True))
+
+
+@app.route('/api/v/danmu/distrib/<bid>/')
+def api_v_danmu_freq(bid):
+    return jsonify(common.query(conf("dbview"), """select t as name, cnt as value from odmdistrib where bvid = "{bid}";""".format(bid=bid)))
+
+
+@app.route('/api/v/danmu/wordcount/<bid>/')
+def api_v_danmu_wordcount(bid):
+    return jsonify(common.query(conf("dbview"), """select word as name, cnt as value from odmwfreq where bvid = "{bid}";""".format(bid=bid), isDict=True))
 
 
 if __name__ == '__main__':

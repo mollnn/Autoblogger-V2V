@@ -4,7 +4,6 @@
     <el-container class="black">
       <el-header>
         <checkbox3 class="box3" />
-        <checkbox4 class="box4" />
         <el-button type="primary" round @click="getagain" class="btn"
           >Let's go!</el-button
         >
@@ -42,12 +41,11 @@
 import Bus from "../bus1.js";
 import Loading from "@/components/loading";
 import checkbox3 from "./checkbox3.vue";
-import checkbox4 from "./checkbox4.vue";
 var tempuse = [1, 1];
 export default {
   components: { 
     Loading,
-   checkbox3, checkbox4 },
+   checkbox3 },
   data() {
     return {
       tstyle: { "background-color": "#111", padding: "8px" },
@@ -80,10 +78,8 @@ export default {
     draw() {
       this.$http
         .get(
-          "http://131.mollnn.com:5001/list/" +
+          "http://v2v.mollnn.com:5000/list/" +
             tempuse[0] +
-            "/" +
-            tempuse[1] +
             "/",
           {
             headers: { "Access-Control-Allow-Origin": "*" },
@@ -96,9 +92,9 @@ export default {
           this.$store.state.objlist = res.data.slice(0, len);
           for (var i = 0; i < len; ++i) {
             this.pplist[i] =
-              "http://131.mollnn.com:5001/poster/" + res.data[i].id + "/";
+              "http://v2v.mollnn.com:5000/poster/" + res.data[i].id + "/";
             this.kklist[i] =
-              "http://131.mollnn.com:5001/video/" + res.data[i].id + "/";
+              "http://v2v.mollnn.com:5000/video/" + res.data[i].id + "/";
           }
           this.$children[0].$children[0].$children[0].value = tempuse[0];
           this.$store.state.value3 = this.$children[0].$children[0].$children[0].value;
@@ -153,7 +149,6 @@ export default {
   left: 10%;
 }
 .btn {
-  float: right;
 }
 .black {
   background-color: #222;

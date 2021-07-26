@@ -1,4 +1,6 @@
 from posix import times_result
+
+from numpy import single
 import common
 import spider
 import os
@@ -115,10 +117,11 @@ if __name__ == "__main__":
     # for th in thread_handles:
     #     th.join()
 
-    out_list = sqlQuery("select ovid from out_info")
-    cnt=0
-    for i in out_list:
-        ovid=i[0]
-        cnt+=1
-        singlePublish(ovid)
-        
+    # out_list = sqlQuery("select ovid from out_info")
+    # cnt=0
+    # for i in out_list:
+    #     ovid=i[0]
+    #     cnt+=1
+    #     singlePublish(ovid)
+    
+    singleDownload("BV1pi4y1s763")

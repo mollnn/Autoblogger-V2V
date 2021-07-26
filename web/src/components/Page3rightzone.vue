@@ -20,7 +20,7 @@ export default {
           tempuse = this.$store.state.objlist[this.$store.state.index].id;
       this.$http
         .get(
-          "http://131.mollnn.com:5001/xv/danmu/" +
+          "http://v2v.mollnn.com:5000/xv/danmu/" +
             tempuse+
             "/",
           {
