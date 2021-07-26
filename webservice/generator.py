@@ -73,7 +73,7 @@ def generateByVideoTemplate(template_bvid, tag):
     last_cut_frame = 0
     for frame_id in range(n_frame):
         if shotcut_tag[frame_id] > 0:
-            clip_duration = frame_id-last_cut_frame
+            clip_duration = frame_id - last_cut_frame
             clip_desc = {"xvid": "", "start": 0, "duration": clip_duration/24}
 
             # 处理空位超出素材库最大长度的情况（递归等分下去，直到满足）

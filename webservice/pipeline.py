@@ -8,6 +8,7 @@ import generator
 import publisher
 import time
 from threading import Thread
+from common import conf
 
 # 下载一个视频
 def singleDownload(bvid):
@@ -94,16 +95,15 @@ def execute():
 
     print("----- generate",time.time()-lt)
 
+    out_list = sqlQuery("select ovid from out_info")
+    for i in out_list:
+        ovid=i[0]
+        if int(conf("is_upload"))==1: singlePublish(ovid)
+
 if __name__ == "__main__":
-    execute()
-    # sqlQuery("truncate table edition")
-    # sqlQuery("truncate table status")
-    # sqlQuery("truncate table out_info")
-    # in_gen=sqlQuery("select * from in_gen")
-    # thread_handles=[]
-    # for i in in_gen: 
-    #     thread_handles.append(Thread(target=singleGenerate, args=(i[0], int(i[1]),)))
-    # for th in thread_handles: 
-    #     th.start()
-    # for th in thread_handles:
-    #     th.join()
+    # execute()
+
+    out_list = sqlQuery("select ovid from out_info")
+    for i in out_list:
+        ovid=i[0]
+        singlePublish(ovid)

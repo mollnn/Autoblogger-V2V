@@ -1,0 +1,183 @@
+# 全局设置
+[global]
+https = true # 使用HTTPS协议
+process = 4 # 进程数
+log = "bilibili.log" # 日志文件名
+
+# 代理设置
+[proxy]
+enable = false # 开关
+pool = "proxy.txt" # 代理池
+
+# 用户设置
+[user]
+update = true # 自动更新凭据
+force_refresh_token = false # 强制刷新Token
+
+account = """
+username=18014847142;password=843580;access_token=413734b4d59e05ca4b78462af90b3571;refresh_token=3ebdcd3a4f591e8ac3028256b53c6371;DedeUserID=307294942;DedeUserID__ckMd5=41349cde91edd078;SESSDATA=3589d867%2C1634960121%2Ca96e9e71;bili_jct=d9539abaf7a4c44691daef1c972b54e7;sid=au8ryta4;
+"""
+# 请在上方填写您的账号凭据, 每一条凭据应至少包含下述三种身份校验方式之一的完整键值对:
+# Password: username=...;password=...;
+# Token: access_token=...;refresh_token=...;
+# Cookie: bili_jct=...;DedeUserID=...;DedeUserID__ckMd5=...;sid=...;SESSDATA=...;
+
+# 获取用户信息
+[get_user_info]
+enable = true # 开关
+
+# 修改隐私设置
+[set_privacy]
+enable = false # 开关
+show_favourite = false # 展示[我的收藏夹]
+show_bangumi = false # 展示[订阅番剧]
+show_tag = false # 展示[订阅标签]
+show_reward = false # 展示[最近投币的视频]
+show_info = false # 展示[个人资料]
+show_game = false # 展示[最近玩过的游戏]
+
+#上传视频
+[upload_video]
+enable=true
+videoconfig = "videoconfig.json"
+
+
+# 银瓜子兑换硬币
+[silver_to_coin]
+enable = false # 开关
+
+# 观看
+[watch]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+
+# 点赞
+[like]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+
+# 投币
+[reward]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+double = [false, true, false] # 双倍投币
+
+# 收藏
+[favour]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+
+# 三连推荐
+[combo]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+
+# 分享
+[share]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+
+# 关注
+[follow]
+enable = false # 开关
+mid = [2, 208259] # 被关注用户UID
+secret = [true, false] # 悄悄关注
+
+# 批量关注
+[follow_batch]
+enable = false # 开关
+mid = [2, 208259] # 被关注用户UID
+
+# 拉黑
+[ban]
+enable = false # 开关
+mid = [12345678, 23456789] # 被拉黑用户UID
+
+# 批量拉黑
+[ban_batch]
+enable = false # 开关
+mid = [12345678, 23456789] # 被拉黑用户UID
+
+# 弹幕发送
+[danmaku_post]
+enable = false # 开关
+aid = ["120040", "21322566", "BV17x411w7KC"] # 稿件av/bv号
+message = ["哔哩哔哩 (゜-゜)つロ 干杯~", "哔哩哔哩 (゜-゜)つロ 干杯~", "哔哩哔哩 (゜-゜)つロ 干杯~"] # 弹幕内容
+page = [1, 1, 1] # 分P
+moment = [-1, -1, -1] # 弹幕发送时间(为-1则随机选择发送时间)
+
+# 评论点赞
+[comment_like]
+enable = false # 开关
+otype = ["video", "article"] # 作品类型(视频video; 活动activity; 相簿gallery; 文章article)
+oid = [120040, 328714] # 作品ID
+rpid = [45737039, 704676668] # 评论ID
+
+# 评论发表
+[comment_post]
+enable = false # 开关
+otype = ["video", "article"] # 作品类型(视频video; 活动activity; 相簿gallery; 文章article)
+oid = [120040, 328714] # 作品ID
+message = ["哔哩哔哩 (゜-゜)つロ 干杯~", "哔哩哔哩 (゜-゜)つロ 干杯~"] # 评论内容
+
+# 动态点赞
+[dynamic_like]
+enable = false # 开关
+did = [2701535477760, 30764064763443574] # 动态ID
+
+# 动态转发
+[dynamic_repost]
+enable = false # 开关
+did = [2701535477760, 30764064763443574] # 动态ID
+message = ["转发动态", "转发动态"] # 转发内容
+ats = [[2, 208259], [208259, 2]] # 被@用户UID列表
+
+# 动态清理
+[dynamic_purge]
+enable = false # 开关
+
+# 系统通知查询
+[system_notice]
+enable = false # 开关
+export = "system_notice.json" # 导出文件名
+time_span = ["2019-01-01 00:00:00", "2019-12-31 23:59:59"] # 时间范围
+keyword = ["中奖", "权益生效"] # 包含关键字
+
+# 会员购抢购
+[mall_rush]
+enable = false # 开关
+item_id = [10000890, 10008264] # 商品ID
+thread = [2, 2] # 线程数
+headless = true # 隐藏窗口
+timeout = 10 # 超时刷新
+
+# 会员购优惠卷领取
+[mall_coupon]
+enable = false # 开关
+coupon_id = ["df73652b539b1c6c", "f2a4f59ad6a1682f"] # 优惠券ID
+thread = [8, 8] # 线程数
+
+# 会员购订单列表查询
+[mall_order_list]
+enable = false # 开关
+export = "mall_order_list.json" # 导出文件名
+status = 0 # 订单状态(全部0; 待付款1; 待收货2; 待评价3; 待开补款4)
+type = [2] # 订单类型
+
+# 会员购优惠券列表查询
+[mall_coupon_list]
+enable = false # 开关
+export = "mall_coupon_list.json" # 导出文件名
+status = 1 # 优惠券状态(未使用1; 已使用2; 已失效3)
+
+# 会员购奖品列表查询
+[mall_prize_list]
+enable = false # 开关
+export = "mall_prize_list.json" # 导出文件名
+status = 0 # 奖品状态(全部0; 待发货1; 已发货2; 无需发货3; 已失效4)
+type = [1, 2] # 奖品类型(实物类1; 虚拟类2)
+
+# 直播奖品列表查询
+[live_prize_list]
+enable = false # 开关
+export = "live_prize_list.json" # 导出文件名

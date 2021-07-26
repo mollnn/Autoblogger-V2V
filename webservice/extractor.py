@@ -128,8 +128,8 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
     score = [max(i, 0) for i in score]
 
     # 去除前 x 秒和后 y 秒的片段
-    timeline_cut_begin = float(conf("timeline_cut_begin"))
-    timeline_cut_end = float(conf("timeline_cut_end"))
+    timeline_cut_begin = int(float(conf("timeline_cut_begin"))*24)
+    timeline_cut_end = int(float(conf("timeline_cut_end"))*24)
 
     for i in range(min(timeline_cut_begin, n_frame)):
         score[i] = 0

@@ -1,6 +1,6 @@
 {
     "dbname": "pipeline_dev",
-    "dbname_backend": "pipeline",
+    "dbname_backend": "pipeline_dev",
     "db_banime": "banime",
     "mysql_host": "rm-bp15x62q3095543qygo.mysql.rds.aliyuncs.com",
     "mysql_user": "mollnn",
@@ -8,11 +8,12 @@
     "mysql_port": 3306,
     "ffmpeg_hd": "-c:v libx264 -c:a aac -vf scale=640:360,setsar=1:1 -r 24 -strict experimental -threads 16 -preset fast",
     "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90,setsar=1:1 -r 24 -strict experimental -threads 16 -preset fast",
-    "ffmpeg_hd_ex": "-c:v libx264 -c:a aac -vf -r 24 crop=512:288 -strict experimental -threads 16 -preset fast",
-    "ffmpeg_ld_ex": "-c:v libx264 -c:a aac -vf -r 24 crop=128:72 -strict experimental -threads 16 -preset fast",
+    "ffmpeg_hd_ex": "-c:v libx264 -c:a aac -vf crop=512:288 -r 24 -strict experimental -threads 16 -preset fast",
+    "ffmpeg_ld_ex": "-c:v libx264 -c:a aac -vf crop=128:72 -r 24 -strict experimental -threads 16 -preset fast",
     "ffmpeg_ov": "-vcodec libx264 -acodec aac -b:v 300k -vf scale=640:360,setsar=1:1 -r 24 -strict experimental -threads 16 -preset fast",
     "ffmpeg_default": " -y -threads 16 -preset fast -hide_banner -loglevel error ",
     "ffmpeg_quiet": " -hide_banner -loglevel error ",
     "timeline_cut_begin": 10,
-    "timeline_cut_end": 10
+    "timeline_cut_end": 10,
+    "is_upload": 1
 }
