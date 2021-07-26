@@ -192,7 +192,7 @@ def edit(edit_desc, output_filename):
     # 将一堆 .ts 合并并重新编码
     os.system(""" ffmpeg -i "concat:{fin}" {fconf} {fout} {fg}""".format(
         fin="|".join(["../tmp/%s.ts" % tsid for tsid in ts_list]),
-        fconf="-vcodec libx264 -acodec aac -b:v 300k",
+        fconf=conf("ffmpeg_ov"),
         fout=output_filename,
         fg=conf("ffmpeg_default")
     ))

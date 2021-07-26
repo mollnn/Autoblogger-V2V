@@ -5,6 +5,7 @@ import os
 from common import sqlQuery
 import extractor
 import generator
+import publisher
 import time
 from threading import Thread
 
@@ -32,7 +33,7 @@ def singleGenerate(description, tag):
 
 def singlePublish(ovid):
     print("singlePublish", ovid)
-
+    publisher.publish(ovid)
 
 def clearDatafile():
     os.system("rm ../data/media/*.mp4 -rf")

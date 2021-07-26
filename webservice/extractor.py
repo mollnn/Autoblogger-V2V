@@ -10,9 +10,10 @@ from threading import Thread
 import random
 import scipy.signal
 
+
 def export_clips(clips, score, bvid, frame_rate, tag):
     # 片段输出封装
-    thread_handles=[]
+    thread_handles = []
     for i in clips:
         def A(clip):
             xvid = common.generateXvid()
@@ -25,7 +26,7 @@ def export_clips(clips, score, bvid, frame_rate, tag):
                 fout="../data/output/%s.mp4" % xvid,
                 ts=l/frame_rate,
                 tt=(r-l)/frame_rate,
-                cfg=conf("ffmpeg_ld")
+                cfg=conf("ffmpeg_ld_ex")
             ))
             os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
                 fg=conf("ffmpeg_default"),
@@ -33,7 +34,7 @@ def export_clips(clips, score, bvid, frame_rate, tag):
                 fout="../data/output/%s.hd.mp4" % xvid,
                 ts=l/frame_rate,
                 tt=(r-l)/frame_rate,
-                cfg=conf("ffmpeg_hd")
+                cfg=conf("ffmpeg_hd_ex")
             ))
             os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
                 fg=conf("ffmpeg_default"),
@@ -41,10 +42,12 @@ def export_clips(clips, score, bvid, frame_rate, tag):
                 fout="../data/poster/%s.jpg" % xvid
             ))
             sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%f,%d)"
-                    % (xvid, bvid, tag, l, r, score_max, score_argmax))
-        thread_handles.append(Thread(target=A,args=(i,)))
-    for th in thread_handles: th.start()
-    for th in thread_handles: th.join()
+                     % (xvid, bvid, tag, l, r, score_max, score_argmax))
+        thread_handles.append(Thread(target=A, args=(i,)))
+    for th in thread_handles:
+        th.start()
+    for th in thread_handles:
+        th.join()
 
 
 ########################################################################
@@ -58,7 +61,7 @@ def export_clips(clips, score, bvid, frame_rate, tag):
 def extractor_sine(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return # 这个提取器实际上荒废，仅供作为编写提取器的参考，以及特殊测试时使用
+    return  # 这个提取器实际上荒废，仅供作为编写提取器的参考，以及特殊测试时使用
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -104,7 +107,6 @@ def extractor_sine(tag, bvid, danmus, shotcuts):
     export_clips(clips, score, bvid, frame_rate, tag)
 
 
-
 #####################################################
 # 1 号提取器
 
@@ -120,9 +122,19 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
-    for danmu in danmus: score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))]+=1
-    score=scipy.signal.savgol_filter(score,49,3)  
-    score=[max(i,0) for i in score]
+    for danmu in danmus:
+        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+    score = scipy.signal.savgol_filter(score, 49, 3)
+    score = [max(i, 0) for i in score]
+
+    # 去除前 x 秒和后 y 秒的片段
+    timeline_cut_begin = float(conf("timeline_cut_begin"))
+    timeline_cut_end = float(conf("timeline_cut_end"))
+
+    for i in range(min(timeline_cut_begin, n_frame)):
+        score[i] = 0
+    for i in range(min(timeline_cut_end, n_frame)):
+        score[n_frame - 1 - i] = 0
 
     # 转场处评分归零
     for cut in shotcuts:
@@ -133,9 +145,9 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
                 score[i] = 0
 
     # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.2
-    len_min = 2*24
-    len_max = 20*24
+    ratio = 1
+    len_min = 0.3*24
+    len_max = 15*24
 
     # 二分确定阈值
     bisect_left = np.min(score)+1e-5
@@ -166,7 +178,7 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
 def extractor_hot(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return # 要启用该提取器，请删除本行
+    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -176,9 +188,10 @@ def extractor_hot(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
-    for danmu in danmus: score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))]+=1
-    score=scipy.signal.savgol_filter(score,49,3)  
-    score=[max(i,0) for i in score]
+    for danmu in danmus:
+        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+    score = scipy.signal.savgol_filter(score, 49, 3)
+    score = [max(i, 0) for i in score]
 
     # 转场处评分归零
     for cut in shotcuts:
@@ -221,7 +234,7 @@ def extractor_hot(tag, bvid, danmus, shotcuts):
 def extractor_love(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return # 要启用该提取器，请删除本行
+    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -231,9 +244,10 @@ def extractor_love(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
-    for danmu in danmus: score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))]+=1
-    score=scipy.signal.savgol_filter(score,49,3)  
-    score=[max(i,0) for i in score]
+    for danmu in danmus:
+        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+    score = scipy.signal.savgol_filter(score, 49, 3)
+    score = [max(i, 0) for i in score]
 
     # 转场处评分归零
     for cut in shotcuts:
@@ -276,7 +290,7 @@ def extractor_love(tag, bvid, danmus, shotcuts):
 def extractor_shock(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return # 要启用该提取器，请删除本行
+    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -286,9 +300,10 @@ def extractor_shock(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
-    for danmu in danmus: score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))]+=1
-    score=scipy.signal.savgol_filter(score,49,3)  
-    score=[max(i,0) for i in score]
+    for danmu in danmus:
+        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+    score = scipy.signal.savgol_filter(score, 49, 3)
+    score = [max(i, 0) for i in score]
 
     # 转场处评分归零
     for cut in shotcuts:
@@ -327,10 +342,11 @@ def extractor_shock(tag, bvid, danmus, shotcuts):
 #####################################################
 # 5 号提取器
 
+
 def extractor_humor(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return # 要启用该提取器，请删除本行
+    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -340,9 +356,10 @@ def extractor_humor(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
-    for danmu in danmus: score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))]+=1
-    score=scipy.signal.savgol_filter(score,49,3)  
-    score=[max(i,0) for i in score]
+    for danmu in danmus:
+        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+    score = scipy.signal.savgol_filter(score, 49, 3)
+    score = [max(i, 0) for i in score]
 
     # 转场处评分归零
     for cut in shotcuts:
@@ -385,7 +402,7 @@ def extractor_humor(tag, bvid, danmus, shotcuts):
 def main(bvid):
     print("  extractor: prep...")
 
-    common.wstat(bvid, 0+random.randint(0,5), ext=True)
+    common.wstat(bvid, 0+random.randint(0, 5), ext=True)
 
     shotcuts = shotcut(bvid)
 
@@ -394,30 +411,32 @@ def main(bvid):
     danmus = sqlQuery(
         "select * from danmu where cid='{cid}'".format(cid=cid), isDict=True)
 
-    common.wstat(bvid, 40+random.randint(0,20), ext=True)
+    common.wstat(bvid, 40+random.randint(0, 20), ext=True)
 
-    thread_handles=[]
+    thread_handles = []
 
     # 提取器总个数
-    n_extractors=6
+    n_extractors = 6
 
     for i in range(n_extractors):
         def A(ext_id):
             # 在这里接入您的 extractor
-            if ext_id==0:
+            if ext_id == 0:
                 extractor_sine(ext_id, bvid, danmus, shotcuts)
-            elif ext_id==1:
+            elif ext_id == 1:
                 extractor_danmu_density(ext_id, bvid, danmus, shotcuts)
-            elif ext_id==2:
+            elif ext_id == 2:
                 extractor_hot(ext_id, bvid, danmus, shotcuts)
-            elif ext_id==3:
+            elif ext_id == 3:
                 extractor_love(ext_id, bvid, danmus, shotcuts)
-            elif ext_id==4:
+            elif ext_id == 4:
                 extractor_shock(ext_id, bvid, danmus, shotcuts)
-            elif ext_id==5:
+            elif ext_id == 5:
                 extractor_humor(ext_id, bvid, danmus, shotcuts)
         thread_handles.append(Thread(target=A, args=(i,)))
-    for th in thread_handles: th.start()
-    for th in thread_handles: th.join()
+    for th in thread_handles:
+        th.start()
+    for th in thread_handles:
+        th.join()
 
     common.wstat(bvid, 100, ext=True)
