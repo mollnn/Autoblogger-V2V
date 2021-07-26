@@ -93,12 +93,17 @@ def execute():
     print("----- total",time.time()-lt)
 
     out_list = sqlQuery("select ovid from out_info")
+    flag=0
     for i in out_list:
+        if flag==1:
+            for j in range(30):
+                print("等待%d秒后继续上传"%j)
+                time.sleep(1)
         ovid=i[0]
         if int(conf("is_upload"))==1: singlePublish(ovid)
 
 if __name__ == "__main__":
-    execute()
+    # execute()
 
     # in_gen=sqlQuery("select * from in_gen")
     # sqlQuery("truncate table out_info")
@@ -110,7 +115,10 @@ if __name__ == "__main__":
     # for th in thread_handles:
     #     th.join()
 
-    # out_list = sqlQuery("select ovid from out_info")
-    # for i in out_list:
-    #     ovid=i[0]
-    #     singlePublish(ovid)
+    out_list = sqlQuery("select ovid from out_info")
+    cnt=0
+    for i in out_list:
+        ovid=i[0]
+        cnt+=1
+        singlePublish(ovid)
+        

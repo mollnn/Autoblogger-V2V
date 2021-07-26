@@ -2,7 +2,7 @@
   <div class="header">
     <el-page-header
       id="xxx3"
-      content="V2V视频播放中..."
+      content="播放页"
       style="color: #fff; line-height: 40px !important"
     >
     

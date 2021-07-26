@@ -11,7 +11,7 @@ from bilibili import main
 from common import conf
 
 def run(ovid, title_prefix="AI混剪:第二轮测试,参数")->None:
-    title='{pref}:{}'.format(title_prefix,int(time.time()))
+    title='{}:{}'.format(title_prefix,int(time.time()))
     video_path='../data/edited/{}.mp4'.format(ovid)
     cover_path='../data/poster/{}.jpg'.format(ovid)
     config_path='videoconfig.json'
