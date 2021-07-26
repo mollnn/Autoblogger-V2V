@@ -146,7 +146,7 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
 
     # 控制时长要求与提取比例（! 自行修改）
     ratio = 1
-    len_min = 0.3*24
+    len_min = 0.2*24
     len_max = 15*24
 
     # 二分确定阈值

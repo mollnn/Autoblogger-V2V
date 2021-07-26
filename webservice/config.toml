@@ -15,7 +15,7 @@ update = true # 自动更新凭据
 force_refresh_token = false # 强制刷新Token
 
 account = """
-username=18014847142;password=843580;access_token=413734b4d59e05ca4b78462af90b3571;refresh_token=3ebdcd3a4f591e8ac3028256b53c6371;DedeUserID=307294942;DedeUserID__ckMd5=41349cde91edd078;SESSDATA=3589d867%2C1634960121%2Ca96e9e71;bili_jct=d9539abaf7a4c44691daef1c972b54e7;sid=au8ryta4;
+username=13515871132;password=88555592wzc;access_token=ad63df720834cb765dde94041a4bc371;refresh_token=ac065dcdbd654801edcdfecc893d6e71;DedeUserID=327074361;DedeUserID__ckMd5=b5989e33de2a6abb;SESSDATA=ba323fe3%2C1635053252%2Cad87d871;bili_jct=e35a86834340b2da5fe0e3d387eb75ad;sid=cp8igae4;
 """
 # 请在上方填写您的账号凭据, 每一条凭据应至少包含下述三种身份校验方式之一的完整键值对:
 # Password: username=...;password=...;

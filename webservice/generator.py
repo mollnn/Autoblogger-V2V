@@ -63,8 +63,8 @@ def generateByVideoTemplate(template_bvid, tag):
             shotcut_tag[min(n_frame-1, shot_cut["end_frame"])] = 3
 
     # 获取素材库中素材的最大长度
-    src_maxlen = int(sqlQuery(
-        "select fe-fb as len from extraction where tag=%d order by len desc limit 1;" % tag)[0][0])
+    src_maxlen = min(int(sqlQuery(
+        "select fe-fb as len from extraction where tag=%d order by len desc limit 1;" % tag)[0][0]),3*24)*0.9
     src_maxsmv = float(
         sqlQuery("select max(smv) from extraction where tag=%d;" % tag)[0][0])
 
@@ -78,7 +78,15 @@ def generateByVideoTemplate(template_bvid, tag):
 
             # 处理空位超出素材库最大长度的情况（递归等分下去，直到满足）
             clip_descs = [clip_desc]
+
             while clip_descs[0]["duration"]*24 >= src_maxlen:
+                print("    gen Warning: slot too long, reduced.")
+                clip_descs += [i.copy() for i in clip_descs]
+                for i in clip_descs:
+                    i["duration"] /= 2
+
+            # 不太想要太多长片段，随机杀掉
+            while clip_descs[0]["duration"]*24 >= src_maxlen/2 and random.random()<0.35:
                 print("    gen Warning: slot too long, reduced.")
                 clip_descs += [i.copy() for i in clip_descs]
                 for i in clip_descs:
@@ -99,7 +107,7 @@ def generateByVideoTemplate(template_bvid, tag):
         # 获取素材库
         src_lib = sqlQuery("select id, fe-fb as len, smv from extraction where tag=%d and smv>=%f order by rand();" %
                         (tag, score_thres), isDict=True)
-        print(json.dumps(src_lib).replace("{","\n{"))
+        # print(json.dumps(src_lib).replace("{","\n{"))
         edit_desc_tmp = edit_desc[:]
         for i in src_lib:
             i["cnt"] = 0
@@ -107,25 +115,28 @@ def generateByVideoTemplate(template_bvid, tag):
         last_use = -1
         for i in range(len(edit_desc_tmp)):
             candidate_id = random.randint(0,len(src_lib)-1)
-            lim = 1000
+            lim = 5000
             while src_lib[candidate_id]["len"] <= edit_desc_tmp[i]["duration"]*24 or candidate_id==last_use:
                 candidate_id = random.randint(0,len(src_lib)-1)
+                if src_lib[candidate_id]["cnt"]>=1 and random.randint(0,2)!=0: continue
+                if src_lib[candidate_id]["cnt"]>=2 and random.randint(0,5)!=0: continue
+                if src_lib[candidate_id]["cnt"]>=3 and random.randint(0,10)!=0: continue
                 lim-=1
                 if lim==0: 
                     print("fail")
                     return edit_desc_tmp, 1e9
-            print("choose ",i,candidate_id)
+            # print("choose ",i,candidate_id)
             edit_desc_tmp[i]["xvid"] = src_lib[candidate_id]["id"]
             last_use=candidate_id
             src_lib[candidate_id]["cnt"] += 1
             clip_max_usage = max(clip_max_usage, src_lib[candidate_id]["cnt"])
-        print(json.dumps(edit_desc_tmp).replace("{","\n{"))
+        # print(json.dumps(edit_desc_tmp).replace("{","\n{"))
         return edit_desc_tmp, clip_max_usage
 
     bisect_l = 0
     bisect_r = src_maxsmv-1e-4
 
-    while bisect_r-bisect_l > 1e-3:
+    while bisect_r-bisect_l > 1e-5:
         bisect_mid = (bisect_l+bisect_r)/2
         edit_desc_ans, clip_max_usage = fillClips(bisect_mid)
         if clip_max_usage > 3:

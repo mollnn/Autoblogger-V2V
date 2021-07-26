@@ -8,9 +8,10 @@ from threading import Thread
 import time
 import json
 from bilibili import main
+from common import conf
 
-def run(ovid)->None:
-    title='AI混剪:第二轮测试,参数:{}'.format(int(time.time()))
+def run(ovid, title_prefix="AI混剪:第二轮测试,参数")->None:
+    title='{pref}:{}'.format(title_prefix,int(time.time()))
     video_path='../data/edited/{}.mp4'.format(ovid)
     cover_path='../data/poster/{}.jpg'.format(ovid)
     config_path='videoconfig.json'
@@ -30,5 +31,5 @@ def run(ovid)->None:
 
 def publish(ovid):
     print("publish",ovid)
-    run(ovid)
+    run(ovid, title_prefix=conf("title_prefix"))
     print("pub finish")
