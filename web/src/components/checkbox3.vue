@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="请选择视频源类型">
+  <el-select v-model="value" placeholder="请选择素材类型">
     <el-option
       v-for="item in options"
       :key="item.value"

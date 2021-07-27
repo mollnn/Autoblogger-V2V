@@ -2,32 +2,90 @@
   <div>
     <el-container class="black">
       <el-header>
-        <checkbox3 class="box3" />
-        <el-button type="primary" round @click="getagain" class="btn"
-          >Let's go!</el-button
+        <img
+          src="http://39.101.139.97:8000/imgs/v2v-yellow.png"
+          style="height: 100% !important; left: 10% !important"
+        />
+        <checkbox3
+          class="box3"
+          style="
+            position: absolute;
+            left: 10% !important;
+            width: 22% !important;
+            top: 3% !important;
+          "
+        />
+        <el-button
+          type="primary"
+          round
+          @click="getagain"
+          class="btn"
+          style="
+            position: absolute;
+            left: 34% !important;
+            width: 8% !important;
+            top: 3% !important;
+          "
+          >换一批</el-button
+        >
+        <el-button
+          type="primary"
+          round
+          @click="turntoback"
+          class="btn"
+          style="
+            position: absolute;
+            left: 44% !important;
+            width: 8% !important;
+            top: 3% !important;
+          "
+          >管理后台</el-button
+        >
+        <el-button
+          type="primary"
+          round
+          @click="turntoindex"
+          class="btn"
+          style="
+            position: absolute;
+            left: 89% !important;
+            width: 8% !important;
+            top: 3% !important;
+          "
+          >返回首页</el-button
         >
       </el-header>
       <el-row><div style="padding: 10px"></div></el-row>
-      <el-row v-show="count_img_load >= 30">
-        <el-col
-          id="elcol"
-          class="elcol"
-          :span="4"
-          v-for="(o, index) in pplist"
-          :value="pplist"
-          :key="o"
-          :offset="index % 4 == 0 ? 2 : 1"
-        >
-          <el-card :body-style="tstyle" shadow="hover" @click.native="gotolink(index)">
-            <img :src="o" @load="handleLoad" class="image" />
-          </el-card>
-          <div style="padding: 10px"></div>
-        </el-col>
+      <transition name="fade" mode="in-out">
+        <el-row v-show="count_img_load >= 50">
+          <el-col
+            id="elcol"
+            class="elcol"
+            :span="4"
+            v-for="(o, index) in pplist"
+            :value="pplist"
+            :key="o"
+            :offset="index % 4 == 0 ? 2 : 1"
+          >
+            <el-card :body-style="tstyle" shadow="hover" @click.native="gotolink(index)">
+              <img :src="o" @load="handleLoad" class="image" />
+            </el-card>
+            <div style="padding: 10px"></div>
+          </el-col>
 
-        <br />
-      </el-row>
-      <el-row v-show="count_img_load < 30"> <img src="http://39.101.139.97:8000/imgs/page2-loading.png" class="loadingimg"> </el-row>
+          <br />
+        </el-row>
+      </transition>
+      <transition name="fade" mode="in-out">
+        <el-row v-if="count_img_load < 50">
+          <img
+            src="http://39.101.139.97:8000/imgs/page2-loading.png"
+            class="loadingimg"
+          />
+        </el-row>
+      </transition>
     </el-container>
+    <el-backtop target=""></el-backtop>
   </div>
 </template>
 <script>
@@ -58,8 +116,8 @@ export default {
     handleLoad() {
       this.count_img_load++;
       console.log(this.count_img_load);
-      if(this.count_img_load>=50){
-        this.isLoading=false;
+      if (this.count_img_load >= 50) {
+        this.isLoading = false;
       }
     },
     getagain: function () {
@@ -77,6 +135,12 @@ export default {
       this.$store.state.vlink = this.kklist[index];
       this.$router.push("/page3");
     },
+    turntoback: function () {
+      this.$router.push("/page1"); // 待修改
+    },
+    turntoindex: function () {
+      this.$router.push("/page1");
+    },
     goback: function () {
       this.$router.push("/page1");
     },
@@ -93,7 +157,7 @@ export default {
             "http://39.101.139.97:8000/imgs/loading.png",
           ];
           this.$forceUpdate();
-          this.isLoading=true;
+          this.isLoading = true;
           this.count_img_load = 0;
           var len = res.data.length;
           if (len >= 100) len = 100;
@@ -105,11 +169,11 @@ export default {
           this.$store.state.value4 = this.$children[0].$children[0].$children[1].value;
           for (var i = 0; i < len; ++i) {
             this.pplist[i] =
-              "http://39.101.139.97:5000/poster/" +
-              this.$store.state.objlist[i].id +
-              "/";
+              "http://39.101.139.97:5000/poster/" + this.$store.state.objlist[i].id + "/";
             this.kklist[i] =
-              "http://39.101.139.97:8081/output/" + this.$store.state.objlist[i].id + ".mp4";
+              "http://39.101.139.97:8081/output/" +
+              this.$store.state.objlist[i].id +
+              ".hd.mp4";
           }
           document.getElementById("elcol").value = this.pplist;
           this.isLoading = false;
@@ -158,7 +222,7 @@ export default {
 .btn {
 }
 .black {
-  background-color: #222;
+  background-color: #181a25;
 }
 .time {
   font-size: 13px;
@@ -193,9 +257,10 @@ export default {
 .el-header {
   background-color: #b3c0d1;
   color: #333;
-  text-align: center;
-  line-height: 60px;
-  height: 20vh;
+  text-align: left !important;
+  line-height: 0px !important;
+  height: 10vh !important;
+  width: 100% !important;
 }
 
 .el-aside {
@@ -214,7 +279,7 @@ export default {
 }
 
 .el-card {
-  border: 0px #222 !important;
+  border: 0px #181a25 !important;
   width: 100% !important;
   height: 100% !important;
 }
@@ -235,5 +300,37 @@ body > .el-container {
 .loadingimg {
   width: 100% !important;
   height: 100% !important;
+}
+
+.el-button--primary {
+  background: #f2b632 !important;
+  border: #f6b935 !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: #f2b632 !important;
+  font-weight: 700;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #e6a23c;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-enter-active {
+  transition: opacity 0.9s;
+}
+
+.fade-leave-active {
+  opacity: 0;
+
+  transition: opacity 0.2s;
 }
 </style>

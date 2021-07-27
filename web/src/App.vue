@@ -2,7 +2,7 @@
 <div>
     <div class="bg" />
 
-  <transition :name="transitionName">
+  <transition name="fade" mode="in-out">
     <router-view></router-view>
   </transition>
 
@@ -29,46 +29,34 @@ export default {
       this.$router.push("/page1");
     }
   },
-  watch: {
-    //使用watch 监听$router的变化
-    $route(to, from) {
-      //如果to索引大于from索引,判断为前进状态,反之则为后退状态
-      if (to.meta.index > from.meta.index) {
-        //设置动画名称
-        this.transitionName = "slide-left";
-
-      } else {
-        this.transitionName = "slide-right";
-      }
-    },
-  },
 };
 </script>
 
 <style>
-.slide-right-enter-active,
-.slide-right-leave-active,
-.slide-left-enter-active,
-.slide-left-leave-active {
-  will-change: transform;
-  transition: all 500ms;
-  position: absolute;
+.fade-enter {
+ 
+ opacity:0;
+ 
 }
-.slide-right-enter {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
+ 
+.fade-leave{
+ 
+ opacity:1;
+ 
 }
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
+ 
+.fade-enter-active{
+ 
+ transition:opacity .8s;
+ 
 }
-.slide-left-enter {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
-}
-.slide-left-leave-active {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
+ 
+.fade-leave-active{
+ 
+ opacity:0;
+ 
+ transition:opacity .3s;
+ 
 }
 </style>
 

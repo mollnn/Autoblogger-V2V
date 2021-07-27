@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="告诉我们您的兴趣">
+  <el-select v-model="value" placeholder="请选择素材类型">
     <el-option
       v-for="item in options"
       :key="item.value"

@@ -30,7 +30,7 @@ export default {
         //         fontSize: 23
         //     }
         // },
-        backgroundColor: "#222",
+        backgroundColor: "#181A25",
         tooltip: {
           show: true,
         },
@@ -77,7 +77,7 @@ export default {
               },
               emphasis: {
                 shadowBlur: 10,
-                shadowColor: "#333",
+                shadowColor: "#292E45",
               },
             },
             data: [],

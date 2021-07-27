@@ -1,15 +1,16 @@
 <template>
   <div>
-    <video-background
-      src="http://v2v.mollnn.com:8000/video/background.mp4"
-      style="max-height: 100vh; height: 100vh "
-    >
-    </video-background>
-    <img :src="img_url" class="logo"/>
-    <checkbox1 class="box1"/>
-    <el-button type="primary" round @click="gotolink" class="btn"
-      >确认</el-button
-    >
+    <transition name="fade" mode="in-out">
+      <video-background
+        src="http://v2v.mollnn.com:8000/video/background.mp4"
+        style="max-height: 100vh; height: 100vh"
+      >
+      </video-background>
+    </transition>
+    <img :src="img_url" class="logo" />
+    <checkbox1 class="box1" />
+    <el-button type="primary" round @click="gotolink" class="btn">开始欣赏</el-button>
+    <el-button type="primary" round @click="gotoback" class="btn2">管理后台</el-button>
   </div>
 </template>
 
@@ -37,6 +38,9 @@ export default {
         console.log(tmp);
       }, 300);
     },
+    gotoback() {
+      this.$router.push("/page1");
+    },
   },
   components: {
     checkbox1,
@@ -46,13 +50,22 @@ export default {
 
 <style scoped>
 .btn {
-  position: absolute;
+  position: absolute !important;
   text-align: center !important;
   top: 65vh;
-  left: 46%;
+  left: 46% !important;
   padding: 10px;
   overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
-  width: 8%;
+  width: 8% !important;
+}
+.btn2 {
+  position: absolute !important;
+  text-align: center !important;
+  top: 75vh;
+  left: 45.4% !important;
+  padding: 10px;
+  overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+  width: 8% !important;
 }
 .box1 {
   text-align: center;
@@ -71,5 +84,31 @@ export default {
   left: 40%;
   padding: 10px;
   overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #e6a23c !important;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #e6a23c;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+
+.fade-leave-active {
+  opacity: 0;
+
+  transition: opacity 0.5s;
 }
 </style>

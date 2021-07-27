@@ -25,7 +25,6 @@ export default {
   },
   methods: {
       onPlayerEnded(player) {
-        
         console.log('player ended!', player);
         console.log(this.$store.state.index);
         this.playerOptions.sources[0].src=this.$store.state.videolist[(this.$store.state.index - 1 + this.$store.state.videolist.length)%this.$store.state.videolist.length];
