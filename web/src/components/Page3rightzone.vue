@@ -72,7 +72,7 @@ export default {
 
 .box-card {
   width: 100%;
-  height: 40%;
+  height: 30%;
   background-color: #282828;
 }
 </style>

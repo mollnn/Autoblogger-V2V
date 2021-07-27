@@ -82,7 +82,7 @@ export default {
     },
     draw() {
       this.$http
-        .get("http://v2v.mollnn.com:5000/list/" + tempuse[0] + "/", {
+        .get("http://39.101.139.97:5000/list/" + tempuse[0] + "/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
@@ -105,11 +105,11 @@ export default {
           this.$store.state.value4 = this.$children[0].$children[0].$children[1].value;
           for (var i = 0; i < len; ++i) {
             this.pplist[i] =
-              "http://v2v.mollnn.com:5000/poster/" +
+              "http://39.101.139.97:5000/poster/" +
               this.$store.state.objlist[i].id +
               "/";
             this.kklist[i] =
-              "http://v2v.mollnn.com:5000/video/" + this.$store.state.objlist[i].id + "/";
+              "http://39.101.139.97:8081/output/" + this.$store.state.objlist[i].id + ".mp4";
           }
           document.getElementById("elcol").value = this.pplist;
           this.isLoading = false;

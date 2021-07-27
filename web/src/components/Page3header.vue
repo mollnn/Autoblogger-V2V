@@ -16,15 +16,12 @@ var tempuse = "";
 export default {
   methods: {
     draw() {
-      tempuse = this.$store.state.objlist[this.$store.state.index].id;
+      tempuse = this.$store.state.objlist[this.$store.state.objlist.length - 1 - this.$store.state.index].id;
       this.$http
         .get("http://v2v.mollnn.com:5000/vinfo/" + tempuse + "/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
-          console.log(res);
-          console.log("fuckkkk");
-          console.log(res.data[0].title);
           document.getElementById("xxx3").textContent = res.data[0].title;
           this.$forceUpdate();
         });

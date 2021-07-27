@@ -14,8 +14,8 @@
             <div>{{item.date}}</div>
         </div> -->
       </swiper-slide>
-      <div class="swiper-button-prev" slot="button-prev"></div>
-      <div class="swiper-button-next" slot="button-next"></div>
+      <!-- <div class="swiper-button-prev" slot="button-prev"></div> -->
+      <!-- <div class="swiper-button-next" slot="button-next"></div> -->
     </swiper>
   </div>
 </template>
@@ -546,16 +546,15 @@ export default {
       ],
 
       swiperOption: {
-        
         effect: "coverflow",
         coverflowEffect: {
           rotate: -3,
-          stretch: 330,
+          stretch: 400,
           depth: 300,
           modifier: 1,
           reverseDirection: true,
           // mousewheel: true,
-          slideShadows: true,
+          slideShadows: false,
         },
 
         centeredSlides: true,
@@ -583,24 +582,25 @@ export default {
     },
   },
   mounted() {
-    
     console.log("Current this instance object", this);
     console.log("Current Swiper instance object", this.swiper);
     this.collocateContentDtos = this.$store.state.posterlist.reverse();
-    this.$store.state.videolist= this.$store.state.videolist.reverse();
+    this.$store.state.videolist = this.$store.state.videolist.reverse();
     // this.collocateContentDtos = this.$store.state.posterlist;
     this.$forceUpdate();
-    this.swiper.slideTo(this.$store.state.index - 0);
     Bus.$on("changethebottom", (val) => {
       this.swiper.slideTo(val - 0, 500);
+      this.$forceUpdate();
     });
+    this.swiper.slideTo(this.$store.state.index - 0);
+    this.$forceUpdate();
   },
 };
 </script>
-<style scoped >
+<style scoped>
 .swiper-container {
   width: 100%;
-  height: 100%;
+  height: 100px !important;
   padding: 0px;
 }
 .swiper-slide {
@@ -620,5 +620,14 @@ export default {
   justify-content: space-around;
   align-items: center;
 }
+.swiper-button-prev {
+  position: relative;
+  height: 120px;
+  float: left;
+}
+.swiper-button-next {
+  position: relative;
+  height: 120px;
+  float: right;
+}
 </style>
-
