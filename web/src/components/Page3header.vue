@@ -12,21 +12,21 @@
       class="item"
       placement="bottom-end"
       id="xxx4"
-            
     >
-      <el-button 
-      
-      type="primary"
-      round
-      style="
-        float: right !important;
-        position: absolute !important;
-        top: 0px !important;
-        right: 100px !important;
-        background-color: #f2b632 !important;
-        color: #fff !important;
-        border: 0px !important;
-      ">视频信息</el-button>
+      <el-button
+        type="primary"
+        round
+        style="
+          float: right !important;
+          position: absolute !important;
+          top: 0px !important;
+          right: 100px !important;
+          background-color: #f2b632 !important;
+          color: #fff !important;
+          border: 0px !important;
+        "
+        >视频信息</el-button
+      >
     </el-tooltip>
     <el-button
       type="primary"
@@ -49,7 +49,7 @@ import Bus from "../bus1.js";
 var tempuse = "";
 export default {
   data() {
-    return {video_info: "video info"}
+    return { video_info: "video info" };
   },
   methods: {
     draw() {
@@ -62,7 +62,7 @@ export default {
         })
         .then((res) => {
           document.getElementById("xxx3").textContent = res.data[0].title;
-          this.video_info = res.data[0].descs
+          this.video_info = "[" + res.data[0].bvid + "]  视频介绍：" + res.data[0].descs;
           this.$forceUpdate();
         });
     },

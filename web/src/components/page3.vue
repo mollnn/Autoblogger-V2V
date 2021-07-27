@@ -1,15 +1,14 @@
 <template>
   <div class="xx" style="height: 100%" :style="styles">
     <el-container id="hh" style="height: 100%">
-      <el-header style="height: 10% !important">
+      <el-header style="height: 12% !important">
         <Page3header />
-
       </el-header>
       <el-main>
         <Page3videoplayer
           style="
-            width: 86% !important;
-            left: 7% !important;
+            width: 74% !important;
+            left: 13% !important;
             position: absolute !important;
           "
         />
