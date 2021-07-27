@@ -21,7 +21,8 @@ export default {
   data() {
     return {
       value: [],
-      img_url: "http://39.101.139.97:8000/imgs/v2v-white-shadow.png"
+      img_url: "http://39.101.139.97:8000/imgs/v2v-white-shadow.png",
+      isLoading: false,
     };
   },
   methods: {
@@ -34,7 +35,7 @@ export default {
       setTimeout(function () {
         Bus.$emit("change", tmp);
         console.log(tmp);
-      }, 1000);
+      }, 300);
     },
   },
   components: {
@@ -67,7 +68,6 @@ export default {
   position: absolute;
   top: 15%;
   width: 20% !important;
-  height: 30% !important;
   left: 40%;
   padding: 10px;
   overflow-y: auto; /* 当内容过多时y轴出现滚动条 */

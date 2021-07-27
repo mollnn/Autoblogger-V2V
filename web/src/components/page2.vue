@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <el-container class="black">
@@ -9,27 +8,25 @@
         >
       </el-header>
       <el-row><div style="padding: 10px"></div></el-row>
-      <el-row>
+      <el-row v-show="count_img_load >= 30">
         <el-col
           id="elcol"
+          class="elcol"
           :span="4"
           v-for="(o, index) in pplist"
           :value="pplist"
           :key="o"
           :offset="index % 4 == 0 ? 2 : 1"
         >
-          <el-card
-            :body-style="tstyle"
-            shadow="hover"
-            @click.native="gotolink(index)"
-          >
-            <img :src="o" class="image" />
+          <el-card :body-style="tstyle" shadow="hover" @click.native="gotolink(index)">
+            <img :src="o" @load="handleLoad" class="image" />
           </el-card>
           <div style="padding: 10px"></div>
         </el-col>
 
         <br />
       </el-row>
+      <el-row v-show="count_img_load < 30"> <img src="http://39.101.139.97:8000/imgs/page2-loading.png" class="loadingimg"> </el-row>
     </el-container>
   </div>
 </template>
@@ -38,26 +35,40 @@ import Bus from "../bus1.js";
 import checkbox3 from "./checkbox3.vue";
 var tempuse = [1, 1];
 export default {
-  components: { 
-   checkbox3 },
+  components: {
+    checkbox3,
+  },
   data() {
     return {
       tstyle: { "background-color": "#111", padding: "8px" },
       list: [],
-      pplist: ["."],
+      pplist: [
+        "http://39.101.139.97:8000/imgs/loading.png",
+        "http://39.101.139.97:8000/imgs/loading.png",
+        "http://39.101.139.97:8000/imgs/loading.png",
+        "http://39.101.139.97:8000/imgs/loading.png",
+      ],
       kklist: [],
       isLoading: true,
       val: [],
+      count_img_load: 0,
     };
   },
   methods: {
+    handleLoad() {
+      this.count_img_load++;
+      console.log(this.count_img_load);
+      if(this.count_img_load>=50){
+        this.isLoading=false;
+      }
+    },
     getagain: function () {
       console.log(this.$children[0].$children[0].$children[0].value);
       this.val[0] = this.$children[0].$children[0].$children[0].value;
       this.val[1] = this.$children[0].$children[0].$children[1].value;
       tempuse = this.val;
       console.log(tempuse);
-      this.$forceUpdate();
+      this.isLoading = true;
       this.draw();
     },
     gotolink: function (index) {
@@ -71,37 +82,40 @@ export default {
     },
     draw() {
       this.$http
-        .get(
-          "http://v2v.mollnn.com:5000/list/" +
-            tempuse[0] +
-            "/",
-          {
-            headers: { "Access-Control-Allow-Origin": "*" },
-          }
-        )
+        .get("http://v2v.mollnn.com:5000/list/" + tempuse[0] + "/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
         .then((res) => {
+          this.pplist = [
+            "http://39.101.139.97:8000/imgs/loading.png",
+            "http://39.101.139.97:8000/imgs/loading.png",
+            "http://39.101.139.97:8000/imgs/loading.png",
+            "http://39.101.139.97:8000/imgs/loading.png",
+          ];
+          this.$forceUpdate();
+          this.isLoading=true;
+          this.count_img_load = 0;
           var len = res.data.length;
           if (len >= 100) len = 100;
           this.list = res.data.slice(0, len);
           this.$store.state.objlist = res.data.slice(0, len);
-          for (var i = 0; i < len; ++i) {
-            this.pplist[i] =
-              "http://v2v.mollnn.com:5000/poster/" + res.data[i].id + "/";
-            this.kklist[i] =
-              "http://v2v.mollnn.com:5000/video/" + res.data[i].id + "/";
-          }
           this.$children[0].$children[0].$children[0].value = tempuse[0];
           this.$store.state.value3 = this.$children[0].$children[0].$children[0].value;
           this.$children[0].$children[0].$children[1].value = tempuse[1];
           this.$store.state.value4 = this.$children[0].$children[0].$children[1].value;
-          this.$store.state.posterlist = this.pplist;
-          this.$store.state.videolist = this.kklist;
-          console.log(this.$store.state.posterlist);
+          for (var i = 0; i < len; ++i) {
+            this.pplist[i] =
+              "http://v2v.mollnn.com:5000/poster/" +
+              this.$store.state.objlist[i].id +
+              "/";
+            this.kklist[i] =
+              "http://v2v.mollnn.com:5000/video/" + this.$store.state.objlist[i].id + "/";
+          }
           document.getElementById("elcol").value = this.pplist;
           this.isLoading = false;
           this.$forceUpdate();
-          console.log("aaaaaaaaaaaaaaaaaa");
-          console.log(this.isLoading);
+          this.$store.state.posterlist = this.pplist;
+          this.$store.state.videolist = this.kklist;
         });
     },
   },
@@ -120,9 +134,8 @@ export default {
       // }, 2000);
       this.draw();
     });
-      Bus.$on("changebacktoPage2", (val) => {
- 
-        this.isLoading = false;
+    Bus.$on("changebacktoPage2", (val) => {
+      this.isLoading = false;
       console.log(val);
       tempuse[0] = this.$store.state.value3;
       tempuse[1] = this.$store.state.value4;
@@ -202,6 +215,8 @@ export default {
 
 .el-card {
   border: 0px #222 !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 body > .el-container {
@@ -215,5 +230,10 @@ body > .el-container {
 
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
+}
+
+.loadingimg {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>
