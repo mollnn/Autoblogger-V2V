@@ -9,7 +9,10 @@
       @ended="onPlayerEnded($event)"
 
       id="fff"
-    ></video-player>
+    >
+
+    </video-player>
+
   </div>
 </template>
 <script>
@@ -30,6 +33,9 @@ export default {
         this.playerOptions.poster = this.$store.state.posterlist[this.$store.state.index];
         this.$forceUpdate();
         Bus.$emit("changethebottom", this.$store.state.index);
+        this.addToList();
+        this.addToList();
+        this.addToList();
       },
   },
   data() {
@@ -61,6 +67,7 @@ export default {
           fullscreenToggle: true, //全屏按钮
         },
       },
+
     };
   },
   mounted() {
@@ -83,5 +90,12 @@ export default {
 <style>
     .input_video{
         margin: 0 auto;
+    }
+    .danmu {
+      position: absolute !important;
+      width: 100% !important;
+      height: 100% !important;
+      left: 0% !important;
+      top: 0% !important;
     }
 </style>

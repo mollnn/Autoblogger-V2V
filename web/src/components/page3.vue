@@ -23,6 +23,7 @@
 import Page3header from "./Page3header.vue";
 import Page3videoplayer from "./Page3videoplayer.vue";
 import Page3bottom from "./Page3bottom.vue";
+
 export default {
   name: "HelloWorld",
   data() {
