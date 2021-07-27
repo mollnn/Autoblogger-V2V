@@ -8,10 +8,6 @@
           >Let's go!</el-button
         >
       </el-header>
-      <transition name="fade">
-        <Loading v-if="isLoading">
-        </Loading>
-      </transition>
       <el-row><div style="padding: 10px"></div></el-row>
       <el-row>
         <el-col
@@ -39,12 +35,10 @@
 </template>
 <script>
 import Bus from "../bus1.js";
-import Loading from "@/components/loading";
 import checkbox3 from "./checkbox3.vue";
 var tempuse = [1, 1];
 export default {
   components: { 
-    Loading,
    checkbox3 },
   data() {
     return {

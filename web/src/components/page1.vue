@@ -47,7 +47,7 @@ export default {
 .btn {
   position: absolute;
   text-align: center !important;
-  top: 70vh;
+  top: 65vh;
   left: 46%;
   padding: 10px;
   overflow-y: auto; /* 当内容过多时y轴出现滚动条 */

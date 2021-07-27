@@ -8,15 +8,18 @@ Vue.use(VueRouter)
 const routes = [
   {
     path :'/page1',
-    component : page1
+    component : page1,
+    meta:{index:0},
   },
   {
     path :'/page2',
     component :page2,
+    meta:{index:1},
   },
   {
     path :'/page3',
     component :page3,
+    meta:{index:2},
   }
 ]
 
