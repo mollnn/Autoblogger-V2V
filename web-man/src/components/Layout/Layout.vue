@@ -5,12 +5,12 @@
   <div class="wrap">
     <Header  />
     <v-touch class="content" @swipe="handleSwipe" :swipe-options="{direction: 'horizontal'}">
-      <breadcrumb-history></breadcrumb-history>
+      <!-- <breadcrumb-history></breadcrumb-history> -->
       <transition name="router-animation">
         <router-view />
       </transition>
       <footer class="contentFooter">
-        V2V视频数据分析平台 - Made by <a href="javascript:;" rel="nofollow noopener noreferrer" >The Following Automaton (Group 8)</a>
+        V2V - Made by <a href="javascript:;" rel="nofollow noopener noreferrer" >The Following Automaton (Group 8)</a>
       </footer>
     </v-touch>
   </div>
@@ -24,13 +24,15 @@ const { mapState, mapActions } = createNamespacedHelpers('layout');
 import Sidebar from '@/components/Sidebar/Sidebar';
 import Header from '@/components/Header/Header';
 import Helper from '@/components/Helper/Helper';
-import BreadcrumbHistory from '@/components/BreadcrumbHistory/BreadcrumbHistory';
+// import BreadcrumbHistory from '@/components/BreadcrumbHistory/BreadcrumbHistory';
 
 import './Layout.scss';
 
 export default {
   name: 'Layout',
-  components: { Sidebar, Header, Helper, BreadcrumbHistory },
+  components: { Sidebar, Header, Helper, 
+  // BreadcrumbHistory
+   },
   methods: {
     ...mapActions(['switchSidebar', 'handleSwipe', 'changeSidebarActive', 'toggleSidebar'],
     ),

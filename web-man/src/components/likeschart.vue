@@ -82,9 +82,9 @@ export default {
                 color: new echarts.graphic.LinearGradient(
                     0, 0, 0, 1,
                     [
-                        {offset: 0, color: 'rgb(255, 70, 131)'},
-                        {offset: 0.5, color: 'rgb(255, 158, 68)'},
-                        {offset: 1, color: 'rgb(255, 158, 68)'}
+                { offset: 0, color: "	RGB(38,112,162) " },
+                { offset: 0.5, color: "	RGB(60,152,215) " },
+                { offset: 1, color: "	#FFFFFF" },
                     ]
                 )
             },
@@ -95,9 +95,9 @@ export default {
                     color: new echarts.graphic.LinearGradient(
                         0, 0, 0, 1,
                         [
-                            {offset: 0, color: '#F55555'},
-                            {offset: 0.7, color: '#F55555'},
-                            {offset: 1, color: '#F55555'}
+                  { offset: 0, color: "RGB(0,43,73)" },
+                  { offset: 0.7, color: "RGB(0,43,73)" },
+                  { offset: 1, color: "RGB(0,43,73)" },
                         ]
                     )
                 }

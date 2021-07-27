@@ -38,14 +38,14 @@ export default {
           x: "80%",
           itemWidth: 15,
           itemHeight: 15,
-          itemGap: 7,
+          itemGap: 3,
         },
         visualMap: {
           show: false,
-          min: 80,
+          min: 300,
           max: 500,
           inRange: {
-            colorLightness: [0.7, 0.8],
+            colorLightness: [0.4, 0.35],
           },
         },
         series: [
@@ -56,9 +56,9 @@ export default {
             center: ["50%", "40%"],
             avoidLabelOverlap: false,
             itemStyle: {
-              color: "#F55555",
+              color: "RGB(0,43,73)",
               shadowBlur: 20,
-              shadowColor: "rgba(0, 0, 0, 0.5)",
+              shadowColor: "rgba(0, 0, 0, 0.4)",
             },
             label: {
               show: false,

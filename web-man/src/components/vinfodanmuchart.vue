@@ -13,9 +13,9 @@ const chartColors = config.app.chartColors;
 const { axisColor } = chartColors;
 
 let lineColors = [
-  "rgb(255, 70, 131)",
-  "rgb(255, 70, 131)",
-  "rgb(255, 70, 131)",
+  "	RGB(0,87,146) ",
+  "	RGB(0,87,146) ",
+  "	RGB(0,87,146) ",
 ];
 export default {
   name: "vinfodanmuchart",

@@ -1,233 +1,68 @@
 <template>
   <div class="tables-basic">
-    <h2 class="page-title">
-      Tables - <span class="fw-semi-bold">Status</span>
-    </h2>
+    <h1 class="page-title">管线状态<span class="fw-semi-bold"></span></h1>
     <b-row>
-      <b-col lg="5">
-        <Widget
-          title="<h5>Table <span class='fw-semi-bold'>Styles</span></h5>"
-          customHeader
-          settings
-          close
-        >
-          <!-- <h3>Stripped <span class="fw-semi-bold">Table</span></h3>
-         <p>Each row is highlighted. You will never lost
-           there. Just <code>.table-striped</code> it.</p>
-         <table class="table table-striped">
-           <thead>
-             <tr>
-               <th>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox1" :checked="checkboxes1[0]"
-                     @change="event => checkAll(event, 'checkboxes1')"
-                   />
-                   <label for="checkbox1" />
-                 </div>
-               </th>
-               <th>First Name</th>
-               <th>Last Name</th>
-               <th>Info</th>
-             </tr>
-           </thead>
-           <tbody>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox2" :checked="checkboxes1[1]"
-                     @change="event => changeCheck(event, 'checkboxes1', 1)"
-                   />
-                   <label for="checkbox2" />
-                 </div>
-               </td>
-               <td>Mark</td>
-               <td>Otto</td>
-               <td><b-badge variant="success">Online</b-badge></td>
-             </tr>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox3" :checked="checkboxes1[2]"
-                     @change="event => changeCheck(event, 'checkboxes1', 2)"
-                   />
-                   <label for="checkbox3" />
-                 </div>
-               </td>
-               <td>Jacob <b-badge variant="warning" class="text-gray-dark">ALERT!</b-badge></td>
-               <td>Thornton</td>
-               <td><b-badge variant="gray">Away</b-badge></td>
-             </tr>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox4" :checked="checkboxes1[3]"
-                     @change="event => changeCheck(event, 'checkboxes1', 3)"
-                   />
-                   <label for="checkbox4" />
-                 </div>
-               </td>
-               <td>Larry</td>
-               <td>the Bird</td>
-               <td><b-badge variant="danger">Construct</b-badge></td>
-             </tr>
-           </tbody>
-         </table>
-         <br /><br /> -->
-          <h3>status--source <span class="fw-semi-bold">Table</span></h3>
-          <p>
-            Trace only what's really important. <code>.table-hover</code> is
-            made for it.
-          </p>
+      <b-col lg="6">
+        <Widget customHeader settings close>
+          <h3>媒体载入段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th>Bid</th>
-                  <th>Status</th>
+                  <th>BVID</th>
+                  <th>进度</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-cloak v-for="(item, index) of alist" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
+                  <td>{{ item[1] }} %</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </Widget>
       </b-col>
-      <b-col lg="7">
-        <Widget
-          title="<h5>Table <span class='fw-semi-bold'>Styles</span></h5>"
-          customHeader
-          settings
-          close
-        >
-          <!-- <h3>Stripped <span class="fw-semi-bold">Table</span></h3>
-         <p>Each row is highlighted. You will never lost
-           there. Just <code>.table-striped</code> it.</p>
-         <table class="table table-striped">
-           <thead>
-             <tr>
-               <th>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox1" :checked="checkboxes1[0]"
-                     @change="event => checkAll(event, 'checkboxes1')"
-                   />
-                   <label for="checkbox1" />
-                 </div>
-               </th>
-               <th>First Name</th>
-               <th>Last Name</th>
-               <th>Info</th>
-             </tr>
-           </thead>
-           <tbody>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox2" :checked="checkboxes1[1]"
-                     @change="event => changeCheck(event, 'checkboxes1', 1)"
-                   />
-                   <label for="checkbox2" />
-                 </div>
-               </td>
-               <td>Mark</td>
-               <td>Otto</td>
-               <td><b-badge variant="success">Online</b-badge></td>
-             </tr>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox3" :checked="checkboxes1[2]"
-                     @change="event => changeCheck(event, 'checkboxes1', 2)"
-                   />
-                   <label for="checkbox3" />
-                 </div>
-               </td>
-               <td>Jacob <b-badge variant="warning" class="text-gray-dark">ALERT!</b-badge></td>
-               <td>Thornton</td>
-               <td><b-badge variant="gray">Away</b-badge></td>
-             </tr>
-             <tr>
-               <td>
-                 <div class="abc-checkbox">
-                   <input type="checkbox"
-                     id="checkbox4" :checked="checkboxes1[3]"
-                     @change="event => changeCheck(event, 'checkboxes1', 3)"
-                   />
-                   <label for="checkbox4" />
-                 </div>
-               </td>
-               <td>Larry</td>
-               <td>the Bird</td>
-               <td><b-badge variant="danger">Construct</b-badge></td>
-             </tr>
-           </tbody>
-         </table>
-         <br /><br /> -->
-          <h3>status--template <span class="fw-semi-bold">Table</span></h3>
-          <p>
-            Trace only what's really important. <code>.table-hover</code> is
-            made for it.
-          </p>
+      <b-col lg="6">
+        <Widget customHeader settings close>
+          <h3>片段提取段<span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th>Bid</th>
-                  <th>Status</th>
+                  <th>BVID</th>
+                  <th>进度</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-cloak v-for="(item, index) of blist" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
+                  <td>{{ item[1] }} %</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </Widget>
-        <Widget
-          title="<h5>Table <span class='fw-semi-bold'>Styles</span></h5>"
-          customHeader
-          settings
-          close
-        >
-          <h3>status--output <span class="fw-semi-bold">Table</span></h3>
-          <p>
-            Trace only what's really important. <code>.table-hover</code> is
-            made for it.
-          </p>
+        <Widget customHeader settings close>
+          <h3>成片生成段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th>Bid</th>
-                  <th>类型号></th>
-                  <th>fsdfsfsa</th>
-                  <th>Status</th>
+                  <th>OVID</th>
+                  <th>进度</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-cloak v-for="(item, index) of clist" :key="index">
                   <td>{{ index + 1 }}</td>
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
-                  <td>{{ item[2] }}</td>
-                  <td>{{ item[3] }}</td>
+                  <td>{{ item[1] }}%</td>
                 </tr>
               </tbody>
             </table>
@@ -339,27 +174,24 @@ export default {
     };
   },
   mounted() {
-    // setInterval(function () {
-    //   this.draw1();
-    // }, 100);
     this.draw1();
     this.draw2();
     this.draw3();
     this.timer = setInterval(() => {
       setTimeout(this.draw1(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
     this.timer = setInterval(() => {
       setTimeout(this.draw2(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
     this.timer = setInterval(() => {
       setTimeout(this.draw3(), 0);
-    }, 1000 * 5);
+    }, 1000 * 2);
   },
   methods: {
     draw1() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/source/", {
+        .get("http://v2v.mollnn.com:5000/api/status/load/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
@@ -371,7 +203,7 @@ export default {
     draw2() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/templates/", {
+        .get("http://v2v.mollnn.com:5000/api/status/extract/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
@@ -383,7 +215,7 @@ export default {
     draw3() {
       console.log("fuck");
       this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/output/", {
+        .get("http://v2v.mollnn.com:5000/api/status/generate/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {

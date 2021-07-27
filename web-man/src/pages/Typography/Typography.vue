@@ -1,56 +1,54 @@
 <template>
   <div>
-    <h1 class="page-title">
-      Typography - <span class="fw-semi-bold">Texts & Display</span>
-    </h1>
+    <h1 class="page-title">管线管理 <span class="fw-semi-bold"></span></h1>
     <b-row>
       <b-col xs="12" lg="6">
-        <Widget
-          title="<h5>Headings <small class='text-muted'>Default and customized</small></h5>"
-          customHeader
-          close
-          collapse
-        >
-          <h4>Table1---</h4>
+        <Widget customHeader close collapse>
+          <h4>源素材管理</h4>
+          <br />
           <b-row>
             <form class="form-inline" role="form">
               <div class="form-group">
-                <span style = "padding : 24px"></span>
+                <span style="padding: 14px"></span>
                 <input
                   type="text"
-                  placeholder="输入搜素信息"
+                  placeholder="关键词搜索"
                   class="form-control"
                   v-model="msgaa"
                 />
-                <span style = "padding : 14px"></span>
+                <span style="padding: 10px"></span>
                 <input
                   type="text"
-                  placeholder="输入添加信息1"
+                  placeholder="BVID"
                   class="form-control"
                   v-model="msg1"
                 />
               </div>
+              <span style="padding: 5px"></span>
             </form>
+            <br />
+
             <form class="form-inline" role="form">
-              <span style = "padding : 24px"></span>
-              <input
-                type="text"
-                placeholder="输入添加信息2"
-                class="form-control"
-                v-model="msg2"
-              />
-              <span style = "padding : 14px"></span>
+              <span style="padding: 14px"></span>
               <button type="button" @click="addinfo1" class="btn btn-primary">
-                添加信息
+                添加素材信息
+              </button>
+              <span style="padding: 26px"></span>
+              <button
+                type="button"
+                @click="clearsource"
+                class="btn btn-primary"
+              >
+                清空素材信息
               </button>
             </form>
+            <br />
           </b-row>
           <table class="table">
             <thead>
               <tr>
-                <th>id</th>
-                <th>Bid</th>
-                <th>info</th>
+                <th>序号</th>
+                <th>BVID</th>
                 <th>删除按钮</th>
               </tr>
             </thead>
@@ -58,7 +56,6 @@
               <tr v-cloak v-for="(item, index) of slist" :key="index">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item[0] }}</td>
-                <td>{{ item[1] }}</td>
                 <td>
                   <a href="javascript:;" @click="del1(index)">删除</a>
                 </td>
@@ -68,58 +65,62 @@
         </Widget>
       </b-col>
       <b-col xs="12" lg="6">
-        <Widget
-          title="<h5>Headings <small class='text-muted'>Default and customized</small></h5>"
-          customHeader
-          close
-          collapse
-        >
-          <h4>Table2---</h4>
+        <Widget customHeader close collapse>
+          <h4>模板管理</h4>
           <b-row>
             <form class="form-inline" role="form">
-              <span style = "padding : 24px"></span>
-            <input
-              type="text"
-              placeholder="输入搜索信息"
-              class="form-control"
-              v-model="msgbb"
-            />
-            <span style = "padding : 14px"></span>
-            <input
-              type="text"
-              placeholder="输入添加信息3"
-              class="form-control"
-              v-model="msg3"
-            />
+              <span style="padding: 24px"></span>
+              <input
+                type="text"
+                placeholder="关键词搜索"
+                class="form-control"
+                v-model="msgbb"
+              />
+              <span style="padding: 14px"></span>
+              <input
+                type="text"
+                placeholder="BVID"
+                class="form-control"
+                v-model="msg3"
+              />
             </form>
-            <br><br>
+            <br /><br />
             <form class="form-inline" role="form">
-              <span style = "padding : 24px"></span>
-            <input
-              type="text"
-              placeholder="输入添加信息5"
-              class="form-control"
-              v-model="msg5"
-            />
+              <span style="padding: 24px"></span>
+              <input
+                type="text"
+                placeholder="tag"
+                class="form-control"
+                v-model="msg5"
+              />
             </form>
             <form class="form-inline" role="form">
-              <span style = "padding : 14px !important"></span>
-            <button type="button" @click="addinfo2" class="btn btn-primary">
-              添加信息
-            </button>
-            <span style = "padding :23px"></span>
-            <button type="button" @click="execall" class="btn btn-primary">
-              执行！
-            </button>
+              <span style="padding: 14px !important"></span>
+              <button type="button" @click="addinfo2" class="btn btn-primary">
+                添加
+              </button>
+              <span style="padding: 10px"></span>
+              <button type="button" @click="execall" class="btn btn-primary">
+                执行
+              </button>
+            </form>
+            <form class="form-inline" role="form">
+              <span style="padding: 10px"></span>
+              <button
+                type="button"
+                @click="cleartemplate"
+                class="btn btn-primary"
+              >
+                清空
+              </button>
             </form>
           </b-row>
           <table class="table">
             <thead>
               <tr>
-                <th>id</th>
-                <th>Bid</th>
-                <th>info</th>
-                <th>hhh</th>
+                <th>序号</th>
+                <th>BVID</th>
+                <th>类型号</th>
                 <th>删除按钮</th>
               </tr>
             </thead>
@@ -127,7 +128,6 @@
               <tr v-cloak v-for="(item, index) of blist" :key="index">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item[0] }}</td>
-                <td>{{ item[1] }}</td>
                 <td>{{ item[2] }}</td>
                 <td>
                   <a href="javascript:;" @click="del2(index)">删除</a>
@@ -161,6 +161,7 @@ export default {
         .then((res) => {
           console.log(res);
         });
+      alert("正在执行....");
     },
     del1(index) {
       this.$forceUpdate();
@@ -182,24 +183,17 @@ export default {
         });
     },
     addinfo1() {
-      if (this.msg2 == "") {
-        alert("fuckyou man! get the msg box all full!");
-        return;
-      } else if (this.msgaa == "" && this.msg1 == "") {
-        alert("fuckyou man! get the msg box all full!");
+      if (this.msgaa == "" && this.msg1 == "") {
+        alert("格式错误，请重新填写！");
         return;
       } else if (this.msgaa != "" && this.msg1 != "") {
-        alert("fuckyou man! get the msg box all full!");
+        alert("格式错误，请重新填写！");
         return;
       } else {
         if (this.msgaa == "") {
           this.$http
             .get(
-              "http://v2v.mollnn.com:5000/api/source/insert/" +
-                this.msg1 +
-                "/" +
-                this.msg2 +
-                "/",
+              "http://v2v.mollnn.com:5000/api/source/insert/" + this.msg1 + "/",
               {
                 headers: { "Access-Control-Allow-Origin": "*" },
               }
@@ -214,8 +208,6 @@ export default {
             .get(
               "http://v2v.mollnn.com:5000/api/source/searchinsert/" +
                 this.msgaa +
-                "/" +
-                this.msg2 +
                 "/",
               {
                 headers: { "Access-Control-Allow-Origin": "*" },
@@ -228,7 +220,6 @@ export default {
             });
         }
         this.msg1 = "";
-        this.msg2 = "";
         this.msgaa = "";
       }
     },
@@ -239,6 +230,17 @@ export default {
         })
         .then((res) => {
           this.slist = res.data;
+          this.$forceUpdate();
+        });
+    },
+    clearsource() {
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/source/clear/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          console.log(res);
+          this.draw1();
           this.$forceUpdate();
         });
     },
@@ -265,13 +267,13 @@ export default {
     },
     addinfo2() {
       if (this.msg5 == "") {
-        alert("fuckyou man! get the msg box all full!!!!");
+        alert("格式错误，请重新填写！");
         return;
       } else if (this.msgbb == "" && this.msg3 == "") {
-        alert("fuckyou man! get the msg box all full!!!!");
+        alert("格式错误，请重新填写！");
         return;
       } else if (this.msgbb != "" && this.msg3 != "") {
-        alert("fuckyou man! get the msg box all full!!!!");
+        alert("格式错误，请重新填写！");
         return;
       } else {
         if (this.msgbb == "") {
@@ -279,8 +281,6 @@ export default {
             .get(
               "http://v2v.mollnn.com:5000/api/template/insert/" +
                 this.msg3 +
-                "/" +
-                this.msg4 +
                 "/" +
                 this.msg5 +
                 "/",
@@ -299,8 +299,6 @@ export default {
               "http://v2v.mollnn.com:5000/api/template/searchinsert/" +
                 this.msgbb +
                 "/" +
-                this.msg4 +
-                "/" +
                 this.msg5 +
                 "/",
               {
@@ -315,7 +313,6 @@ export default {
         }
         this.msgbb = "";
         this.msg3 = "";
-        this.msg4 = "";
         this.msg5 = "";
       }
     },
@@ -329,6 +326,17 @@ export default {
           this.$forceUpdate();
         });
     },
+    cleartemplate() {
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/template/clear/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          console.log(res);
+          this.draw2();
+          this.$forceUpdate();
+        });
+    },
   },
   data() {
     return {
@@ -337,9 +345,7 @@ export default {
       msgaa: "",
       msgbb: "",
       msg1: "",
-      msg2: "",
       msg3: "",
-      msg4: 0,
       msg5: "",
     };
   },

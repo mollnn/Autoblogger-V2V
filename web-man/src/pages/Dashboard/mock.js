@@ -1225,7 +1225,7 @@ export let liveChartInterval = null;
 
 export const liveChart = {
     liveChartInterval: null,
-    colors: ['#D4688C'],
+    colors: [primary],
     chart: {
         height: 250,
         type: 'spline',

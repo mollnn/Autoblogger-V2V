@@ -91,7 +91,6 @@ export default {
     Bus.$on("change", (val) => {
       tempuse = val;
       this.ttt();
-      // alert(tempuse);
     });
     this.draw();
   },

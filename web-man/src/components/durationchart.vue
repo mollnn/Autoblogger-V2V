@@ -86,17 +86,17 @@ export default {
             symbol: "none",
             sampling: "lttb",
             itemStyle: {
-              color: "rgb(255, 158, 68)",
+              color: "#FFFFFF",
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 {
                   offset: 1,
-                  color: "rgb(255, 70, 131)",
+                  color: "#1860B8",
                 },
                 {
                   offset: 0,
-                  color: "rgb(255, 158, 68)",
+                  color: "RGB(60,152,215)",
                 },
               ]),
             },

@@ -21,7 +21,7 @@ import ChartsPage from '@/pages/Charts/Charts';
 
 // Ui
 import IconsPage from '@/pages/Icons/Icons';
-// import NotificationsPage from '@/pages/Notifications/Notifications';
+import NotificationsPage from '@/pages/Notifications/Notifications';
 
 
 Vue.use(Router);
@@ -58,11 +58,11 @@ export default new Router({
           name: 'IconsPage',
           component: IconsPage,
         },
-        // {
-        //   path: 'notifications',
-        //   name: 'NotificationsPage',
-        //   component: NotificationsPage,
-        // },
+        {
+          path: 'notifications',
+          name: 'NotificationsPage',
+          component: NotificationsPage,
+        },
         {
           path: 'components/charts',
           name: 'ChartsPage',

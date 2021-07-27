@@ -14,16 +14,6 @@
           <i class="fi flaticon-menu" />
         </a>
       </b-nav-item>
-      <!-- <b-nav-item class="d-md-down-none">
-        <a href="#" class="px-2">
-          <i class='fi flaticon-flip' />
-        </a>
-      </b-nav-item> -->
-      <!-- <b-nav-item class="d-md-down-none">
-        <a href="#" class="px-2">
-          <i class='fi flaticon-close' />
-        </a>
-      </b-nav-item> -->
     </b-nav>
     <b-nav>
       <b-form class="d-sm-down-none ml-5" inline>
@@ -116,7 +106,12 @@ export default {
     sendMsg: function () {
       // 定义sendMsg方法，并将msg通过chaange传给label组件
       // alert(this.Bidinputmsg);
+      if(this.BidinputMsg == ""){
+        alert("输入BVID为空,请检查");return;
+      }
       Bus.$emit("change", this.BidinputMsg);
+      this.$router.push('/app/components/charts')
+      this.BidinputMsg = "";
     },
     ...mapActions("layout", [
       "toggleSidebar",
