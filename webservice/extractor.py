@@ -175,10 +175,8 @@ def extractor_danmu_density(tag, bvid, danmus, shotcuts):
 # 2 号提取器
 
 
-def extractor_hot(tag, bvid, danmus, shotcuts):
+def extractor_love(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
-
-    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -188,8 +186,22 @@ def extractor_hot(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
+    words = [
+        '甜',
+        '磕',
+        '酸',
+        '狗粮',
+        '宠',
+        '名场面',
+        '经典'
+    ]
     for danmu in danmus:
-        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+        flag = 0
+        for w in words:
+            if danmu["text"].find(w) != -1:
+                flag = 1
+        if flag == 1:
+            score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
     score = scipy.signal.savgol_filter(score, 49, 3)
     score = [max(i, 0) for i in score]
 
@@ -231,10 +243,8 @@ def extractor_hot(tag, bvid, danmus, shotcuts):
 #####################################################
 # 3 号提取器
 
-def extractor_love(tag, bvid, danmus, shotcuts):
+def extractor_shock(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
-
-    return  # 要启用该提取器，请删除本行
 
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
@@ -244,8 +254,24 @@ def extractor_love(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
+    words = [
+        '名场面',
+        '经典',
+        '可爱',
+        '美',
+        '经费爆炸',
+        '帅',
+        '飒',
+        '高能',
+        '耳机'
+    ]
     for danmu in danmus:
-        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+        flag = 0
+        for w in words:
+            if danmu["text"].find(w) != -1:
+                flag = 1
+        if flag == 1:
+            score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
     score = scipy.signal.savgol_filter(score, 49, 3)
     score = [max(i, 0) for i in score]
 
@@ -287,67 +313,9 @@ def extractor_love(tag, bvid, danmus, shotcuts):
 #####################################################
 # 4 号提取器
 
-def extractor_shock(tag, bvid, danmus, shotcuts):
-    # tag: 提取的素材标记
-
-    return  # 要启用该提取器，请删除本行
-
-    # 读取基本信息
-    duration = float(ffmpeg.probe("../data/media/%s.mp4" %
-                     bvid)["format"]["duration"])
-    frame_rate = 24
-    n_frame = int(math.ceil(duration*frame_rate))
-
-    # 计算评分（! 自行修改）
-    score = [0]*n_frame
-    for danmu in danmus:
-        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
-    score = scipy.signal.savgol_filter(score, 49, 3)
-    score = [max(i, 0) for i in score]
-
-    # 转场处评分归零
-    for cut in shotcuts:
-        cut_begin = cut["cut_frame"] if cut["transition"] == "cut" else cut["start_frame"]
-        cut_end = cut["cut_frame"] if cut["transition"] == "cut" else cut["end_frame"]
-        for i in range(cut_begin, cut_end+1):
-            if 0 <= i and i < n_frame:
-                score[i] = 0
-
-    # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.05
-    len_min = 3*24
-    len_max = 20*24
-
-    # 二分确定阈值
-    bisect_left = np.min(score)+1e-5
-    bisect_right = np.max(score)-1e-5
-    while bisect_right-bisect_left > 1e-4:
-        mid = (bisect_left+bisect_right)/2
-        clips, total = common.makeRanges(
-            [(score[i] > mid) for i in range(n_frame)], len_min, len_max)
-        if total/n_frame > ratio:
-            bisect_left = mid
-        else:
-            bisect_right = mid
-
-    # 区间列表生成
-    threshold = bisect_left
-    clips, total = common.makeRanges(
-        [(score[i] > threshold) for i in range(n_frame)], len_min, len_max)
-    print("  extractor.danmu_density: report: ", threshold, total)
-
-    # 片段输出
-    export_clips(clips, score, bvid, frame_rate, tag)
-
-#####################################################
-# 5 号提取器
-
-
 def extractor_humor(tag, bvid, danmus, shotcuts):
     # tag: 提取的素材标记
 
-    return  # 要启用该提取器，请删除本行
-
     # 读取基本信息
     duration = float(ffmpeg.probe("../data/media/%s.mp4" %
                      bvid)["format"]["duration"])
@@ -356,8 +324,21 @@ def extractor_humor(tag, bvid, danmus, shotcuts):
 
     # 计算评分（! 自行修改）
     score = [0]*n_frame
+    words = [
+        '名场面',
+        '经典',
+        '可爱',
+        '草',
+        '哈',
+        '笑死'
+    ]
     for danmu in danmus:
-        score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
+        flag = 0
+        for w in words:
+            if danmu["text"].find(w) != -1:
+                flag = 1
+        if flag == 1:
+            score[max(0, min(n_frame-1, int(float(danmu["floattime"]*24))))] += 1
     score = scipy.signal.savgol_filter(score, 49, 3)
     score = [max(i, 0) for i in score]
 
@@ -395,9 +376,9 @@ def extractor_humor(tag, bvid, danmus, shotcuts):
     # 片段输出
     export_clips(clips, score, bvid, frame_rate, tag)
 
+#####################################################################################
+#####################################################################################
 
-#####################################################################################
-#####################################################################################
 
 def main(bvid):
     print("  extractor: prep...")
@@ -426,12 +407,10 @@ def main(bvid):
             elif ext_id == 1:
                 extractor_danmu_density(ext_id, bvid, danmus, shotcuts)
             elif ext_id == 2:
-                extractor_hot(ext_id, bvid, danmus, shotcuts)
-            elif ext_id == 3:
                 extractor_love(ext_id, bvid, danmus, shotcuts)
-            elif ext_id == 4:
+            elif ext_id == 3:
                 extractor_shock(ext_id, bvid, danmus, shotcuts)
-            elif ext_id == 5:
+            elif ext_id == 4:
                 extractor_humor(ext_id, bvid, danmus, shotcuts)
         thread_handles.append(Thread(target=A, args=(i,)))
     for th in thread_handles:

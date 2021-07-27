@@ -57,7 +57,7 @@
       </el-header>
       <el-row><div style="padding: 10px"></div></el-row>
       <transition name="fade" mode="in-out">
-        <el-row v-show="count_img_load >= 50">
+        <el-row v-show="!isLoading">
           <el-col
             id="elcol"
             class="elcol"
@@ -77,7 +77,7 @@
         </el-row>
       </transition>
       <transition name="fade" mode="in-out">
-        <el-row v-if="count_img_load < 50">
+        <el-row v-if="isLoading">
           <img
             src="http://39.101.139.97:8000/imgs/page2-loading.png"
             class="loadingimg"
@@ -100,6 +100,7 @@ export default {
     return {
       tstyle: { "background-color": "#111", padding: "8px" },
       list: [],
+      tot_len: 0,
       pplist: [
         "http://39.101.139.97:8000/imgs/loading.png",
         "http://39.101.139.97:8000/imgs/loading.png",
@@ -116,8 +117,11 @@ export default {
     handleLoad() {
       this.count_img_load++;
       console.log(this.count_img_load);
-      if (this.count_img_load >= 50) {
+      if (this.count_img_load >= this.tot_len/2) {
         this.isLoading = false;
+      }
+      else {
+        this.isLoading=true;
       }
     },
     getagain: function () {
@@ -156,17 +160,20 @@ export default {
             "http://39.101.139.97:8000/imgs/loading.png",
             "http://39.101.139.97:8000/imgs/loading.png",
           ];
-          this.$forceUpdate();
           this.isLoading = true;
+          this.$forceUpdate();
           this.count_img_load = 0;
           var len = res.data.length;
+          this.isLoading = true;
           if (len >= 100) len = 100;
+          this.tot_len = len;
           this.list = res.data.slice(0, len);
           this.$store.state.objlist = res.data.slice(0, len);
           this.$children[0].$children[0].$children[0].value = tempuse[0];
           this.$store.state.value3 = this.$children[0].$children[0].$children[0].value;
           this.$children[0].$children[0].$children[1].value = tempuse[1];
           this.$store.state.value4 = this.$children[0].$children[0].$children[1].value;
+          this.isLoading = true;
           for (var i = 0; i < len; ++i) {
             this.pplist[i] =
               "http://39.101.139.97:5000/poster/" + this.$store.state.objlist[i].id + "/";
@@ -175,11 +182,13 @@ export default {
               this.$store.state.objlist[i].id +
               ".hd.mp4";
           }
+          this.isLoading = true;
           document.getElementById("elcol").value = this.pplist;
           this.isLoading = false;
           this.$forceUpdate();
           this.$store.state.posterlist = this.pplist;
           this.$store.state.videolist = this.kklist;
+          this.isLoading = true;
         });
     },
   },

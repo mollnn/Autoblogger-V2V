@@ -213,11 +213,6 @@ def api_vtwordcloud(xvid):
 ####################################################################
 # 数据可视化 API
 
-@app.route('/')
-def api_index():
-    return render_template("index.html")
-
-
 @app.route('/getrc/<path:name>/')
 def api_getrc(name):
     print(name)

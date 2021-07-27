@@ -10,7 +10,7 @@
     "ffmpeg_ld": "-c:v libx264 -c:a aac -vf scale=160:90,setsar=1:1 -r 24 -strict experimental -threads 32 -preset fast",
     "ffmpeg_hd_ex": "-c:v libx264 -c:a aac -vf crop=1536:864 -r 24 -strict experimental -threads 32 -preset fast",
     "ffmpeg_ld_ex": "-c:v libx264 -c:a aac -vf crop=128:72 -r 24 -strict experimental -threads 32 -preset fast",
-    "ffmpeg_ov": "-vcodec libx264 -acodec aac -b:v 2000k -vf scale=1920:1080,setsar=1:1 -r 24 -strict experimental -threads 32 -preset fast",
+    "ffmpeg_ov": "-vcodec libx264 -acodec aac -b:v 3000k -vf scale=1920:1080,setsar=1:1 -r 24 -strict experimental -threads 32 -preset fast",
     "ffmpeg_default": " -y -threads 32 -preset fast -hide_banner -loglevel error ",
     "ffmpeg_quiet": " -hide_banner -loglevel error ",
     "timeline_cut_begin": 10,
