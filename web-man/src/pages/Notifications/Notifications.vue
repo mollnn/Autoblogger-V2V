@@ -1,8 +1,6 @@
 <template>
   <div class="tables-basic">
-    <h2 class="page-title">
-      成片<span class="fw-semi-bold"></span>
-    </h2>
+    <h1 class="page-title">精彩剪辑<span class="fw-semi-bold"></span></h1>
     <b-row>
       <b-col>
         <Widget
@@ -15,7 +13,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th class="hidden-sm-down">#</th>
+                  <th class="hidden-sm-down">序号</th>
                   <th>生成封面</th>
                   <th>成片的标题</th>
                   <th class="hidden-sm-down">成片的模板号</th>
@@ -37,16 +35,6 @@
                   <td>
                     {{ item[3] }}
                   </td>
-                  <td>
-                    <!-- <p>
-                      <small>
-                        <span class="fw-semi-bold">Dimensions:</span>
-                        <span class="text-muted"
-                          >&nbsp; {{ row.info.dimensions }}</span
-                        >
-                      </small>
-                    </p> --> 
-                  </td>
                   <td class="text-semi-muted">
                     {{ item[1] }}
                   </td>
@@ -54,38 +42,11 @@
                     {{ item[2] }}
                   </td>
                   <td class="width-150">
-                    <!-- <b-progress
-                      :variant="row.progress.colorClass"
-                      :value="row.progress.percent"
-                      :max="100"
-                      class="progress-sm mb-xs"
-                    /> -->
-                    <a :href= "videolist[index]">here!</a>
+                    <a :href="videolist[index]">点击查看视频</a>
                   </td>
                 </tr>
               </tbody>
             </table>
-          </div>
-          <div class="clearfix">
-            <div class="float-right">
-              <b-button variant="default" class="mr-3" size="sm"
-                >Send to...</b-button
-              >
-              <b-dropdown
-                variant="inverse"
-                class="mr-xs"
-                size="sm"
-                text="Clear"
-                right
-              >
-                <b-dropdown-item>Clear</b-dropdown-item>
-                <b-dropdown-item>Move ...</b-dropdown-item>
-                <b-dropdown-item>Something else here</b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item>Separated link</b-dropdown-item>
-              </b-dropdown>
-            </div>
-            <!-- <p>成片列表如上所示</p> -->
           </div>
         </Widget>
       </b-col>
@@ -211,12 +172,16 @@ export default {
     },
     getphotos() {
       for (var i = 0; i < this.slist.length; ++i) {
-        this.photolist.push("http://v2v.mollnn.com:5000/api/ov/poster/" + this.slist[i][0] +"/");
+        this.photolist.push(
+          "http://v2v.mollnn.com:5000/api/ov/poster/" + this.slist[i][0] + "/"
+        );
       }
     },
     getvideos() {
       for (var i = 0; i < this.slist.length; ++i) {
-        this.videolist.push("http://39.101.139.97:8081/edited/" + this.slist[i][0]+".mp4");
+        this.videolist.push(
+          "http://39.101.139.97:8081/edited/" + this.slist[i][0] + ".mp4"
+        );
       }
     },
     parseDate(date) {

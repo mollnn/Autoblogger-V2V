@@ -1,6 +1,6 @@
 <template>
   <div class="tables-basic">
-    <h1 class="page-title">状态<span class="fw-semi-bold"></span></h1>
+    <h1 class="page-title">管线状态<span class="fw-semi-bold"></span></h1>
     <b-row>
       <b-col lg="6">
         <Widget customHeader settings close>
@@ -13,7 +13,7 @@
                   <th>BVID</th>
                   <th>进度</th>
                 </tr>
-              </thead> 
+              </thead>
               <tbody>
                 <tr v-cloak v-for="(item, index) of alist" :key="index">
                   <td>{{ index + 1 }}</td>

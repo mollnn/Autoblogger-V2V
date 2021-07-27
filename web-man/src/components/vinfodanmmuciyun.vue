@@ -22,14 +22,6 @@ export default {
         "infographic"
       );
       myChart.setOption({
-        // title: {
-        //     text: '热点分析',
-        //     // link: 'https://www.baidu.com/s?wd=' + encodeURIComponent('ECharts'),
-        //     x: 'center',
-        //     textStyle: {
-        //         fontSize: 23
-        //     }
-        // },
         backgroundColor: "#FFFFFF",
         tooltip: {
           show: true,
@@ -67,9 +59,9 @@ export default {
                   return (
                     "rgb(" +
                     [
-                      Math.round(Math.random() * 40 + 195),
-                      Math.round(Math.random() * 50 + 145),
-                      Math.round(Math.random() * 50 + 160),
+                      Math.round(Math.random() * 10 + 20),
+                      Math.round(Math.random() * 100 + 80),
+                      Math.round(Math.random() * 150 + 120),
                     ].join(",") +
                     ")"
                   );

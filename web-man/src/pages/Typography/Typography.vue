@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="page-title">管理 <span class="fw-semi-bold"></span></h1>
+    <h1 class="page-title">管线管理 <span class="fw-semi-bold"></span></h1>
     <b-row>
       <b-col xs="12" lg="6">
         <Widget customHeader close collapse>
@@ -161,7 +161,7 @@ export default {
         .then((res) => {
           console.log(res);
         });
-        alert("正在执行....");
+      alert("正在执行....");
     },
     del1(index) {
       this.$forceUpdate();

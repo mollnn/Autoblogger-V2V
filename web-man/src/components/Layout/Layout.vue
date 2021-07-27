@@ -10,7 +10,7 @@
         <router-view />
       </transition>
       <footer class="contentFooter">
-        V2V视频数据分析平台 - Made by <a href="javascript:;" rel="nofollow noopener noreferrer" >The Following Automaton (Group 8)</a>
+        V2V - Made by <a href="javascript:;" rel="nofollow noopener noreferrer" >The Following Automaton (Group 8)</a>
       </footer>
     </v-touch>
   </div>

@@ -6,7 +6,7 @@
   width: $sidebar-width-open;
   background-color: var(--sidebar-bg-color);
   //旁条的背景色在这里改
-  background-color:#C7436F;
+  // background-color:#C7436F;
   color: var(--sidebar-color);
   transition: $transition-base;
 }
@@ -57,11 +57,12 @@
     font-weight: $font-weight-normal;
   }
   .secondary-word {
+    color: #5CB0FF;
     opacity: 1;
     transition: all $sidebar-transition-time;
   }
   .primary-word {
-    color: RGB(255,235,237);
+    color: #5CB0FF;
     font-weight: $font-weight-normal;
     
   }
@@ -98,7 +99,7 @@
   font-size: $font-size-mini;
   font-weight: $font-weight-bold;
   transition: opacity $sidebar-transition-time ease-in-out;
-  color: RGB(255,205,216);
+  color: #5287B999;
 
   &.first {
     //小图标位置
