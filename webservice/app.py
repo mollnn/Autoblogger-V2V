@@ -69,7 +69,7 @@ def api_source_delete(bvid):
 # 删除模板
 @app.route('/api/template/delete/<bvid>/<int:tag>/')
 def api_template_delete(bvid, tag):
-    common.query(common.readConfig("dbname_backend"),""" delete from in_gen where bvid="%s" and tag=%d; """%(bvid,tag))
+    common.query(common.readConfig("dbname_backend"),""" delete from in_gen where description="%s" and tag=%d; """%(bvid,tag))
     return "ok"
 
 # 清空素材

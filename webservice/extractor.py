@@ -13,41 +13,35 @@ import scipy.signal
 
 def export_clips(clips, score, bvid, frame_rate, tag):
     # 片段输出封装
-    thread_handles = []
     for i in clips:
-        def A(clip):
-            xvid = common.generateXvid()
-            l, r = clip[0], clip[1]
-            score_argmax = np.argmax(score[l:r])+l
-            score_max = np.max(score[l:r])
-            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
-                fg=conf("ffmpeg_default"),
-                fin="../data/media/%s.mp4" % bvid,
-                fout="../data/output/%s.mp4" % xvid,
-                ts=l/frame_rate,
-                tt=(r-l)/frame_rate,
-                cfg=conf("ffmpeg_ld_ex")
-            ))
-            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
-                fg=conf("ffmpeg_default"),
-                fin="../data/media/%s.hd.mp4" % bvid,
-                fout="../data/output/%s.hd.mp4" % xvid,
-                ts=l/frame_rate,
-                tt=(r-l)/frame_rate,
-                cfg=conf("ffmpeg_hd_ex")
-            ))
-            os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
-                fg=conf("ffmpeg_default"),
-                fin="../data/output/%s.mp4" % xvid,
-                fout="../data/poster/%s.jpg" % xvid
-            ))
-            sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%f,%d)"
-                     % (xvid, bvid, tag, l, r, score_max, score_argmax))
-        thread_handles.append(Thread(target=A, args=(i,)))
-    for th in thread_handles:
-        th.start()
-    for th in thread_handles:
-        th.join()
+        clip=i
+        xvid = common.generateXvid()
+        l, r = clip[0], clip[1]
+        score_argmax = np.argmax(score[l:r])+l
+        score_max = np.max(score[l:r])
+        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/media/%s.mp4" % bvid,
+            fout="../data/output/%s.mp4" % xvid,
+            ts=l/frame_rate,
+            tt=(r-l)/frame_rate,
+            cfg=conf("ffmpeg_ld_ex")
+        ))
+        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} {cfg} {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/media/%s.hd.mp4" % bvid,
+            fout="../data/output/%s.hd.mp4" % xvid,
+            ts=l/frame_rate,
+            tt=(r-l)/frame_rate,
+            cfg=conf("ffmpeg_hd_ex")
+        ))
+        os.system("ffmpeg -i {fin} -ss 00:00:00 -vframes 1 {fout} {fg}".format(
+            fg=conf("ffmpeg_default"),
+            fin="../data/output/%s.mp4" % xvid,
+            fout="../data/poster/%s.jpg" % xvid
+        ))
+        sqlQuery("insert into extraction (id,bvid,tag,fb,fe,smv,smp) values ('%s','%s',%d,%d,%d,%f,%d)"
+                    % (xvid, bvid, tag, l, r, score_max, score_argmax))
 
 
 ########################################################################

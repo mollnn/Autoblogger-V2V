@@ -169,8 +169,6 @@ export default {
         .get(
           "http://v2v.mollnn.com:5000/api/source/delete/" +
             this.slist[index][0] +
-            "/" +
-            this.slist[index][1] +
             "/",
           {
             headers: { "Access-Control-Allow-Origin": "*" },
@@ -252,8 +250,6 @@ export default {
             this.blist[index][0] +
             "/" +
             this.blist[index][1] +
-            "/" +
-            this.blist[index][2] +
             "/",
           {
             headers: { "Access-Control-Allow-Origin": "*" },

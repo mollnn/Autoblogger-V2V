@@ -182,23 +182,17 @@ def edit(edit_desc, output_filename):
     # 根据剪辑描述符剪辑视频
     # 先把每个片段切成 .ts
     ts_list = []
-    thread_handles = []
     for i in edit_desc:
-        def A(clip_desc):
-            tsid = common.generateTempid()
-            ts_list.append(tsid)
-            os.system("ffmpeg -i {fin} -ss {ts} -t {tt} -b:v 20000k {fout} {fg}".format(
-                fin="../data/output/%s.hd.mp4" % clip_desc["xvid"],
-                ts=clip_desc["start"],
-                tt=clip_desc["duration"],
-                fout="../tmp/%s.ts" % tsid,
-                fg=conf("ffmpeg_default")
-            ))
-        thread_handles.append(Thread(target=A, args=(i,)))
-    for th in thread_handles:
-        th.start()
-    for th in thread_handles:
-        th.join()
+        clip_desc=i
+        tsid = common.generateTempid()
+        ts_list.append(tsid)
+        os.system("ffmpeg -i {fin} -ss {ts} -t {tt} -b:v 20000k {fout} {fg}".format(
+            fin="../data/output/%s.hd.mp4" % clip_desc["xvid"],
+            ts=clip_desc["start"],
+            tt=clip_desc["duration"],
+            fout="../tmp/%s.ts" % tsid,
+            fg=conf("ffmpeg_default")
+        ))
 
     # 将一堆 .ts 合并并重新编码
     os.system(""" ffmpeg -i "concat:{fin}" {fconf} {fout} {fg}""".format(
