@@ -291,5 +291,9 @@ def api_v_danmu_wordcount(bid):
     return jsonify(common.query(conf("dbview"), """select word as name, cnt as value from odmwfreq where bvid = "{bid}";""".format(bid=bid), isDict=True))
 
 
+@app.route('/api/vrank/')
+def api_vrank():
+    return jsonify(common.query(conf("dbview"), """select bvid,title,tname,duration,`view`,danmaku from vinfo order by `view` desc limit 50;"""))
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

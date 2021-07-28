@@ -57,7 +57,7 @@
     <b-row>
       <b-col md="6" xl="6" sm="6" xs="12">
         <Widget
-          title="<h5> Blibli <span class='fw-semi-bold'>实时用户数量</span></h5>"
+          title="<h5> Bilibili <span class='fw-semi-bold'>实时用户数量</span></h5>"
           close
           collapse
           customHeader
@@ -71,6 +71,19 @@
             <typechart style="height: 250px"></typechart>
           </Widget>
         </div>
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col md="6" xl="12" sm="6" xs="12">
+        <Widget
+          title="<h5> Bilibili <span class='fw-semi-bold'>实时热门视频排行</span></h5>"
+          close
+          collapse
+          customHeader
+        >
+          <vrank />
+        </Widget>
       </b-col>
     </b-row>
   </div>
@@ -99,7 +112,7 @@ import likeschart from "@/components/likeschart";
 import coinchart from "@/components/coinchart";
 import sumlabel from "@/components/sumlabel";
 import { Chart } from "highcharts-vue";
-
+import vrank from "@/components/vrank";
 exporting(Highcharts);
 exportData(Highcharts);
 exporting(Highcharts);
@@ -118,6 +131,7 @@ export default {
     sumlabel,
     Widget,
     BigStat,
+    vrank,
     echart: ECharts,
     highcharts: Chart,
     initEchartsOptions: {
@@ -132,6 +146,7 @@ export default {
       initEchartsOptions: {
         renderer: "canvas",
       },
+      slist: [],
     };
   },
   methods: {
