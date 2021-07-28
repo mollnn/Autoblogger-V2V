@@ -128,7 +128,7 @@
               <tr v-cloak v-for="(item, index) of blist" :key="index">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item[0] }}</td>
-                <td>{{ item[2] }}</td>
+                <td>{{ item[1] }}</td>
                 <td>
                   <a href="javascript:;" @click="del2(index)">删除</a>
                 </td>

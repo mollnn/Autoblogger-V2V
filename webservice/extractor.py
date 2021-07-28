@@ -214,8 +214,8 @@ def extractor_love(tag, bvid, danmus, shotcuts):
                 score[i] = 0
 
     # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.05
-    len_min = 3*24
+    ratio = 0.3
+    len_min = 1*24
     len_max = 20*24
 
     # 二分确定阈值
@@ -284,8 +284,8 @@ def extractor_shock(tag, bvid, danmus, shotcuts):
                 score[i] = 0
 
     # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.05
-    len_min = 3*24
+    ratio = 0.3
+    len_min = 1*24
     len_max = 20*24
 
     # 二分确定阈值
@@ -351,8 +351,8 @@ def extractor_humor(tag, bvid, danmus, shotcuts):
                 score[i] = 0
 
     # 控制时长要求与提取比例（! 自行修改）
-    ratio = 0.05
-    len_min = 3*24
+    ratio = 0.3
+    len_min = 1*24
     len_max = 20*24
 
     # 二分确定阈值
