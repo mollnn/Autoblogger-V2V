@@ -133,6 +133,16 @@ def api_status_pipeline():
     else:
         return "就绪"
 
+@app.route('/api/status/progress/')
+def api_status_progress():
+    if len(common.query(common.readConfig("dbname_backend"),""" select * from status_mutex; """))>0:
+        return str(common.query(common.readConfig("dbname_backend"),"""select cast(round(sum(T.prog)/max(TTT.cnt+TTTTT.cnt+TTTTTT.cnt)) 
+            as signed) from (select id, ext, max(p) as prog from status group by id, ext) as T, (select count(distinct bvid) as cnt 
+            from (select * from in_src union select description as bvid from in_gen) as TT) as TTT,(select count(distinct bvid) as 
+            cnt from (select * from in_src) as TTTT) as TTTTT, (select count(*) as cnt from in_gen) as TTTTTT;""")[0][0])
+    else:
+        return str(100)
+
 # 查看成片列表
 @app.route('/api/ov/list/')
 def api_ov_list():

@@ -4,7 +4,7 @@
     <b-row>
       <b-col xs="12" lg="6">
         <Widget customHeader close collapse>
-          <h4>源素材管理</h4>
+          <h4>媒体父对象管理</h4>
           <br />
           <b-row>
             <form class="form-inline" role="form">
@@ -31,7 +31,7 @@
             <form class="form-inline" role="form">
               <span style="padding: 14px"></span>
               <button type="button" @click="addinfo1" class="btn btn-primary">
-                添加素材信息
+                添加媒体父对象
               </button>
               <span style="padding: 26px"></span>
               <button
@@ -39,7 +39,7 @@
                 @click="clearsource"
                 class="btn btn-primary"
               >
-                清空素材信息
+                清空媒体父对象
               </button>
             </form>
             <br />
@@ -66,7 +66,7 @@
       </b-col>
       <b-col xs="12" lg="6">
         <Widget customHeader close collapse>
-          <h4>模板管理</h4>
+          <h4>模板对象管理</h4>
           <b-row>
             <form class="form-inline" role="form">
               <span style="padding: 24px"></span>
@@ -97,11 +97,11 @@
             <form class="form-inline" role="form">
               <span style="padding: 14px !important"></span>
               <button type="button" @click="addinfo2" class="btn btn-primary">
-                添加
+                添加模板对象
               </button>
               <span style="padding: 10px"></span>
               <button type="button" @click="execall" class="btn btn-primary">
-                执行
+                启动管线
               </button>
             </form>
             <form class="form-inline" role="form">
@@ -111,7 +111,7 @@
                 @click="cleartemplate"
                 class="btn btn-primary"
               >
-                清空
+                清空模板对象
               </button>
             </form>
           </b-row>
@@ -119,9 +119,9 @@
             <thead>
               <tr>
                 <th>序号</th>
-                <th>BVID</th>
-                <th>类型号</th>
-                <th>删除按钮</th>
+                <th>模板对象描述</th>
+                <th>分类标记号</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -160,8 +160,8 @@ export default {
         })
         .then((res) => {
           console.log(res);
+      alert(res.data);
         });
-      alert("正在执行....");
     },
     del1(index) {
       this.$forceUpdate();

@@ -14,11 +14,11 @@
               <thead>
                 <tr>
                   <th class="hidden-sm-down">序号</th>
-                  <th>生成封面</th>
-                  <th>成片的标题</th>
-                  <th class="hidden-sm-down">成片的模板号</th>
-                  <th class="hidden-sm-down">成片的素材类型</th>
-                  <th class="hidden-sm-down">点此查看</th>
+                  <th>成片封面</th>
+                  <th>成片标题</th>
+                  <th class="hidden-sm-down">模板对象描述</th>
+                  <th class="hidden-sm-down">分类标记号</th>
+                  <th class="hidden-sm-down">查看视频</th>
                 </tr>
               </thead>
               <tbody>

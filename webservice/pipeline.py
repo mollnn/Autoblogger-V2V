@@ -76,8 +76,13 @@ def execute():
     thread_handles=[]
     for i in down_src_list:
         thread_handles.append(Thread(target=bondDownloadExtract, args=(i,)))
+        common.wstat(i,0,ext=False)
+        common.wstat(i,0,ext=True)
+
     for i in down_gen_list: 
         thread_handles.append(Thread(target=singleDownload, args=(i,)))
+        common.wstat(i,0,ext=False)
+
     for th in thread_handles: 
         th.start()
         time.sleep(0.2)  # 防止请求并发度过大

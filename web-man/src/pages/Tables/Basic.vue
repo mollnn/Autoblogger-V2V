@@ -1,6 +1,6 @@
 <template>
   <div class="tables-basic">
-    <h1 class="page-title">管线状态<span class="fw-semi-bold"></span></h1>
+    <h1 class="page-title">管线状态监控<span class="fw-semi-bold"></span></h1>
     <b-row>
       <b-col lg="6">
         <Widget customHeader settings close>
@@ -23,7 +23,7 @@
           </div>
         </Widget>
         <Widget customHeader settings close>
-          <h3>媒体载入段 <span class="fw-semi-bold"></span></h3>
+          <h3>媒体对象载入段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -46,7 +46,7 @@
       </b-col>
       <b-col lg="6">
         <Widget customHeader settings close>
-          <h3>片段提取段<span class="fw-semi-bold"></span></h3>
+          <h3>定制化媒体切片提取段<span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -67,7 +67,7 @@
           </div>
         </Widget>
         <Widget customHeader settings close>
-          <h3>成片生成段 <span class="fw-semi-bold"></span></h3>
+          <h3>媒体子对象合成段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -220,22 +220,6 @@ export default {
           this.alist = res.data;
           this.$forceUpdate();
         });
-      this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/pipeline/", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-        })
-        .then((res) => {
-          this.ssx = res.data;
-          this.$forceUpdate();
-        });
-      this.$http
-        .get("http://v2v.mollnn.com:5000/api/status/pipeline/", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-        })
-        .then((res) => {
-          this.ssy = res.data;
-          this.$forceUpdate();
-        });
     },
     draw2() {
       console.log("fuck");
@@ -258,6 +242,22 @@ export default {
         .then((res) => {
           console.log(res);
           this.clist = res.data;
+          this.$forceUpdate();
+        });
+              this.$http
+        .get("http://v2v.mollnn.com:5000/api/status/pipeline/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          this.ssx = res.data;
+          this.$forceUpdate();
+        });
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/status/progress/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          this.ssy = res.data;
           this.$forceUpdate();
         });
     },
