@@ -21,13 +21,13 @@ export default {
     draw() {
       var elem1 = document.getElementById("photo");
       this.$http
-        .get("http://131.mollnn.com:5000/api/v/info/" + tempuse + "/", {
+        .get("http://v2v.mollnn.com:5000/api/v/info/" + tempuse + "/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
           elem1.setAttribute(
             "src",
-            "http://131.mollnn.com:5000/getrc/" + res.data[0].pic
+            "http://v2v.mollnn.com:5000/getrc/" + res.data[0].pic
           );
         });
     },

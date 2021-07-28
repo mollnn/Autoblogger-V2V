@@ -79,7 +79,7 @@ export default {
         ],
       });
       this.$http
-        .get("http://131.mollnn.com:5000/api/type/distrib/", {
+        .get("http://v2v.mollnn.com:5000/api/type/distrib/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {

@@ -1,5 +1,6 @@
 {
     "dbname": "pipeline_dev",
+    "dbview": "biliview",
     "dbname_backend": "pipeline_dev",
     "db_banime": "banime",
     "mysql_host": "rm-bp15x62q3095543qygo.mysql.rds.aliyuncs.com",

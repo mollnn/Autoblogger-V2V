@@ -70,7 +70,7 @@ export default {
       var elem8 = document.getElementById("likes");
       var elem9 = document.getElementById("favorite");
       this.$http
-        .get("http://131.mollnn.com:5000/api/v/info/" + tempuse + "/", {
+        .get("http://v2v.mollnn.com:5000/api/v/info/" + tempuse + "/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {

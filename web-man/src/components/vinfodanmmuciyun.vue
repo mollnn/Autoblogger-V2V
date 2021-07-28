@@ -78,7 +78,7 @@ export default {
       });
       this.$http
         .get(
-          "http://131.mollnn.com:5000/api/v/danmu/wordcount/" + tempuse + "/",
+          "http://v2v.mollnn.com:5000/api/v/danmu/wordcount/" + tempuse + "/",
           {
             headers: { "Access-Control-Allow-Origin": "*" },
           }

@@ -4,6 +4,25 @@
     <b-row>
       <b-col lg="6">
         <Widget customHeader settings close>
+          <h3>管线状态概览 <span class="fw-semi-bold"></span></h3>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>状态</th>
+                  <th>总进度</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ ssx }}</td>
+                  <td>{{ ssy }} %</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </Widget>
+        <Widget customHeader settings close>
           <h3>媒体载入段 <span class="fw-semi-bold"></span></h3>
           <div class="table-responsive">
             <table class="table table-hover">
@@ -87,6 +106,8 @@ export default {
       alist: [],
       blist: [],
       clist: [],
+      ssx: "",
+      ssy: "",
       tableStyles: [
         {
           id: 1,
@@ -197,6 +218,22 @@ export default {
         .then((res) => {
           console.log(res);
           this.alist = res.data;
+          this.$forceUpdate();
+        });
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/status/pipeline/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          this.ssx = res.data;
+          this.$forceUpdate();
+        });
+      this.$http
+        .get("http://v2v.mollnn.com:5000/api/status/pipeline/", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          this.ssy = res.data;
           this.$forceUpdate();
         });
     },

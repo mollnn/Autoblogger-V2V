@@ -50,7 +50,7 @@ export default {
       var elemdanmaku = document.getElementById("danmaku");
       var elemduration = document.getElementById("duration");
       this.$http
-        .get("http://131.mollnn.com:5000/api/v/info/" + tempuse + "/", {
+        .get("http://v2v.mollnn.com:5000/api/v/info/" + tempuse + "/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {

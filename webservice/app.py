@@ -126,6 +126,13 @@ def api_exec():
     app_thread_handles.append(th)
     return "ok"
 
+@app.route('/api/status/pipeline/')
+def api_status_pipeline():
+    if len(common.query(common.readConfig("dbname_backend"),""" select * from status_mutex; """))>0:
+        return "运行中……"
+    else:
+        return "就绪"
+
 # 查看成片列表
 @app.route('/api/ov/list/')
 def api_ov_list():

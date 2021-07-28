@@ -35,7 +35,7 @@ export default {
       var elemsdanmuku = document.getElementById("sdanmuku");
       var elemslikes = document.getElementById("slikes");
       this.$http
-        .get("http://131.mollnn.com:5000/api/sum/", {
+        .get("http://v2v.mollnn.com:5000/api/sum/", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
