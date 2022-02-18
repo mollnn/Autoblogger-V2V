@@ -1,17 +1,17 @@
-# Bilibili-Extractor
+# Video Extractor
 
-自动视频萃取机。
+Automatically extract the best clips from streaming media and edit them into mixed videos
 
-结构说明：
+Structure description:
 
-`web` 为萃取机素材监控系统前端。
+The web is the front end of the material monitoring system for the extractor.
 
-`web-man` 为萃取机网站管理前端。
+web-man manages the front end for the extractor website.
 
-`webservice` 为萃取机网站后端，包括中为萃取机的核心组件，用于爬取视频、分析视频、生成视频片段等。可视化后端暂时没有合并上去。
+webservice is the backend of the extractor website, including the core components of the extractor, which is used to crawl videos, analyze videos, and generate video clips. The visualization backend has not been merged for the time being.
 
-`data` 为萃取机存储/输出数据的位置。
+data is the location where the extractor stores/outputs data.
 
-`tmp` 供萃取机存放部分临时文件。目前需要手动定期清空。
+tmp is used by the extractor to store some temporary files. Currently it needs to be cleared manually and periodically.
 
-已撤销上次合并。
+The last merge has been undone.
